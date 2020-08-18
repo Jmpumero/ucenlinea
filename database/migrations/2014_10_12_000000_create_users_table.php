@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name',50);
+            $table->string('apellido',50);
             $table->string('email',100)->unique();
             $table->string('avatar')->default('adminlte/img/user_default2.png');
             $table->enum('status', ['active', 'inactive']);
@@ -24,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
