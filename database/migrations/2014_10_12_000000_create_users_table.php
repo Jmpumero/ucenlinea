@@ -18,8 +18,9 @@ class CreateUsersTable extends Migration
             $table->string('name',50);
             $table->string('apellido',50);
             $table->string('email',100)->unique();
+            $table->string('ci',50)->unique();
             $table->string('avatar')->default('adminlte/img/user_default2.png');
-            $table->enum('status', ['active', 'inactive']);
+            $table->boolean('status')->default(true); //esta en revision
             $table->enum('sexo', ['hombre', 'mujer']);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

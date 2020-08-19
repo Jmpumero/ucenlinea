@@ -17,10 +17,16 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(User::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker ) {
+    $gender = $faker->randomElement(['male', 'female']);
+    //$faker = Faker::create('de_DE'); //esta fora no la prove
     return [
-        'name' => $faker->name,
+        'name' => $faker->firstName($gender),
+        'apellido' =>$faker->lastName,
         'email' => $faker->unique()->safeEmail,
+        'ci'    =>$faker->unique()->nationalId,
+        'status'=> $faker->boolean($chanceOfGettingTrue = 90),
+        //'sexo'=> $faker->randomElement($array = array ('hombre','mujer')),
         'email_verified_at' => now(),
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
