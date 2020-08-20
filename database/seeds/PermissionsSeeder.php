@@ -5,7 +5,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\User;
 
-class PermissionsTableSeeder extends Seeder
+class PermissionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -42,8 +42,9 @@ class PermissionsTableSeeder extends Seeder
         $user = User::find(1); //yo
         $user->assignRole('Admin');
 
-        $user = User::find(2); //otro
-        $user->assignRole('prueba');
+        //otro
+        /*$user = User::find(2);
+        $user->assignRole('prueba');*/
     }
 
 }

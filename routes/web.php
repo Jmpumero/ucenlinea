@@ -23,8 +23,8 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir estudiantes')
-                                                        ->middleware('permission:productos.index');
+    Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')
+                                                        ->middleware('permission:inscribir estudiantes');
 
 
     //Route::post('users/update', 'UserController@update')->name('productos.update');
