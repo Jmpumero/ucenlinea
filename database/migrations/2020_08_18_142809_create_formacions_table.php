@@ -27,6 +27,7 @@ class CreateFormacionsTable extends Migration
             $table->float('calificacion')->nullable()->default(0.00);
             $table->string('imagen')->nullable();
             $table->date('fecha_de_inicio')->default($hoy);
+            //$table->dateTime('fecha_de_inicio')->default(new DateTime());
             $table->date('fecha_de_culminacion')->nullable();
             $table->timestamps();
             $table->softDeletes();
