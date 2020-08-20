@@ -14,7 +14,7 @@ class UserInsFormacionController extends Controller
      */
     public function index()
     {
-        //
+        return view('responsable_de_personal.inscripcion');
     }
 
     /**

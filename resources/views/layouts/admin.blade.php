@@ -208,14 +208,17 @@
                           <i class="fas fa-angle-left right"></i>
                         </p>
                       </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="rpinscripcion1.html" class="nav-link">
-                            <i class="fas fa-clipboard-check"></i>
 
-                            <p>Inscribir personal</p>
-                          </a>
-                        </li>
+                      <ul class="nav nav-treeview">
+                        @can('inscribir estudiantes')
+                            <li class="nav-item">
+                            <a href= "{{ route('responsable_de_personal.inscripcion') }} class="nav-link">
+                                <i class="fas fa-clipboard-check"></i>
+
+                                <p>Inscribir personal</p>
+                            </a>
+                            </li>
+                        @endcan
                         <li class="nav-item">
                           <a href="modform.html" class="nav-link">
                             <i class="far fa-edit"></i>

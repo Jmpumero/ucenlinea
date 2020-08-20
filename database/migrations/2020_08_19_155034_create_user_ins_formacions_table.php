@@ -16,20 +16,27 @@ class CreateUserInsFormacionsTable extends Migration
         Schema::create('user_ins_formacions', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('formacion_id');
+            $table->unsignedBigInteger('supervisor_id');
             $table->boolean('retiro')->default(false);
 
             $table->foreign('user_id')
                 ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+                ->on('users');
+                //->onDelete('cascade');
 
             $table->foreign('formacion_id')
                 ->references('id')
-                ->on('formacions')
-                ->onDelete('cascade');
+                ->on('formacions');
+                //->onDelete('cascade');
+
+            $table->foreign('supervisor_id')
+                ->references('id')
+                ->on('users');
+                //->onUpdate('cascade'); //revision
 
             $table->primary(['user_id', 'formacion_id'], 'user_ins_formacions_user_id_formacion_id_primary');
             $table->timestamps();
+            $table->softDeletes();//ojo
         });
     }
 
@@ -40,6 +47,9 @@ class CreateUserInsFormacionsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('user_ins_formacions');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
     }
 }

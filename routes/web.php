@@ -19,8 +19,17 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::middleware(['auth'])->group(function () {
 
 
+
+    Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir estudiantes')
+                                                        ->middleware('permission:productos.index');
+
+
+    //Route::post('users/update', 'UserController@update')->name('productos.update');
+});
+/*
 Route::get('/admin', function () {
     return view('prueba');
-});
+});*/

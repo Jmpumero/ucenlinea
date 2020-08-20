@@ -36,6 +36,6 @@ class UsersTableSeeder extends Seeder
 
 
 
-        factory(User::class,4)->create();
+        factory(User::class,8)->create();
     }
 }
