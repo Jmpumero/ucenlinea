@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+//import chromelogger as console;
+//include 'ChromePhp.php';
 use App\User_ins_formacion;
+use App\Formacion;
 use Illuminate\Http\Request;
 
 class UserInsFormacionController extends Controller
@@ -15,6 +17,44 @@ class UserInsFormacionController extends Controller
     public function index()
     {
         return view('responsable_de_personal.inscripcion');
+    }
+
+
+
+
+    public function select_formacion(Request $request)
+    {
+        /*$term = trim($request->q);
+
+        if (empty($term)) {
+            return \Response::json([]);
+        }*/
+
+        //$tags = Tag::search($term)->limit(5)->get();
+
+        $formaciones = Formacion::all();
+        $formaciones_array = [];
+        //$formaciones2 [] = ['id' => 2, 'text' => 'algo'];
+
+
+        //dd($formaciones);
+
+        //dd($formaciones);
+        foreach ($formaciones as $formacion) {
+            //dump($f);
+            $formaciones_array[] = ['id' => $formacion->id, 'text' => $formacion->nombre];
+
+        }
+        //dump($formaciones_array);
+        //dd($formaciones_array);
+        //dump($formaciones);
+        //var_dump($formaciones);
+        //die($formaciones);
+        //print_r($formacion);
+        return response()->json($formaciones_array);
+
+
+
     }
 
     /**
