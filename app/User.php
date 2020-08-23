@@ -55,4 +55,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Empresa')->withTimestamps();
     }
+
+
+    public function requisiciones()//one to many
+    {
+        return $this->hasMany('App\Requisicion','creador');
+    }
 }

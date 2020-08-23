@@ -18,7 +18,7 @@ class CreateUsuarioPEmpresasTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('empresa_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('empresa_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('empresa_id')->references('id')->on('empresas')->onDelete('cascade');
             $table->timestamps();
 
 
