@@ -50,4 +50,9 @@ class User extends Authenticatable
         ->withTimestamps()->withPivot('retiro');
     }
 
+
+    public function empresas() //prueba relacion con tabla pivote many to many
+    {
+        return $this->belongsToMany('App\Empresa')->withTimestamps();
+    }
 }

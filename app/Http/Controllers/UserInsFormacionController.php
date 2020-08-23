@@ -16,13 +16,17 @@ class UserInsFormacionController extends Controller
      */
     public function index()
     {
-        return view('responsable_de_personal.inscripcion');
+        $formaciones_list= Formacion::pluck('nombre','id');
+        //$formaciones_list->prepend('');
+        return view('responsable_de_personal.inscripcion',['formaciones_list'=>$formaciones_list]);
+        //return view('responsable_de_personal.inscripcion');
     }
 
 
 
 
-    public function select_formacion(Request $request)
+
+    public function select_formacion(Request $request) //select con ajax
     {
         /*$term = trim($request->q);
 
@@ -34,28 +38,23 @@ class UserInsFormacionController extends Controller
 
         $formaciones = Formacion::all();
         $formaciones_array = [];
-        //$formaciones2 [] = ['id' => 2, 'text' => 'algo'];
 
-
-        //dd($formaciones);
-
-        //dd($formaciones);
         foreach ($formaciones as $formacion) {
             //dump($f);
             $formaciones_array[] = ['id' => $formacion->id, 'text' => $formacion->nombre];
 
         }
-        //dump($formaciones_array);
-        //dd($formaciones_array);
-        //dump($formaciones);
-        //var_dump($formaciones);
-        //die($formaciones);
-        //print_r($formacion);
+
         return response()->json($formaciones_array);
 
 
 
     }
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.
