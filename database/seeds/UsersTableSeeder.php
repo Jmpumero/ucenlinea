@@ -26,7 +26,7 @@ class UsersTableSeeder extends Seeder
         App\User::create([
             'name'      => 'Prueba',
             'apellido' => 'Algo',
-            'email'     => 'prueba@gmail.com',
+            'email'     => 'prueba@algo.com',
             'ci'  =>'V123456',
             'status' => true,
             'sexo' =>'mujer',
@@ -36,6 +36,6 @@ class UsersTableSeeder extends Seeder
 
 
 
-        factory(User::class,4)->create();
+        factory(User::class,8)->create();
     }
 }

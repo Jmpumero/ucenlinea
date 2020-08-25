@@ -41,4 +41,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+
+    public function formaciones() //prueba relacion con tabla pivote many to many
+    {
+        return $this->belongsToMany('App\Formacion')->as('inscripcion')
+        ->withTimestamps()->withPivot('retiro');
+    }
+
+
+    public function empresas() //prueba relacion con tabla pivote many to many
+    {
+        return $this->belongsToMany('App\Empresa')->withTimestamps();
+    }
+
+
+    public function requisiciones()//one to many
+    {
+        return $this->hasMany('App\Requisicion','creador');
+    }
 }

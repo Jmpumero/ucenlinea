@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Carbon\Carbon;
 class CreateFormacionsTable extends Migration
 {
     /**
@@ -15,8 +15,8 @@ class CreateFormacionsTable extends Migration
     {
 
         Schema::create('formacions', function (Blueprint $table) {
-            $hoy=new DateTime();
-            $hoy=$hoy->format('Y-m-d');
+            //$hoy=new DateTime();
+            //$hoy=$hoy->format('Y-m-d');
             $table->bigIncrements('id');
             $table->string('nombre',50);
             $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada']);
@@ -26,10 +26,15 @@ class CreateFormacionsTable extends Migration
             $table->decimal('precio', 5, 2)->default(00000.00);
             $table->float('calificacion')->nullable()->default(0.00);
             $table->string('imagen')->nullable();
-            $table->date('fecha_de_inicio')->default($hoy);
-            $table->date('fecha_de_culminacion')->nullable();
+            $table->unsignedBigInteger('requisicion_id');
+            //$table->date('fecha_de_inicio')->default($hoy);
+            $table->dateTime('fecha_de_inicio')->default(Carbon::now());
+            $table->dateTime('fecha_de_culminacion')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+
+            $table->foreign('requisicion_id')->references('id')->on('requisicion');
         });
     }
 
@@ -40,6 +45,9 @@ class CreateFormacionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('formacions');
+        //Schema::dropIfExists('formacions');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::drop('formacions');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

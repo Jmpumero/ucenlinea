@@ -2,7 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
   <title>RP Admin</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +15,10 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
-  <!--JQUERY UI CDN-->
+  <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/adminlte/plugins/jquery/jquery.min.js"><\/script>')</script>
+    <!--JQUERY UI CDN-->
   <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
   <!-- Tempusdominus Bbootstrap 4 -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
@@ -32,6 +38,8 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.css') }}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/summernote/summernote-bs4.css') }}">
+
+  <link href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
   <!-- Google Font: Source Sans Pro -->
   <!--<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">-->
 </head>
@@ -67,7 +75,7 @@
 
 
           <!-- Right navbar links -->
-          <ul class="navbar-nav"  style="margin-left: 32rem;">
+          <ul class="navbar-nav ml-auto"  >
             <!-- Messages Dropdown Menu -->
 
             <!-- Notifications Dropdown Menu -->
@@ -136,6 +144,9 @@
                 </li>
               </ul>
             </li>
+
+
+
             <!--interesante
             <li class="nav-item">
               <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
@@ -208,14 +219,17 @@
                           <i class="fas fa-angle-left right"></i>
                         </p>
                       </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="rpinscripcion1.html" class="nav-link">
-                            <i class="fas fa-clipboard-check"></i>
 
-                            <p>Inscribir personal</p>
-                          </a>
-                        </li>
+                      <ul class="nav nav-treeview">
+                        @can('inscribir estudiantes')
+                            <li class="nav-item">
+                            <a href= "{{ route('inscribir/estudiantes') }}" class="nav-link">
+                                <i class="fas fa-clipboard-check"></i>
+
+                                <p>Inscribir personal</p>
+                            </a>
+                            </li>
+                        @endcan
                         <li class="nav-item">
                           <a href="modform.html" class="nav-link">
                             <i class="far fa-edit"></i>
@@ -307,7 +321,7 @@
           <!-- /.content-header -->
 
           <!-- Main content -->
-          <section class="content">
+          <div class="content">
             <div class="container-fluid">
                 <main class="content">
                     @yield('content')
@@ -315,7 +329,7 @@
 
               <!-- /.row (main row) -->
             </div><!-- /.container-fluid -->
-          </section>
+        </div>
           <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
@@ -342,9 +356,7 @@
       <!-- ./wrapper -->
 <!-- ./wrapper -->
 
-<!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="/adminlte/plugins/jquery/jquery.min.js"><\/script>')</script>
+
 
 
 <!-- jQuery UI 1.11.4 -->
@@ -375,6 +387,8 @@
 <script src="{{ asset('adminlte/plugins/summernote/summernote-bs4.min.js') }}"></script>
 <!-- overlayScrollbars -->
 <script src="{{ ('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+
+<script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
 
 <!-- AdminLTE App -->
