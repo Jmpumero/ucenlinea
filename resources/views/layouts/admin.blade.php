@@ -2,7 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
   <title>RP Admin</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -72,7 +75,7 @@
 
 
           <!-- Right navbar links -->
-          <ul class="navbar-nav"  style="margin-left: 32rem;">
+          <ul class="navbar-nav ml-auto"  >
             <!-- Messages Dropdown Menu -->
 
             <!-- Notifications Dropdown Menu -->
@@ -141,6 +144,9 @@
                 </li>
               </ul>
             </li>
+
+
+
             <!--interesante
             <li class="nav-item">
               <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
@@ -315,7 +321,7 @@
           <!-- /.content-header -->
 
           <!-- Main content -->
-          <section class="content">
+          <div class="content">
             <div class="container-fluid">
                 <main class="content">
                     @yield('content')
@@ -323,7 +329,7 @@
 
               <!-- /.row (main row) -->
             </div><!-- /.container-fluid -->
-          </section>
+        </div>
           <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
@@ -383,6 +389,8 @@
 <script src="{{ ('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 
 <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
+
+
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
 <!--para iconos ionic -->
