@@ -20,8 +20,12 @@ class PermissionsSeeder extends Seeder
 
         //Admin
         $admin = Role::create(['name' => 'Admin']);
-
+        $rp=Role::create(['name' => 'Responsable de Personal']);
         $admin->givePermissionTo([
+            'inscribir estudiantes'
+
+        ]);
+        $rp->givePermissionTo([
             'inscribir estudiantes'
 
         ]);
@@ -43,8 +47,8 @@ class PermissionsSeeder extends Seeder
         $user->assignRole('Admin');
 
         //otro
-        /*$user = User::find(2);
-        $user->assignRole('prueba');*/
+        $user = User::find(3);
+        $user->assignRole('Responsable de Personal');
     }
 
 }

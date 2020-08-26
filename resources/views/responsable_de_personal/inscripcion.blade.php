@@ -2,6 +2,7 @@
 
 @section('content')
 
+
         <!-- esto fue una prueba para usar ajax
             <div class="card card-notificacion">
             <div class="card-header">ajax sin collective</div>
@@ -16,19 +17,22 @@
 
 
             </div>
-        </div>
-        -->
-        <div class="card card-notificacion">
-            <div class="card-header">forma simple sin ajax</div>
+        </div>-->
 
-            <div class="card-body">
+        <div class="card card-notifiacion table-responsive">
+            <div class="card-header text-center">Formaciones disponibles </div>
 
-               {!! Form::open() !!}
-               {!! Form::select('formas', $formaciones_list ?? [], null, ['id'=>'formas','placeholder' => '','style'=>'width: 50%']) !!}
 
-               {!! Form::close() !!}
+                <div class=" card-body table-responsive-sm" style="text-align:center;">
 
-            </div>
+                    <div style="text-align:center;" >
+
+                        {!! Form::select('formas', $formaciones_list ?? [], null, ['id'=>'formas','placeholder' => '','class'=>'center-s']) !!}
+
+                    </div>
+                    <button style="margin-top:1%;" type="button" name="" id="" class="btn disabled btn-success" btn-lg btn-block">Confirmar</button>
+                </div>
+
         </div>
 
 
@@ -80,7 +84,7 @@
 
 
         $('#formas').select2({
-            placeholder:"Elige una formacion",
+            placeholder:" Elige una formacion ",
             theme:"classic"
         });
 

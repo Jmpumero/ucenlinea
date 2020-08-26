@@ -34,6 +34,16 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
+        App\User::create([
+            'name'      => 'RP1',
+            'apellido' => 'Algo',
+            'email'     => 'rp1@gmail.com',
+            'ci'  =>'V123456789',
+            'status' => true,
+            'sexo' =>'hombre',
+            'password'     => bcrypt('123'),
+
+        ]);
 
 
         factory(User::class,8)->create();

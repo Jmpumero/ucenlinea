@@ -19,8 +19,9 @@ class CreateRequisicionsTable extends Migration
             $table->unsignedBigInteger('empresa_id');
             $table->string('nombre', 50);
             $table->string('modalida', 50);//definir por gestor de contenido
-            $table->enum('audiencia', ['todo publico', 'zoomer','boomer','etc'])->nullable()->default(['todo publico']);//definir por gestor de contenido
-            $table->enum('t_formacion', ['interna', 'externa'])->nullable()->default(['interna', 'externa']);//definir por gestor de contenido
+            $table->enum('audiencia', ['todo publico', 'zoomer','boomer','etc'])->nullable()->default('todo publico');//definir por gestor de contenido
+            $table->enum('t_formacion', ['interna', 'externa'])->nullable()->default('interna');//definir por gestor de contenido
+
             $table->foreign('creador')->references('id')->on('users');
             $table->foreign('empresa_id')->references('id')->on('empresas');
             $table->timestamps();
@@ -37,6 +38,10 @@ class CreateRequisicionsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::dropIfExists('requisicions');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
+
     }
 }

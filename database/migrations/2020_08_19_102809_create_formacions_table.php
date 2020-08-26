@@ -13,7 +13,9 @@ class CreateFormacionsTable extends Migration
      */
     public function up()
     {
-
+        //DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        //Schema::drop('formacions');
+        //DB::statement('SET FOREIGN_KEY_CHECKS = 1');
         Schema::create('formacions', function (Blueprint $table) {
             //$hoy=new DateTime();
             //$hoy=$hoy->format('Y-m-d');
@@ -26,15 +28,15 @@ class CreateFormacionsTable extends Migration
             $table->decimal('precio', 5, 2)->default(00000.00);
             $table->float('calificacion')->nullable()->default(0.00);
             $table->string('imagen')->nullable();
-            $table->unsignedBigInteger('requisicion_id');
+
             //$table->date('fecha_de_inicio')->default($hoy);
             $table->dateTime('fecha_de_inicio')->default(Carbon::now());
             $table->dateTime('fecha_de_culminacion')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-
-            $table->foreign('requisicion_id')->references('id')->on('requisicion');
+            $table->unsignedBigInteger('requisicion_id')->nullable();//quitar nullable luego
+            $table->foreign('requisicion_id')->references('id')->on('requisicions');
         });
     }
 
