@@ -12,8 +12,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         App\User::create([
-            'name'      => 'Jose',
-            'apellido' => 'Medina',
+            'name'      => 'Jose Medina',
             'email'     => 'jmpumero@gmail.com',
             'ci'  =>'V20959966',
             'status' => true,
@@ -25,7 +24,6 @@ class UsersTableSeeder extends Seeder
 
         App\User::create([
             'name'      => 'Prueba',
-            'apellido' => 'Algo',
             'email'     => 'prueba@algo.com',
             'ci'  =>'V123456',
             'status' => true,
@@ -35,8 +33,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         App\User::create([
-            'name'      => 'RP1',
-            'apellido' => 'Algo',
+            'name'      => 'RP1 Prueba1',
             'email'     => 'rp1@gmail.com',
             'ci'  =>'V123456789',
             'status' => true,
@@ -46,6 +43,6 @@ class UsersTableSeeder extends Seeder
         ]);
 
 
-        factory(User::class,8)->create();
+        factory(User::class,18)->create();
     }
 }
