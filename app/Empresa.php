@@ -14,8 +14,14 @@ class Empresa extends Model
 
 
 
-    public function users() //many to many
+    public function users() //inverse many to many
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User','usuario_p_empresa');
     }
+
+    public function requisiciones()//one to many
+    {
+        return $this->hasMany('App\Requisicion');
+    }
+
 }

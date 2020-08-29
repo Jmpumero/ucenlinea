@@ -5,7 +5,15 @@ namespace App\Http\Controllers;
 //include 'ChromePhp.php';
 use App\User_ins_formacion;
 use App\Formacion;
+use App\User;
+use App\Empresa;
+use App\Requisicion;
+use App\User_p_empresa;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserInsFormacionController extends Controller
 {
@@ -16,10 +24,23 @@ class UserInsFormacionController extends Controller
      */
     public function index()
     {
-        $formaciones_list= Formacion::pluck('nombre','id');
-        //$formaciones_list->prepend('');
-        return view('responsable_de_personal.inscripcion',['formaciones_list'=>$formaciones_list]);
-        //return view('responsable_de_personal.inscripcion');
+        /* //una forma
+        //$query=DB::table('formacions')->where('status','sin postulados');
+        //$formaciones_list=$query->pluck('nombre','id');
+        */
+        $user=Auth::user();
+        if ($user->hasPermissionTo('inscribir estudiantes')) {
+            //falta un condicional especial para el rol admin y super-admin
+            $now=Carbon::now('-4:00'); //bueno como se cambio la variable  'timezone' =>'America/Caracas' ya no es necesario hacer esta inicializacion bastaria con usar Carbon::now()
+            $em_id=$user->empresa->first()->id;
+            $r=Requisicion::where('empresa_id',$em_id);
+            $formaciones_list=$r->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','sin postulados')->where('disponibilidad',1)->where('fecha_de_inicio','>',$now)->get()->pluck('nombre','id');
+            //dump($formaciones_list);
+
+            return view('responsable_de_personal.inscripcion',['formaciones_list'=>$formaciones_list]);
+        }
+
+
     }
 
 
