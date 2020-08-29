@@ -20,6 +20,11 @@
     <script>window.jQuery || document.write('<script src="/adminlte/plugins/jquery/jquery.min.js"><\/script>')</script>
     <!--JQUERY UI CDN-->
   <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
+
+
+  <!--DATA TABLE-->
+
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
   <!-- Tempusdominus Bbootstrap 4 -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
   <!-- iCheck -->
@@ -111,7 +116,7 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                 <img src="{{ ('adminlte/img/user_default2.png') }}" class="user-image img-circle elevation-2" alt="User Image">
-                <span class="d-none d-md-inline">{{ Auth::user()->name }} {{ Auth::user()->apellido }}</span>
+                <span class="d-none d-md-inline">{{ Auth::user()->name }} </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <!-- User image -->
@@ -358,6 +363,12 @@
 
 
 
+<!--datatable jquery-->
+<!--<script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>-->
+<!--<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+<!--<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>-->
 
 <!-- jQuery UI 1.11.4 -->
 <!--cdn-->

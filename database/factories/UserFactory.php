@@ -18,11 +18,11 @@ use Illuminate\Support\Str;
 */
 
 $factory->define(User::class, function (Faker $faker ) {
-    $gender = $faker->randomElement(['male', 'female']);
+    //$gender = $faker->randomElement(['male', 'female']);
     //$faker = Faker::create('de_DE'); //esta fora no la prove
     return [
-        'name' => $faker->firstName($gender),
-        'apellido' =>$faker->lastName,
+        'name' => $faker->name,
+        //'apellido' =>$faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'ci'    =>$faker->unique()->nationalId,
         'status'=> $faker->boolean($chanceOfGettingTrue = 90),

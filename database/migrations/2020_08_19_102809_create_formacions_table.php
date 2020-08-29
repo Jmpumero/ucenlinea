@@ -35,7 +35,7 @@ class CreateFormacionsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unsignedBigInteger('requisicion_id')->nullable();//quitar nullable luego
+            $table->unsignedBigInteger('requisicion_id')->unique()->nullable();//quitar nullable luego
             $table->foreign('requisicion_id')->references('id')->on('requisicions');
         });
     }
