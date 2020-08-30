@@ -18,7 +18,7 @@ class CreateRequisicionsTable extends Migration
             $table->unsignedBigInteger('creador'); //'user_id' pendiente
             $table->unsignedBigInteger('empresa_id');
             $table->string('nombre', 50);
-            $table->string('modalida', 50);//definir por gestor de contenido
+            $table->string('modalidad', 50);//definir por gestor de contenido
             $table->enum('audiencia', ['todo publico', 'zoomer','boomer','etc'])->nullable()->default('todo publico');//definir por gestor de contenido
             $table->enum('t_formacion', ['interna', 'externa'])->nullable()->default('interna');//definir por gestor de contenido
 
