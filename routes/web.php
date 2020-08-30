@@ -26,7 +26,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')
                                                         ->middleware('permission:inscribir estudiantes');
 
-    Route::get('select/form', 'UserInsFormacionController@select_formacion')->name('select/formacion');
+    Route::get('select/form', 'UserInsFormacionController@select_formacion')->name('select/formacion'); //pendiente eliminar
+
+    Route::get('lista/postulados/{id}', 'UserInsFormacionController@show')->name('postulados.show'); //pendiente eliminar
 
 
     //Route::post('users/update', 'UserController@update')->name('productos.update');
