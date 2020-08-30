@@ -16,6 +16,7 @@ $factory->define(Formacion::class, function (Faker $faker) {
         'precio'    => $faker->randomFloat($nbMaxDecimals = 8, $min = 0, $max = 1000),
         'calificacion' => $faker->randomFloat($nbMaxDecimals = 4, $min = 0, $max = 10),
         'imagen' =>$faker->imageUrl($width=200, $height=250, 'cats'),
+        //'requisicion_id'=>$faker->unique()->numberBetween($min = 1, $max = 30)
         //'fecha_de_inicio' =>$faker->date($format = 'Y-m-d', $max = 'now'),
     ];
 });

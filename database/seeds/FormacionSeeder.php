@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Formacion;
+use Carbon\Carbon;
 class FormacionSeeder extends Seeder
 {
     /**
@@ -11,6 +12,21 @@ class FormacionSeeder extends Seeder
      */
     public function run()
     {
-        factory(Formacion::class,20)->create();
+        $now=Carbon::now();
+
+        Formacion::create([
+            'nombre'    => 'Cirice',
+            'status'    => 'sin postulados',
+            'disponibilidad'    => true,
+            't_facilitador'   => false,
+            'tipo'  => 'interna',
+            'precio'    => 3.33,
+            'calificacion' => 9,
+
+            'fecha_de_inicio'=>$now->addWeek(),
+            'requisicion_id'=>1,
+
+        ]);
+        factory(Formacion::class,30)->create();
     }
 }
