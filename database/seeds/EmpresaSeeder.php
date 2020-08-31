@@ -11,6 +11,11 @@ class EmpresaSeeder extends Seeder
      */
     public function run()
     {
+        Empresa::create([
+            'nombre'      => 'Universidad de Carabobo',
+            'rif'     => 'G-20000041-4',
+
+        ]);
         factory(Empresa::class,10)->create();
     }
 }

@@ -22,7 +22,7 @@ class FormacionSeeder extends Seeder
             'tipo'  => 'interna',
             'precio'    => 3.33,
             'calificacion' => 9,
-
+            'max_matricula' =>5,
             'fecha_de_inicio'=>$now->addWeek(),
             'requisicion_id'=>1,
 

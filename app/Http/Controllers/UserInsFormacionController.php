@@ -24,23 +24,16 @@ class UserInsFormacionController extends Controller
      */
     public function index()
     {
-        /* //una forma
-        //$query=DB::table('formacions')->where('status','sin postulados');
-        //$formaciones_list=$query->pluck('nombre','id');*/
 
-
-        //$q=User::query()->get()->toJson();
 
         $user=Auth::user();
         if ($user->hasPermissionTo('inscribir estudiantes')) {
             //falta un condicional especial para el rol admin y super-admin
-            $now=Carbon::now('-4:00'); //bueno como se cambio la variable  'timezone' =>'America/Caracas' ya no es necesario hacer esta inicializacion bastaria con usar Carbon::now()
-            $em_id=$user->empresa->first()->id;
-            //dump($em_id);
+            $now=Carbon::now('-4:00'); // como se cambio la variable  'timezone' =>'America/Caracas' ya no es necesario hacer esta inicializacion bastaria con usar Carbon::now()
+            $em_id=$user->empresa->first()->id; //un problema aqui es si el usuario no esta asociado a ninguna empresa, se supone que ese caso no deberia ocurrir ya que todo usuario dentro del sistema pertenece a una empresa
+
             $r=Requisicion::where('empresa_id',$em_id);
-            //dump($r->get());
             $formaciones_list=$r->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','sin postulados')->where('disponibilidad',1)->where('fecha_de_inicio','>',$now)->get()->pluck('nombre','id');
-            //dump($formaciones_list);
 
             return view('responsable_de_personal.inscripcion',['formaciones_list'=>$formaciones_list]);
         }
@@ -53,7 +46,7 @@ class UserInsFormacionController extends Controller
 
 
 
-    public function select_formacion(Request $request) //select con ajax
+    public function select_usuarios(Request $request) //select con ajax
     {
         /*$term = trim($request->q);
 
@@ -62,17 +55,32 @@ class UserInsFormacionController extends Controller
         }*/
 
         //$tags = Tag::search($term)->limit(5)->get();
+        //falta hacer el search
+            $user=Auth::user();
 
-        $formaciones = Formacion::all();
-        $formaciones_array = [];
+            if ($user->hasPermissionTo('inscribir estudiantes')) {
 
-        foreach ($formaciones as $formacion) {
-            //dump($f);
-            $formaciones_array[] = ['id' => $formacion->id, 'text' => $formacion->nombre];
+                $em_id=$user->empresa->first()->id;
+                $usuarios=Empresa::find($em_id)->users;
+
+                foreach ($usuarios as $u) {
+                    $nombre=$u->name;
+                    $users_array[] = ['id' => $u->id, 'text' => $u->ci.' -> '.$nombre];
+
+                }
+
+                return response()->json($users_array);
 
         }
 
-        return response()->json($formaciones_array);
+
+
+        /*$formaciones = Formacion::all();
+        $formaciones_array = [];
+
+
+
+        return response()->json($formaciones_array);*/
 
 
 
@@ -81,7 +89,33 @@ class UserInsFormacionController extends Controller
 
 
 
+    public function users_show()
+    {
+        $user=Auth::user();
+        if(request()->ajax())
+        {
 
+            //$t=json_encode($f);
+            /*$q3=User_ins_formacion::where('formacion_id',$id)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.ci','tbl1.name','tbl1.email','tbl2.name as supervisor');*/
+
+            $em_id=$user->empresa->first()->id;
+            $usuarios=Empresa::find($em_id)->users;
+            return datatables()->of($usuarios)
+                    ->addColumn('action', function($data){
+                        $button = '<button type="button" name="edit" id="btn_select_p" data-id="'.$data->id.'" class="inscribir btn  btn-outline-success btn-sm"><i class="fas fa-check"></i></button>';
+
+
+                        return $button;
+                    })
+                    ->rawColumns(['action'])
+                    ->toJson();
+        }
+
+        $em_id=$user->empresa->first()->id;
+        $usuarios=Empresa::find($em_id)->users->dump();
+
+
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -115,52 +149,32 @@ class UserInsFormacionController extends Controller
         if(request()->ajax())
         {
 
-
             //$t=json_encode($f);
-            $q=User_ins_formacion::where('formacion_id',$id)->join('users','user_ins_formacions.user_id','=','users.id')->select('users.ci','users.name','users.apellido','users.email','user_ins_formacions.supervisor_id')->get();
+            /*$q3=User_ins_formacion::where('formacion_id',$id)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.ci','tbl1.name','tbl1.email','tbl2.name as supervisor');*/
 
-            $t=collect($q);
-            return datatables()->of($q)
+            return datatables()->of(User_ins_formacion::where('formacion_id',$id)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.id','tbl1.ci','tbl1.name','tbl1.email','tbl2.name as supervisor'))
                     ->addColumn('action', function($data){
-                        $button = '<button type="button" name="edit" id="'.$data->id.'" class="inscribir btn btn-success btn-sm">Inscribir</button>';
+                        $button = '<button type="button" name="edit" id="btn_edit_p" data-id="'.$data->id.'" class="inscribir btn btn-success btn-sm">Inscribir</button>';
 
-                        $button .= '<button type="button" name="delete" id ="btn-eliminar"    data-id="'.$data->id.'" class="btn-eliminar btn btn-danger btn-sm">Borrar</button>';
+                        $button .= '<button type="button" name="delete" id ="btn_eliminar_p"    data-id="'.$data->id.'" class="btn-eliminar btn btn-danger btn-sm"><i class="fas fa-trash"  style="margin-right: 0.5rem;" ></i>Borrar</button>';
                         return $button;
                     })
                     ->rawColumns(['action'])
                     ->toJson();
-        }else {
-            $q3=User_ins_formacion::join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->get()->dump();
-
-
-            $q=User_ins_formacion::where('formacion_id',$id)->join('users','user_ins_formacions.user_id','=','users.id')->select('users.ci','users.name','users.apellido','users.email','user_ins_formacions.supervisor_id')->get();
-
-            foreach ($q as $item) {
-                //dump($f);
-                $f[] = ['ci' => $item->ci, 'name' => $item->name,'apellido' => $item->apellido,'email' => $item->email,'supervisor' => User::find($item->supervisor_id)->name.' '.User::find($item->supervisor_id)->apellido];
-
-            }
-
-
-
-
-
-
         }
-        //return view('responsable_de_personal.inscripcion');
-       // return response()->json($formaciones_array);
 
     }
 
 
 
 
-    public function especialdt($id)
+    public function pruebas($id)
     {
 
         $q3=User_ins_formacion::join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.name','tbl1.apellido','tbl2.apellido')->dump();
 
         $q3=User_ins_formacion::join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.name','tbl1.apellido','tbl2.name as snombre','tbl2.apellido as sapellido')->get()->dump();
+
 
         /*$q=User_ins_formacion::where('formacion_id',$id)->join('users','user_ins_formacions.user_id','=','users.id')->select('users.ci','users.name','users.apellido','users.email','user_ins_formacions.supervisor_id')->get();
 
@@ -212,8 +226,17 @@ class UserInsFormacionController extends Controller
      * @param  \App\User_ins_formacion  $user_ins_formacion
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User_ins_formacion $user_ins_formacion)
+    public function destroy(Request $request,$id)
     {
-        //
+        if ($request->ajax()) {
+
+            try {
+                $postulado = User_ins_formacion::where('user_id',$id);
+                $postulado->delete();
+            } catch (\Throwable $th) {
+                return "algo salio mal";
+            }
+
+        }
     }
 }

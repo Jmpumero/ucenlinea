@@ -12,19 +12,24 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
 
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-
-  <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Ionicons cdn-->
+  <!--<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+-->
+  <!-- jQuery cdn -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <script>window.jQuery || document.write('<script src="/adminlte/plugins/jquery/jquery.min.js"><\/script>')</script>
+
+
     <!--JQUERY UI CDN-->
   <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
 
 
   <!--DATA TABLE-->
-
+    <!--cdn-->
   <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-scroller/css/scroller.bootstrap4.min.css') }}">
   <!-- Tempusdominus Bbootstrap 4 -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
   <!-- iCheck -->
@@ -115,13 +120,13 @@
             <!--USER-->
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <img src="{{ ('adminlte/img/user_default2.png') }}" class="user-image img-circle elevation-2" alt="User Image">
+                <img src="{{ Auth::user()->avatar }}" class="user-image img-circle elevation-2" alt="User Image">
                 <span class="d-none d-md-inline">{{ Auth::user()->name }} </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <!-- User image -->
                 <li class="user-header bg-white">
-                  <img src="adminlte/img/user_default2.png" class="img-circle elevation-2" alt="User Image">
+                  <img src="{{ Auth::user()->avatar }}" class="img-circle elevation-2" alt="User Image">
                     <!-- NO ESTA TERMINADO-->
                   <p>
                     Empresa - Algo
@@ -363,12 +368,18 @@
 
 
 
-<!--datatable jquery-->
-<!--<script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>-->
-<!--<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 
-<!--<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>-->
+<!--datatable jquery-->
+<script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<!--<script src="{{ asset('adminlte/plugins/datatables-scroller/js/dataTables.scroller.min.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/datatables-scroller/js/scroller.bootstrap4.min.js') }}"></script>
+-->
+
+<!--<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>-->
+
+<!--<script>window.dataTable || document.write('<script src="adminlte/plugins/datatables/jquery.dataTables.min.js"><\/script>')</script>-->
+
+
 
 <!-- jQuery UI 1.11.4 -->
 <!--cdn-->

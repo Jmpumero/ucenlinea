@@ -20,7 +20,7 @@
         </div>-->
 
         <div class="card card-notifiacion table-responsive" id="c_formaciones">
-            <div class="card-header text-center">Formaciones disponibles </div>
+            <div class="card-header text-center"><h2> Formaciones disponibles</h2> </div>
 
 
                 <div class=" card-body table-responsive-sm" style="text-align:center;">
@@ -44,23 +44,24 @@
 
               <div class="btn-group  table-responsive"  style="margin-left: 10%; " role="group" aria-label="Basic example">
                 <a>
-                <button type="button" class="btn   btn-outline-primary" style="width: 100%;"> <i class="fas fa-user-plus"  style="margin-right: 0.5rem; "></i>Agregar</button>
+                <button   type="button" id="btn_agregar" class="btn   btn-outline-primary" style="width: 100%;"> <i class="fas fa-user-plus"  style="margin-right: 0.5rem; "></i>Agregar</button>
                 </a>
 
                 <a href="#">
-                  <button type="button" class="btn  btn-outline-info"  style="width: 100%;" data-toggle="tooltip" title="Examinar"  >
+                  <button disabled=true type="button" id="btn_expediente" class="btn  btn-outline-info"  style="width: 100%;" data-toggle="tooltip" title="Examinar"  >
                      <i class="fas fa-search" style="margin-right: 0.5rem; "></i>Expedientes</button>
                 </a>
 
                 <a>
-                <button type="button" class="btn  btn-outline-success" style="width: 100%;" data-toggle="tooltip" title="Examinar" > <i class="fas fa-clipboard-check"  style="margin-right: 0.5rem;" ></i>Inscribir Lista</button>
+                <button type="button" id="btn_carga" class="btn  btn-outline-success" style="width: 100%;" data-toggle="tooltip" title="Examinar" > <i class="fas fa-upload"  style="margin-right: 0.5rem;" ></i>Cargar Excel </button>
                 </a>
 
                 <a href="#">
-                <button type="button" class="btn  btn-outline-danger" style="width: 100%;" data-toggle="tooltip" title="Examinar" > <i class="fas fa-trash"  style="margin-right: 0.5rem;" ></i>Borrar Lista</button>
+                <button disabled=true type="button" id="btn_borrar_todo" class="btn  btn-outline-danger" style="width: 100%;" data-toggle="tooltip" title="" > <i class="fas fa-trash"  style="margin-right: 0.5rem;" ></i>Borrar Lista</button>
                 </a>
 
               </div>
+
 
 
             </div>
@@ -75,9 +76,7 @@
                             <th style="width: 15%">
                                 Nombre
                             </th>
-                            <th style="width: 15%">
-                                Apellido
-                            </th>
+
                             <th  style="width: 15%" class="text-center" >
                                 Correo
                             </th>
@@ -92,6 +91,85 @@
                 </table>
             </div>
         </div>
+
+        <div><h3>esto es un div de prueba</h3></div>
+
+
+
+
+
+
+
+           <!-- Modal -->
+           <div class="modal fade table-responsive"  id="modal_agregar" role="dialog">
+            <div id="modal_agregar_op" class="modal-dialog modal-dialog-centered modal-lg" >
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4>Añadir un nuevo postulado</h4>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                        </button>
+
+                    </div>
+
+                    <!-- Modal Body -->
+                <div class="modal-body">
+                    <p class="statusMsg"></p>
+
+
+                    <!--cCON SELECT2-->
+                    <div class=" card-body table-responsive-sm" style="text-align:center; display:none">
+
+                        <div style="text-align:center;" >
+
+                            {!! Form::select('estudiantes', $users_array ?? ['id'=>0,'text'=>'gg'], null, ['id'=>'s_users','placeholder' => '','class'=>'center-s','style'=>'50%']) !!}
+
+                        </div>
+                        <button style="margin-top:1%;" type="button" name="" id="btn_confirm_f" class="btn  btn-success" btn-lg btn-block" disabled=true>Confirmar</button>
+                    </div>
+
+                    <!---CON DATATABLE-->
+
+                    <div   class="card-body table-responsive-sm " >
+
+                        <table id="select_new_postulado" class="table table-striped projects text-center">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 15%">
+                                        C.I
+                                    </th>
+                                    <th style="width: 15%">
+                                        Nombre
+                                    </th>
+
+                                    <th  style="width: 15%" class="text-center" >
+                                        Correo
+                                    </th>
+
+                                    <th style="width: 20%" class="text-center">
+                                    Seleccionar
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+
+
+                </div>
+
+                <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-outline-success submitBtn" onclick="submitContactForm()">Guardar</button>
+                    </div>
+                </div>
+        </div>
+        </div>
+
+
+
 
 
 
@@ -114,7 +192,7 @@
             //tags: true,
             //tokenSeparators: [','],
             ajax: {
-                url: "{{ route('select/formacion') }}" ,
+                url: "{{ route('select/users') }}" ,
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {//en esta parte va el parmetro que se envia por medio de la request
@@ -141,65 +219,177 @@
             theme:"classic"
         });
 
+        /*$('#s_usuarios').select2({
+            placeholder:" Elige un postulado ",
+            theme:"classic"
+        });*/
+
+
 
     });
 
 
-      $('#formas').on('change', function () {
-          if ($('#formas').val()) {
-
-              var id_form=$('#formas').val()
-              console.log(id_form)
-              $("#btn_confirm_f").prop('disabled', false);
-              $('#btn_confirm_f').click(function (e) {
-                  e.preventDefault();
-                 // $('#c_formaciones').toggle(1000); de momento no
-                  $('#_postulados').fadeIn(); //prueba de momento
+    $('#formas').on('change', function () {
+        if ($('#formas').val()) {
 
 
-                    var tabla_inscritos= $('#tabla_postulados').DataTable({
-                        "destroy":true,
-                        "serverSide": true,
-                        "processing": true,
-                        "ajax": "lista/postulados/"+id_form,
+           //
+            $("#btn_confirm_f").prop('disabled', false);
+            $("#btn_agregar").prop('disabled', false);
 
-                        "columns": [
-                            {data: 'ci'},
-                            {data: 'name'},
-                            {data: 'apellido'},
-                            {data: 'email'},
-                            {data: 'supervisor_id'},
+        }
 
+    });
 
-                            {data: 'action', name: 'btn', orderable: false, searchable: false},
-                        ],
+    $('#btn_confirm_f').click(function (e) {
+                e.preventDefault();
+                var id_form=$('#formas').val()
+                // $('#c_formaciones').toggle(1000); de momento no
+                $('#_postulados').fadeIn(); //prueba de momento
+                console.log(id_form)
+                var tabla_postulados= $('#tabla_postulados').DataTable({
 
-                        "language": {
-                            "info": "_TOTAL_ registros",
-                            "search": "Buscar",
-                            "paginate": {
-                                "next": "Siguiente",
-                                "previous": "Anterior",
-                            },
-                            "lengthMenu": 'Mostrar <select >'+
-                                        '<option value="10">10</option>'+
-                                        '<option value="30">30</option>'+
-                                        '<option value="-1">Todos</option>'+
-                                        '</select> registros',
-                            "loadingRecords": "Cargando...",
-                            "processing": "Procesando...",
-                            "emptyTable": "No hay datos",
-                            "zeroRecords": "No hay coincidencias",
-                            "infoEmpty": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
-                            "infoFiltered": ""
-                        }
-                    });
-            });
+                    "destroy":true,
+                    "responsive": true,
+                    "searching": false,
+                    "serverSide": true,
+                    "processing": true,
+                    "ajax": "lista/postulados/"+id_form,
+
+                    "columns": [
+                        {data: 'ci'},
+                        {data: 'name'},
+                        //{data: 'apellido'},
+                        {data: 'email'},
+                        {data: 'supervisor','render' : function (data, type, row) {
+                                return '<span class="badge badge-dark">'+data+'</span>'
+                            }},
 
 
-          }
+                        {data: 'action', name: 'btn', orderable: false},
+                    ],
 
-      });
+                    "language": {
+                        "info": "_TOTAL_ registros",
+                        "search": "Buscar",
+                        "paginate": {
+                            "next": "Siguiente",
+                            "previous": "Anterior",
+                        },
+                        "lengthMenu": 'Mostrar <select >'+
+                                    '<option value="10">10</option>'+
+                                    '<option value="30">30</option>'+
+                                    '<option value="-1">Todos</option>'+
+                                    '</select> registros',
+                        "loadingRecords": "Cargando...",
+                        "processing": "Procesando...",
+                        "emptyTable": "No hay datos",
+                        "zeroRecords": "No hay coincidencias",
+                        "infoEmpty": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+                        "infoFiltered": ""
+                    }
+                });
+
+                //$('#tabla_postulados').DataTable().draw();
+        });
+
+
+
+    $('body').on('click', '#btn_eliminar_p', function () {
+
+        var producto_id = $(this).data("id");
+
+        console.log(producto_id);
+
+        $.ajax({
+            url:"postulado/eliminar/f/"+producto_id,
+            type: "get",
+            success:function(data)
+            {
+                $('#tabla_postulados').DataTable().ajax.reload();
+            }
+        })
+
+    });
+
+    $('#btn_agregar').click(function (e) {
+        e.preventDefault();
+        $('#modal_agregar').modal('show');
+
+        $('#s_users').select2({
+            placeholder:"Elige un nuevo postulado",
+            theme: "classic",
+           // minimumResultsForSearch: Infinity, //para ocultar el search que en seste caso no hace falta
+            //tags: true,
+            //tokenSeparators: [','],
+            ajax: {
+                url: "{{ route('select/users') }}" ,
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {//en esta parte va el parmetro que se envia por medio de la request
+                    return {
+                        ci: $.trim(params.term)
+                    };
+                },
+
+                processResults: function(data)
+                {
+                    //console.log(data)
+
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+
+            }
+        })
+
+
+        var tabla_postulados= $('#select_new_postulado').DataTable({
+
+            "destroy":true,
+            "responsive": true,
+            //"deferRender":  true,
+            //"scroller":     true,
+            //"searching": false,
+            "serverSide": true,
+            "processing": true,
+            "ajax": "select/users_table",
+
+            "columns": [
+                {data: 'ci'},
+                {data: 'name'},
+                //{data: 'apellido'},
+                {data: 'email'},
+
+
+
+                {data: 'action', name: 'btn', orderable: false},
+            ],
+
+            "language": {
+                "info": "_TOTAL_ registros",
+                "search": "Buscar",
+                "paginate": {
+                    "next": "Siguiente",
+                    "previous": "Anterior",
+                },
+                "lengthMenu": 'Mostrar <select >'+
+                            '<option value="10">10</option>'+
+                            '<option value="30">30</option>'+
+                            '<option value="-1">Todos</option>'+
+                            '</select> registros',
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "emptyTable": "No hay datos",
+                "zeroRecords": "No hay coincidencias",
+                "infoEmpty": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+                "infoFiltered": ""
+            }
+        });
+
+    });
 
 
 

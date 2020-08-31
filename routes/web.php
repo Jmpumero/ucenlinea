@@ -26,9 +26,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')
                                                         ->middleware('permission:inscribir estudiantes');
 
-    Route::get('select/form', 'UserInsFormacionController@select_formacion')->name('select/formacion'); //pendiente eliminar
+    Route::get('select/users', 'UserInsFormacionController@select_usuarios')->name('select/users'); //pendiente revisar
 
-    Route::get('lista/postulados/{id}', 'UserInsFormacionController@show')->name('postulados.show'); //pendiente eliminar
+    Route::get('select/users_table', 'UserInsFormacionController@users_show')->name('selecionar/users_tabla'); //pendiente revisar
+
+    Route::get('lista/postulados/{id}', 'UserInsFormacionController@show')->name('postulados.show'); //
+
+    Route::get('postulado/eliminar/f/{id}', 'UserInsFormacionController@destroy')->name('postulados.destroy'); //pendiente revisar
 
 
     //Route::post('users/update', 'UserController@update')->name('productos.update');
