@@ -8,6 +8,9 @@ class User_ins_formacion extends Model
 {
 
 
+protected $fillable = [
+        'user_id', 'formacion_id', 'supervisor_id',
+    ];
 
 
     public function formacion() //relacion

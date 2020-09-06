@@ -20,6 +20,9 @@
     <script>window.jQuery || document.write('<script src="/adminlte/plugins/jquery/jquery.min.js"><\/script>')</script>
 
 
+    <!--sweetalert-->
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
     <!--JQUERY UI CDN-->
   <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">-->
 
@@ -412,6 +415,10 @@
 
 <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
+
+
+<script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>-->
 
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
