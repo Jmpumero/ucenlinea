@@ -227,8 +227,6 @@ class UserInsFormacionController extends Controller
 
                 'archivo.extension' => 'El documento debe ser un archivo Excel'
             ];
-
-
             $error= Validator::make(
                 [
                     'file'      => $request->file('archivo'),
@@ -247,38 +245,78 @@ class UserInsFormacionController extends Controller
               }
               ///** */
               $cont_error=0;
+              $messages=array('errores'=>array('mensaje'=>'','fila'=>''),'exito'=>array('mensaje'=>''));// de prueba
               $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
-              $l=[];
+            /**se buscan los encbezados*/
+            $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
+              $encabezados=[];
               foreach ($postulados as $key => $value) { //ineficiente pero seguro para obtener todas las posibles claves presente
                 foreach ($value as $key2 => $value2) {
-
                     foreach ($value2 as $key3 => $value3) {
-                        $l[]=$key3;
+                        $encabezados[]=$key3;
                     }
                     break 2;
-
                 }
+            }//se validan los encabezados
+            if (array_search('postulado',$encabezados,true)==null) {
+                $cont_error++;
+                //recoger error
+                return response()->json(['error' => 'No se encontro la columna Postulado']);//mientras tanto
+
+            }else{
+                if (array_search('supervisor',$encabezados,true)==null) {
+                    $cont_error++;
+                //recoger error
+                    return response()->json(['error' => 'No se encontro la columna Supervisor']);//mientras
+                }
+
+            }
+            //** */
+
+
+
+            $user=Auth::user();
+
+            $em_id=$user->empresa->first()->id;
+
+            foreach ($postulados as $key => $value) {
+                $row=1;
+               foreach ($value as $key2 => $value2) {
+
+                    $row++;
+                    $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
+                    $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
+                    if (is_bool($p_v)) {
+                        if (is_bool($s_v)) {
+                            if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
+                                $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('supervisor_id',$value2['supervisor'])->where('formacion_id',$id)->get(); //valida repetidos
+                                if ($t->count()==0) {
+                                    User_ins_formacion::create([ //se inserta
+                                        'user_id' => $value2['postulado'],
+                                        'formacion_id' =>$id,
+                                        'supervisor_id' => $value2['supervisor'],
+                                    ]);
+                                }else{
+                                    //falta recoge el error
+                                    $cont_error++;
+                                   // dump($row.'  El postulado ya se encuentra registrado en la formacion');
+                                }
+
+                            }
+                        }else{
+                            //falta recoge el error
+                            $cont_error++;
+                        }
+                    }else{
+                        //falta recoge el error
+                        $cont_error++;
+                    }
+               }
             }
 
-            array_search('postulado',$l,true);
-            array_search('supervisor',$l,true);
 
 
-
-              //dd($collection);
-              //Excel::Import(new PostuladosImport,  request()->file('archivo')); //funciona
-             /* foreach ($collection  as $row)
-            {
-                User_ins_formacion::create([
-                    'user_id' => $row['postulado'],
-                    'formacion_id' =>$row['formacion'],
-                    'supervisor_id' => $row['supervisor'],
-                ]);
-            }*/
-
-
-
-           if ($collection->isNotEmpty()) {
+           if ($cont_error>0) {
                 //$request->file('archivo')->store('public');
                 return response()->json(['success' => 'Es el dia del PLAATANOOO chi cheñol']);
            }
@@ -287,7 +325,7 @@ class UserInsFormacionController extends Controller
 
 
 
-           return response()->json(['error' => 'nope']);
+           //return response()->json(['error' => 'nope']);
         }
     }
 
@@ -320,31 +358,102 @@ class UserInsFormacionController extends Controller
     }
 
 
+    public function validar_p_s($value,$row,$evaluado,$em_id){
 
 
-    public function pruebas()
+        if (is_int($value) and $value>0 ) { //valida que el valor sea un numero entero no negativo mayor a 1
+            $p=User::find($value);
+            if ($p) {//que exista en el sistema
+                if ($value=='supervisor') { //condicion especial para supervisor
+                   if ( !$p->hasRole('Admin')) { //OJO CAMBIAR POR supervisor
+                    return('fila:'.$row.' -->El ' .$evaluado. ' NO tiene el rango de supervisor');
+                   }
+                }
+                $p=$p->empresa->first()->id;
+                if ($p==$em_id) {//el postulado pertence a la empresa
+                    return(true);
+                }else{
+                    return('fila:'.$row.' -->El ' .$evaluado. ' NO pertenece a la Empresa');
+                }
+
+            }else{
+                return('fila:'.$row.' -->El ' .$evaluado.' NO esta registrado en la UVC');
+            }
+
+        }else{
+            return('fila:'.$row. '  valor NO PERMITIDO');
+        }
+
+
+    }
+
+    public function pruebas(Request $request)
     {
 
-
-
         //$collection = Excel::toCollection(new PostuladosImport,  request()->file('archivo'));
-        $array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
+       // $array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
         //$sp=Excel::toArray([],  request()->file('archivo'));
 
         //dump($collection);
        // dump($array);
+       $messages = [
+
+        'archivo.extension' => 'El documento debe ser un archivo Excel'
+    ];
+
+       $error= Validator::make(
+        [
+            'file'      => $request->file('archivo'),
+            'extension' => strtolower($request->file('archivo')->getClientOriginalExtension()),
+        ],
+        [
+            'file'          => 'required',
+            'extension'      => 'required|in:xlsx,xls,odt,ods',
+        ],
+        $messages
+      );
+      //dump($error);
+      $array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
 
 
-        //$l=array_change_key_case($array,CASE_UPPER);
+
         $l=[];
+        $user=Auth::user();
+        $cont_error=0;
+        $em_id=$user->empresa->first()->id;
+        //dump($em_id);
         foreach ($array as $key => $value) {
-
+            $row=1;
             foreach ($value as $key2 => $value2) {
+                $row++;
+                $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
+                $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
+                if (is_bool($p_v)) {
+                    if (is_bool($s_v)) {
+                        if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
+                            $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('supervisor_id',$value2['supervisor'])->where('formacion_id',1)->get();
+                            dump($t->count());
+                            if ($t->count()==0) {
+                                dump($value2['postulado'].' --'.$value2['supervisor']);
+                                # code...
+                            }else{
+                                dump($row.'  El postulado ya se encuentra registrado en la formacion');
+                            }
 
-                //dump($value2['postulado']);
-                //dump($value2['formacion']);
-               // dump($value2['supervisor']);
+                        }
+                    }else{
+                        //dump($value2['supervisor']);
+                        //dump($row);
+                        //dump('supervisor'.$value2['supervisor'].'->'.$s_v);
+                        $cont_error++;
+                    }
+                }else{
+                    //falta recoge el error
+                    $cont_error++;
+                }
+
             }
+
         }
 
         foreach ($array as $key => $value) { //ineficiente pero seguro para obtener todas las posibles claves presente
@@ -358,10 +467,15 @@ class UserInsFormacionController extends Controller
             }
         }
 
-        dump(array_search('postulado',$l,true));
-        dump(array_search('supervisor',$l,true));
-        dump($l);
-        dump($array);
+        //dump(array_search('postulado',$l,true));
+        //dump(array_search('supervisor',$l,true));
+        /*$p=User::find(2299);
+        if ($p==3) {
+            dump($array);
+        }else{
+            dump($p);
+        }*/
+        //dump();
        // dump(array_key_exists('postulado',$l));
 
         /*
