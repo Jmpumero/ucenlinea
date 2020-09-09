@@ -15,10 +15,10 @@ class CreateRequisicionsTable extends Migration
     {
         Schema::create('requisicions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('creador'); //'user_id' pendiente
+            $table->unsignedBigInteger('creador'); //'user_id'
             $table->unsignedBigInteger('empresa_id');
             $table->string('nombre', 50);
-            $table->string('modalidad', 50);//definir por gestor de contenido
+            $table->string('modalidad', 50)->default('sin modalida');;//definir por gestor de contenido
             $table->enum('audiencia', ['todo publico', 'zoomer','boomer','etc'])->nullable()->default('todo publico');//definir por gestor de contenido
             $table->enum('t_formacion', ['interna', 'externa'])->nullable()->default('interna');//definir por gestor de contenido
 

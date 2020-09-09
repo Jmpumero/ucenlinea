@@ -7,8 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(Empresa::class, function (Faker $faker) {
     return [
-        'nombre' => $faker->company,
-        'rif' =>$faker->taxpayerIdentificationNumber,
+        'nombre' => $faker->unique()->company,
+        'rif' =>$faker->unique()->taxpayerIdentificationNumber,
 
     ];
 });

@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')
-                                                        ->middleware('permission:inscribir estudiantes');
+                                                        ->middleware('permission:inscribir estudiantes en formacion');
 
     Route::get('select/users', 'UserInsFormacionController@select_usuarios')->name('select/users'); //pendiente revisar
 

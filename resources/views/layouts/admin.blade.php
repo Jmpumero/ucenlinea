@@ -234,7 +234,7 @@
                       </a>
 
                       <ul class="nav nav-treeview">
-                        @can('inscribir estudiantes')
+                        @can('inscribir estudiantes en formacion')
                             <li class="nav-item">
                             <a href= "{{ route('inscribir/estudiantes') }}" class="nav-link">
                                 <i class="fas fa-clipboard-check"></i>

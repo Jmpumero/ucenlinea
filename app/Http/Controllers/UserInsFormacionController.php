@@ -32,7 +32,7 @@ class UserInsFormacionController extends Controller
 
 
         $user=Auth::user();
-        if ($user->hasPermissionTo('inscribir estudiantes')) {
+        if ($user->hasPermissionTo('inscribir estudiantes en formacion')) {
             //falta un condicional especial para el rol admin y super-admin
             $now=Carbon::now('-4:00'); // como se cambio la variable  'timezone' =>'America/Caracas' ya no es necesario hacer esta inicializacion bastaria con usar Carbon::now()
             $em_id=$user->empresa->first()->id; //un problema aqui es si el usuario no esta asociado a ninguna empresa, se supone que ese caso no deberia ocurrir ya que todo usuario dentro del sistema pertenece a una empresa
@@ -63,7 +63,7 @@ class UserInsFormacionController extends Controller
         //falta hacer el search
             $user=Auth::user();
 
-            if ($user->hasPermissionTo('inscribir estudiantes')) {
+            if ($user->hasPermissionTo('inscribir estudiantes en formacion')) {
 
                 $em_id=$user->empresa->first()->id;
                 $usuarios=Empresa::find($em_id)->users;
@@ -128,7 +128,7 @@ class UserInsFormacionController extends Controller
         $user=Auth::user();
         if(request()->ajax())
         {
-            $roles = Role::findByName('Admin'); //OJO CAMBIAR A SUPERVISOR
+            $roles = Role::findByName('Supervisor'); //OJO CAMBIAR A SUPERVISOR
             $roles_us=$roles->users;
             $em_id=$user->empresa->first()->id;
             $usuarios=Empresa::find($em_id)->users;
@@ -145,7 +145,7 @@ class UserInsFormacionController extends Controller
                     ->toJson();
         }
 
-        $roles = Role::findByName('Admin');
+        $roles = Role::findByName('Supervisor');
         $roles_us=$roles->users->dump();
 
         $em_id=$user->empresa->first()->id;
@@ -365,7 +365,7 @@ class UserInsFormacionController extends Controller
             $p=User::find($value);
             if ($p) {//que exista en el sistema
                 if ($value=='supervisor') { //condicion especial para supervisor
-                   if ( !$p->hasRole('Admin')) { //OJO CAMBIAR POR supervisor
+                   if ( !$p->hasRole('Supervisor')) { //OJO CAMBIAR POR supervisor
                     return('fila:'.$row.' -->El ' .$evaluado. ' NO tiene el rango de supervisor');
                    }
                 }
@@ -390,12 +390,7 @@ class UserInsFormacionController extends Controller
     public function pruebas(Request $request)
     {
 
-        //$collection = Excel::toCollection(new PostuladosImport,  request()->file('archivo'));
-       // $array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
-        //$sp=Excel::toArray([],  request()->file('archivo'));
 
-        //dump($collection);
-       // dump($array);
        $messages = [
 
         'archivo.extension' => 'El documento debe ser un archivo Excel'

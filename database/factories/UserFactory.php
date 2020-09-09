@@ -24,6 +24,7 @@ $factory->define(User::class, function (Faker $faker ) {
         'name' => $faker->name,
         //'apellido' =>$faker->lastName,
         'email' => $faker->unique()->safeEmail,
+        'prioridad'  => $faker->randomElement($array = array ('alta','media','baja')),
         'ci'    =>$faker->unique()->nationalId,
         'status'=> $faker->boolean($chanceOfGettingTrue = 90),
         //'sexo'=> $faker->randomElement($array = array ('hombre','mujer')),
