@@ -34,12 +34,13 @@ class RequisicionSeeder extends Seeder
 
         Requisicion::create([
             'creador'      => 1,
-            'empresa_id'     => 5,
+            'empresa_id'     => 3,
             'nombre'  =>'Il Cigno Nero',
             'modalidad' =>'imposible',
             'audiencia' =>'todo publico',
             't_formacion'     => 'externa',
 
         ]);
+        factory(Requisicion::class,30)->create();
     }
 }

@@ -8,6 +8,7 @@ class User_ins_formacion extends Model
 {
 
 
+    protected $guarded = [];
 
 
     public function formacion() //relacion

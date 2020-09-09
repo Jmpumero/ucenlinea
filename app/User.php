@@ -53,7 +53,7 @@ class User extends Authenticatable
 
     public function empresa() //prueba relacion con tabla pivote many to many
     {
-        return $this->belongsToMany('App\Empresa','usuario_p_empresa')->withTimestamps(); //(modelo con el que se relaciona,nombre de la tabla en la que se relacionan) Nota:la tabla que las relaciona debe existir
+        return $this->belongsToMany('App\Empresa','usuario_p_empresas')->withTimestamps(); //(modelo con el que se relaciona,nombre de la tabla en la que se relacionan) Nota:la tabla que las relaciona debe existir
     }
 
 

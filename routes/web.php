@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('postulados/gg', function () {
+    return view('welcome');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -24,11 +28,26 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')
-                                                        ->middleware('permission:inscribir estudiantes');
+                                                        ->middleware('permission:inscribir estudiantes en formacion');
 
-    Route::get('select/form', 'UserInsFormacionController@select_formacion')->name('select/formacion');
+    Route::get('select/users', 'UserInsFormacionController@select_usuarios')->name('select/users'); //pendiente revisar
+
+    Route::get('select/users_table', 'UserInsFormacionController@users_show')->name('selecionar/users_tabla'); //pendiente revisar
+
+    Route::get('select/sup_table', 'UserInsFormacionController@sup_show')->name('selecionar/super'); //pendiente revisar
+
+    Route::post('inscribir/postulados', 'UserInsFormacionController@store')->name('UserInsFormacion.store'); //añade un postulado a la formacion
 
 
+    Route::post('inscribir/postulados/masivo/{id}', 'UserInsFormacionController@import_excel')->name('UserInsFormacion.import'); //añade un postulado a la formacion
+
+
+
+    Route::get('lista/postulados/{id}', 'UserInsFormacionController@show')->name('postulados.show'); //buena
+
+    Route::get('postulado/eliminar/f/{id}', 'UserInsFormacionController@destroy')->name('postulados.destroy'); //pendiente revisar
+
+    Route::post('pruebas/excel', 'UserInsFormacionController@pruebas')->name('postulados.prueba');
     //Route::post('users/update', 'UserController@update')->name('productos.update');
 });
 /*

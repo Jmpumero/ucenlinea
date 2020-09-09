@@ -11,9 +11,14 @@ use App\Requisicion;
 use App\User_p_empresa;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use App\Imports\PostuladosImport;
+use Maatwebsite\Excel\Importer;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserInsFormacionController extends Controller
 {
@@ -24,21 +29,20 @@ class UserInsFormacionController extends Controller
      */
     public function index()
     {
-        /* //una forma
-        //$query=DB::table('formacions')->where('status','sin postulados');
-        //$formaciones_list=$query->pluck('nombre','id');
-        */
+
+
         $user=Auth::user();
-        if ($user->hasPermissionTo('inscribir estudiantes')) {
+        if ($user->hasPermissionTo('inscribir estudiantes en formacion')) {
             //falta un condicional especial para el rol admin y super-admin
-            $now=Carbon::now('-4:00'); //bueno como se cambio la variable  'timezone' =>'America/Caracas' ya no es necesario hacer esta inicializacion bastaria con usar Carbon::now()
-            $em_id=$user->empresa->first()->id;
+            $now=Carbon::now('-4:00'); // como se cambio la variable  'timezone' =>'America/Caracas' ya no es necesario hacer esta inicializacion bastaria con usar Carbon::now()
+            $em_id=$user->empresa->first()->id; //un problema aqui es si el usuario no esta asociado a ninguna empresa, se supone que ese caso no deberia ocurrir ya que todo usuario dentro del sistema pertenece a una empresa
+
             $r=Requisicion::where('empresa_id',$em_id);
             $formaciones_list=$r->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','sin postulados')->where('disponibilidad',1)->where('fecha_de_inicio','>',$now)->get()->pluck('nombre','id');
-            //dump($formaciones_list);
 
             return view('responsable_de_personal.inscripcion',['formaciones_list'=>$formaciones_list]);
         }
+
 
 
     }
@@ -47,7 +51,7 @@ class UserInsFormacionController extends Controller
 
 
 
-    public function select_formacion(Request $request) //select con ajax
+    public function select_usuarios(Request $request) //select con ajax
     {
         /*$term = trim($request->q);
 
@@ -56,17 +60,32 @@ class UserInsFormacionController extends Controller
         }*/
 
         //$tags = Tag::search($term)->limit(5)->get();
+        //falta hacer el search
+            $user=Auth::user();
 
-        $formaciones = Formacion::all();
-        $formaciones_array = [];
+            if ($user->hasPermissionTo('inscribir estudiantes en formacion')) {
 
-        foreach ($formaciones as $formacion) {
-            //dump($f);
-            $formaciones_array[] = ['id' => $formacion->id, 'text' => $formacion->nombre];
+                $em_id=$user->empresa->first()->id;
+                $usuarios=Empresa::find($em_id)->users;
+
+                foreach ($usuarios as $u) {
+                    $nombre=$u->name;
+                    $users_array[] = ['id' => $u->id, 'text' => $u->ci.' -> '.$nombre];
+
+                }
+
+                return response()->json($users_array);
 
         }
 
-        return response()->json($formaciones_array);
+
+
+        /*$formaciones = Formacion::all();
+        $formaciones_array = [];
+
+
+
+        return response()->json($formaciones_array);*/
 
 
 
@@ -75,6 +94,67 @@ class UserInsFormacionController extends Controller
 
 
 
+    public function users_show()
+    {
+        $user=Auth::user();
+        if(request()->ajax())
+        {
+
+            //$t=json_encode($f);
+            /*$q3=User_ins_formacion::where('formacion_id',$id)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.ci','tbl1.name','tbl1.email','tbl2.name as supervisor');*/
+
+            $em_id=$user->empresa->first()->id;
+            $usuarios=Empresa::find($em_id)->users;
+            return datatables()->of($usuarios)
+                    ->addColumn('action', function($data){
+                        $button = '<button type="button" name="postulado" id="btn_select_p" data-id="'.$data->id.'" class="inscribir btn  btn-outline-success btn-sm"><i class="fas fa-check"></i></button>';
+
+
+                        return $button;
+                    })
+                    ->rawColumns(['action'])
+                    ->toJson();
+        }
+
+        $em_id=$user->empresa->first()->id;
+        $usuarios=Empresa::find($em_id)->users->dump();
+
+
+    }
+
+
+    public function sup_show()
+    {
+        $user=Auth::user();
+        if(request()->ajax())
+        {
+            $roles = Role::findByName('Supervisor'); //OJO CAMBIAR A SUPERVISOR
+            $roles_us=$roles->users;
+            $em_id=$user->empresa->first()->id;
+            $usuarios=Empresa::find($em_id)->users;
+            $q=$roles_us->intersect($usuarios);
+
+            return datatables()->of($q)
+                    ->addColumn('action', function($data){
+                        $button = '<button type="button" name="s_up" id="btn_select_sup" data-id="'.$data->id.'" class="inscribir btn  btn-outline-success btn-sm">Seleccionar</button>';
+
+
+                        return $button;
+                    })
+                    ->rawColumns(['action'])
+                    ->toJson();
+        }
+
+        $roles = Role::findByName('Supervisor');
+        $roles_us=$roles->users->dump();
+
+        $em_id=$user->empresa->first()->id;
+        $usuarios=Empresa::find($em_id)->users->dump();
+        $r=$roles_us->intersect($usuarios)->dump();
+        //$super_v=$roles_us->join();
+
+
+    }
 
 
     /**
@@ -95,8 +175,160 @@ class UserInsFormacionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->ajax()) {
+
+           /* $formacion=Formacion::where('id',$request->idf)->select('max_matricula');
+            $actual=User_ins_formacion::where('user_id', $request->id_user)->count();
+            if ($formacion->max_matricula) {
+                # code...
+            }*/
+
+            if (User_ins_formacion::where('user_id', $request->id_user)->where('formacion_id',$request->idf)->exists()) {
+
+                //$user=User::find($request->id_user);
+               // $error[] = ['error' => 'El postulado ya se encuentra registrado en la formacion'];
+                //$m= 'El postulado'+'gg'+ 'ya se encuentra registrado en la formacion';
+                return response()->json(['error' => 'El postulado ya se encuentra registrado en la formacion']);
+            }
+
+            if ($request->id_user==$request->id_sp) {
+                return response()->json(['error' => 'El postulado no puede ser su propio supervisor']);
+            }
+
+
+            $nuevo =new User_ins_formacion;
+            $nuevo->user_id=$request->id_user;
+            $nuevo->formacion_id=$request->idf;
+            $nuevo->supervisor_id=$request->id_sp;
+
+            $nuevo->save();
+
+
+
+            return response()->json(['success' => 'Estudiante añadido a la formacion']);
+
+        }else {
+            return redirect()->back()->withInput();
+
+
+
+        }
     }
+
+
+    public function import_excel(Request $request,$id)
+    {
+        if ($request->ajax()) {
+
+            //validacion de permisos pendiente
+
+            //**validacion del archivo */
+            $messages = [
+
+                'archivo.extension' => 'El documento debe ser un archivo Excel'
+            ];
+            $error= Validator::make(
+                [
+                    'file'      => $request->file('archivo'),
+                    'extension' => strtolower($request->file('archivo')->getClientOriginalExtension()),
+                ],
+                [
+                    'file'          => 'required',
+                    'extension'      => 'required|in:xlsx,xls,odt,ods',
+                ],
+                $messages
+              );
+              if($error->fails())
+              {
+                 return response()->json(['error' => $error->errors()->all()]);
+
+              }
+              ///** */
+              $cont_error=0;
+              $messages=array('errores'=>array('mensaje'=>'','fila'=>''),'exito'=>array('mensaje'=>''));// de prueba
+              $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
+            /**se buscan los encbezados*/
+            $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
+              $encabezados=[];
+              foreach ($postulados as $key => $value) { //ineficiente pero seguro para obtener todas las posibles claves presente
+                foreach ($value as $key2 => $value2) {
+                    foreach ($value2 as $key3 => $value3) {
+                        $encabezados[]=$key3;
+                    }
+                    break 2;
+                }
+            }//se validan los encabezados
+            if (array_search('postulado',$encabezados,true)==null) {
+                $cont_error++;
+                //recoger error
+                return response()->json(['error' => 'No se encontro la columna Postulado']);//mientras tanto
+
+            }else{
+                if (array_search('supervisor',$encabezados,true)==null) {
+                    $cont_error++;
+                //recoger error
+                    return response()->json(['error' => 'No se encontro la columna Supervisor']);//mientras
+                }
+
+            }
+            //** */
+
+
+
+            $user=Auth::user();
+
+            $em_id=$user->empresa->first()->id;
+
+            foreach ($postulados as $key => $value) {
+                $row=1;
+               foreach ($value as $key2 => $value2) {
+
+                    $row++;
+                    $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
+                    $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
+                    if (is_bool($p_v)) {
+                        if (is_bool($s_v)) {
+                            if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
+                                $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('formacion_id',$id)->get(); //valida repetidos estudiante-formacion
+                                if ($t->count()==0) {
+                                    User_ins_formacion::create([ //se inserta
+                                        'user_id' => $value2['postulado'],
+                                        'formacion_id' =>$id,
+                                        'supervisor_id' => $value2['supervisor'],
+                                    ]);
+                                }else{
+                                    //falta recoge el error
+                                    $cont_error++;
+                                   // dump($row.'  El postulado ya se encuentra registrado en la formacion');
+                                }
+
+                            }
+                        }else{
+                            //falta recoge el error
+                            $cont_error++;
+                        }
+                    }else{
+                        //falta recoge el error
+                        $cont_error++;
+                    }
+               }
+            }
+
+
+
+           if ($cont_error>0) {
+                //$request->file('archivo')->store('public');
+                return response()->json(['success' => 'Es el dia del PLAATANOOO chi cheñol']);
+           }
+
+
+
+
+
+           //return response()->json(['error' => 'nope']);
+        }
+    }
+
 
     /**
      * Display the specified resource.
@@ -104,10 +336,163 @@ class UserInsFormacionController extends Controller
      * @param  \App\User_ins_formacion  $user_ins_formacion
      * @return \Illuminate\Http\Response
      */
-    public function show(User_ins_formacion $user_ins_formacion)
+    public function show($id)
     {
-        //
+        if(request()->ajax())
+        {
+
+            //$t=json_encode($f);
+            /*$q3=User_ins_formacion::where('formacion_id',$id)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.ci','tbl1.name','tbl1.email','tbl2.name as supervisor');*/
+
+            return datatables()->of(User_ins_formacion::where('formacion_id',$id)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.id','tbl1.ci','tbl1.name','tbl1.email','tbl2.name as supervisor'))
+                    ->addColumn('action', function($data){
+                        $button = '<button type="button" name="edit" id="btn_edit_p" data-id="'.$data->id.'" class="inscribir btn btn-success btn-sm">Inscribir</button>';
+
+                        $button .= '<button type="button" name="delete" id ="btn_eliminar_p"    data-id="'.$data->id.'" class="btn-eliminar btn btn-danger btn-sm"><i class="fas fa-trash"  style="margin-right: 0.5rem;" ></i>Borrar</button>';
+                        return $button;
+                    })
+                    ->rawColumns(['action'])
+                    ->toJson();
+        }
+
     }
+
+
+    public function validar_p_s($value,$row,$evaluado,$em_id){
+
+
+        if (is_int($value) and $value>0 ) { //valida que el valor sea un numero entero no negativo mayor a 1
+            $p=User::find($value);
+            if ($p) {//que exista en el sistema
+                if ($value=='supervisor') { //condicion especial para supervisor
+                   if ( !$p->hasRole('Supervisor')) { //OJO CAMBIAR POR supervisor
+                    return('fila:'.$row.' -->El ' .$evaluado. ' NO tiene el rango de supervisor');
+                   }
+                }
+                $p=$p->empresa->first()->id;//se supone que todo usuario registrado pertenece a una empresa
+                if ($p==$em_id) {//el postulado pertence a la empresa
+                    return(true);
+                }else{
+                    return('fila:'.$row.' -->El ' .$evaluado. ' NO pertenece a la Empresa');
+                }
+
+            }else{
+                return('fila:'.$row.' -->El ' .$evaluado.' NO esta registrado en la UVC');
+            }
+
+        }else{
+            return('fila:'.$row. '  valor NO PERMITIDO');
+        }
+
+
+    }
+
+    public function pruebas(Request $request)
+    {
+
+
+       $messages = [
+
+        'archivo.extension' => 'El documento debe ser un archivo Excel'
+    ];
+
+       $error= Validator::make(
+        [
+            'file'      => $request->file('archivo'),
+            'extension' => strtolower($request->file('archivo')->getClientOriginalExtension()),
+        ],
+        [
+            'file'          => 'required',
+            'extension'      => 'required|in:xlsx,xls,odt,ods',
+        ],
+        $messages
+      );
+      //dump($error);
+      $array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
+
+
+
+        $l=[];
+        $user=Auth::user();
+        $cont_error=0;
+        $em_id=$user->empresa->first()->id;
+        //dump($em_id);
+        foreach ($array as $key => $value) {
+            $row=1;
+            foreach ($value as $key2 => $value2) {
+                $row++;
+                $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
+                $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
+                if (is_bool($p_v)) {
+                    if (is_bool($s_v)) {
+                        if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
+                            $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('supervisor_id',$value2['supervisor'])->where('formacion_id',1)->get();
+                            dump($t->count());
+                            if ($t->count()==0) {
+                                dump($value2['postulado'].' --'.$value2['supervisor']);
+                                # code...
+                            }else{
+                                dump($row.'  El postulado ya se encuentra registrado en la formacion');
+                            }
+
+                        }
+                    }else{
+                        //dump($value2['supervisor']);
+                        //dump($row);
+                        //dump('supervisor'.$value2['supervisor'].'->'.$s_v);
+                        $cont_error++;
+                    }
+                }else{
+                    //falta recoge el error
+                    $cont_error++;
+                }
+
+            }
+
+        }
+
+        foreach ($array as $key => $value) { //ineficiente pero seguro para obtener todas las posibles claves presente
+            foreach ($value as $key2 => $value2) {
+
+                foreach ($value2 as $key3 => $value3) {
+                    $l[]=$key3;
+                }
+                break 2;
+
+            }
+        }
+
+        //dump(array_search('postulado',$l,true));
+        //dump(array_search('supervisor',$l,true));
+        /*$p=User::find(2299);
+        if ($p==3) {
+            dump($array);
+        }else{
+            dump($p);
+        }*/
+        //dump();
+       // dump(array_key_exists('postulado',$l));
+
+        /*
+
+            foreach ($q as $item) {
+                //dump($f);
+                $data[] = ['ci' => $item->ci, 'name' => $item->name,'apellido' => $item->apellido,'email' => $item->email,'supervisor' => User::find($item->supervisor_id)->name.' '.User::find($item->supervisor_id)->apellido];
+            }
+
+            $d=json_encode($data);
+            dump($d);*/
+            //return response()->json($data);
+            //return $q3;
+
+    }
+
+
+
+
+
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -138,8 +523,17 @@ class UserInsFormacionController extends Controller
      * @param  \App\User_ins_formacion  $user_ins_formacion
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User_ins_formacion $user_ins_formacion)
+    public function destroy(Request $request,$id)
     {
-        //
+        if ($request->ajax()) {
+
+            try {
+                $postulado = User_ins_formacion::where('user_id',$id);
+                $postulado->delete();
+            } catch (\Throwable $th) {
+                return "algo salio mal";
+            }
+
+        }
     }
 }

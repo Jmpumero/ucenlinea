@@ -28,7 +28,8 @@ class CreateFormacionsTable extends Migration
             $table->decimal('precio', 5, 2)->default(00000.00);
             $table->float('calificacion')->nullable()->default(0.00);
             $table->string('imagen')->nullable();
-
+            $table->smallInteger('max_matricula')->default(-1);
+            $table->smallInteger('actual_matricula')->default(0);//pendiente a revision
             //$table->date('fecha_de_inicio')->default($hoy);
             $table->dateTime('fecha_de_inicio')->default(Carbon::now());
             $table->dateTime('fecha_de_culminacion')->nullable();

@@ -17,8 +17,9 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name',50);
             //$table->string('apellido',50);
-            $table->string('email',100);
-            $table->string('ci',20)->unique();
+            $table->string('email',50);
+            $table->enum('prioridad', ['alta', 'media','baja']); //de momento
+            $table->string('ci',25)->unique();
             $table->string('avatar')->default('adminlte/img/user_default2.png');
             $table->boolean('status')->default(true); //esta en revision
             $table->enum('sexo', ['hombre', 'mujer']);
