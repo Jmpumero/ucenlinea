@@ -289,7 +289,7 @@ class UserInsFormacionController extends Controller
                     if (is_bool($p_v)) {
                         if (is_bool($s_v)) {
                             if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
-                                $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('supervisor_id',$value2['supervisor'])->where('formacion_id',$id)->get(); //valida repetidos
+                                $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('formacion_id',$id)->get(); //valida repetidos estudiante-formacion
                                 if ($t->count()==0) {
                                     User_ins_formacion::create([ //se inserta
                                         'user_id' => $value2['postulado'],
@@ -369,7 +369,7 @@ class UserInsFormacionController extends Controller
                     return('fila:'.$row.' -->El ' .$evaluado. ' NO tiene el rango de supervisor');
                    }
                 }
-                $p=$p->empresa->first()->id;
+                $p=$p->empresa->first()->id;//se supone que todo usuario registrado pertenece a una empresa
                 if ($p==$em_id) {//el postulado pertence a la empresa
                     return(true);
                 }else{

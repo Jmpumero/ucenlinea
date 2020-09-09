@@ -55,6 +55,6 @@ class FormacionSeeder extends Seeder
             'requisicion_id'=>3,
 
         ]);
-        factory(Formacion::class,30)->create();
+        factory(Formacion::class,15)->create();
     }
 }

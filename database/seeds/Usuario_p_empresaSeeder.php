@@ -32,6 +32,6 @@ class Usuario_p_empresaSeeder extends Seeder
         ]);
 
 
-        factory(Usuario_p_empresa::class,90)->create();
+        factory(Usuario_p_empresa::class,80)->create();
     }
 }
