@@ -252,6 +252,7 @@
                         {{ csrf_field() }}
                         <label for="archivo"><b>Archivo: </b></label><br>
                         <input id="archivo_inputp" type="file" name="archivo" required>
+
                         <input id="btn_enviar_p" class="btn btn-success" type="submit" value="prueba" >
                       </form>
 
@@ -339,6 +340,11 @@
                 <!-- Modal Footer -->
                     <div class="modal-footer">
                         <button id="btn_closed_m_excel" type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                        <form id="form_p2" action="{{ url('pruebas/excel2') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+
+                            <input id="btn_eder_p" class="btn btn-success" type="submit" value="descarga" >
+                          </form>
                         <div class="form-group">
 
 

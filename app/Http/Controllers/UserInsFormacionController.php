@@ -27,6 +27,7 @@ use App\CustomClass\CedulaVE;
 
 class UserInsFormacionController extends Controller
 {
+    public $prueba=null;
     /**
      * Display a listing of the resource.
      *
@@ -297,7 +298,7 @@ class UserInsFormacionController extends Controller
             // $export = new ErroresExport( $array_e);
 
           /// return Excel::download($export, 'errores.xlsx');
-
+            //return (new ErroresExport($m_e))->download('invoices.xlsx');
              return response()->json( $array_e); //fino
 
 
@@ -406,7 +407,8 @@ class UserInsFormacionController extends Controller
 
                                    /* $m[$i][$j]=$value2['postulado'];
                                     $m[$i][$j+1]=$value2['supervisor'];*/
-                                    $m[$i][$j+2]='Tuto normali';
+                                    $m[$i][$j+2]=' ';
+                                    $m[$i][$j+3]='Guardardo Correctamente';
 
                                 }else{
                                     $response[0]['status']=300;
@@ -597,8 +599,8 @@ class UserInsFormacionController extends Controller
       $this->validacion_con_ids($array,2,$l,$m_export);
 
 
-      dump($l);
-      dump($m_export);
+     // dump($l);
+      //dump($m_export);
       $d[]=[];
       foreach ($l[1]['errores'] as $key => $value) {
           $d[]=['mensaje'=>$value];
@@ -608,7 +610,9 @@ class UserInsFormacionController extends Controller
       //$export = new ErroresExport( $l);
      // $export = new ErroresExport( $l[1]['errores']); funcionan
       //$export = new ErroresExport( $array);
-       Excel::download(new ErroresExport($m_export), 'prueba_export.xlsx');
+      return Excel::download(new ErroresExport($m_export), 'prueba_export.xlsx');
+      //return (new ErroresExport($m_export))->download('invoices.xlsx');
+        //return Excel::download(new ErroresExport($m_export), 'prueba_export.xlsx');
        //Excel::download(new ErroresvistaExport($l), 'prueba_export.xlsx');
 
 

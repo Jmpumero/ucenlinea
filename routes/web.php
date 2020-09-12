@@ -50,10 +50,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('eliminar/lista/{id}', 'UserInsFormacionController@destroy_all')->name('vaciar lista');
 
 
-    Route::post('pruebas/excel', 'UserInsFormacionController@pruebas')->name('postulados.prueba');
+    Route::post('pruebas/excel', 'UserInsFormacionController@pruebas');
+   // Route::post('pruebas/excel2', 'UserInsFormacionController@pruebas2');
     //Route::post('users/update', 'UserController@update')->name('productos.update');
 });
-/*
-Route::get('/admin', function () {
-    return view('prueba');
-});*/
+
+Route::get('users/export/', 'UsersController@export');
