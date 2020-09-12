@@ -596,7 +596,7 @@ class UserInsFormacionController extends Controller
       $m_export;
 
 
-      $this->validacion_con_ids($array,2,$l,$m_export);
+      $this->validacion_con_ids($array,$request->formacion,$l,$m_export);
 
 
      // dump($l);

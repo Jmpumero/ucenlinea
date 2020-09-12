@@ -252,20 +252,9 @@
                         {{ csrf_field() }}
                         <label for="archivo"><b>Archivo: </b></label><br>
                         <input id="archivo_inputp" type="file" name="archivo" required>
-
+                        <input id="f_id" type="text" name="formacion" hidden>
                         <input id="btn_enviar_p" class="btn btn-success" type="submit" value="prueba" >
                       </form>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -388,6 +377,10 @@
     var info
     var cont_select_sup=false
 
+    $('#archivo_inputp').click(function (e) {
+
+        $('#f_id').val($('#formas').val());
+    });
     $('#formas').on('change', function () {
         if ($('#formas').val()) {
 
