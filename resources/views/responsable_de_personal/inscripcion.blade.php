@@ -57,7 +57,7 @@
                 </a>
 
                 <a href="#">
-                <button disabled=true type="button" id="btn_borrar_todo" class="btn  btn-outline-danger" style="width: 100%;" data-toggle="tooltip" title="" > <i class="fas fa-trash"  style="margin-right: 0.5rem;" ></i>Borrar Lista</button>
+                <button disabled=true type="button" id="btn_deleted_all" class="btn  btn-outline-danger" style="width: 100%;" data-toggle="tooltip" title="" > <i class="fas fa-trash"  style="margin-right: 0.5rem;" ></i>Borrar Lista</button>
                 </a>
 
               </div>
@@ -97,7 +97,7 @@
 
 
 
-
+        <!-----------MODALES------------->
 
 
            <!-- Modal agregar un postulado -->
@@ -288,6 +288,66 @@
 
 
 
+         <!-- Modal para Errores del excel -->
+         <div class="modal fade table-responsive"  id="modal_e_excel" role="dialog">
+            <div id="modal_e" class="modal-dialog modal-dialog-centered modal-lg" >
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4>Errores</h4>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                    <!-- Modal Body -->
+                <div class="modal-body text-center">
+                    <p class="statusMsg"></p>
+                    <h5 id="tabla_e_titulo"></h5>
+
+                    <div   class="card-body table-responsive "  >
+
+                        <div class="table-responsive "  style="height: 250px;" >
+                            <table id="tabla_errores"   class="table table-striped projects">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" >
+                                            Fila:
+                                        </th>
+                                        <th >
+                                            &nbsp
+                                        </th>
+
+                                        <th  class="text-center" >
+                                            Error
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+                        <div class="card"></div>
+                    </div>
+
+
+
+                <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button id="btn_closed_m_excel" type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
+                        <div class="form-group">
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
 
@@ -319,7 +379,7 @@
     });
 
 
-
+    var info
     var cont_select_sup=false
 
     $('#formas').on('change', function () {
@@ -337,9 +397,9 @@
     $('#btn_confirm_f').click(function (e) {
                 e.preventDefault();
                 var id_form=$('#formas').val()
-                // $('#c_formaciones').toggle(1000); de momento no
+                $("#btn_deleted_all").prop('disabled', false);
                 $('#_postulados').fadeIn(); //prueba de momento
-                console.log(id_form)
+               // console.log(id_form)
                 var tabla_postulados= $('#tabla_postulados').DataTable({
 
                     "destroy":true,
@@ -380,26 +440,77 @@
                         "zeroRecords": "No hay coincidencias",
                         "infoEmpty": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
                         "infoFiltered": ""
+                    },
+                    "initComplete": function( settings, json ) {
+                         info=tabla_postulados.page.info();
+                        //console.log( info.recordsTotal)
                     }
                 });
 
+
+                //console.log( tabla_postulados.rows().count())
+                //tabla.rows().count()
                 //$('#tabla_postulados').DataTable().draw();
         });
 
 
+    $('#btn_deleted_all').click(function (e) {
+        e.preventDefault();
+        var f_id=$('#formas').val()
+        info= $('#tabla_postulados').DataTable().page.info();
+        console.log(info.recordsTotal)
+
+        var toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2800
+            });
+
+
+        if (info.recordsTotal>0) {
+            $.ajax({
+                url:"eliminar/lista/"+f_id,
+                type: "get",
+                success:function(data)
+                {
+                    $('#tabla_postulados').DataTable().ajax.reload();
+                    toast.fire({
+                        icon: 'success',
+                        title: 'Lista vaciada.'
+                    })
+                }
+            })
+        }else{
+            toast.fire({
+                        icon: 'warning',
+                        title: 'La lista ya esta vaciada.'
+                    })
+        }
+
+    });
 
     $('body').on('click', '#btn_eliminar_p', function () {
 
         var postu_id = $(this).data("id");
 
-       // console.log(producto_id);
+        var toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+            });
 
         $.ajax({
-            url:"postulado/eliminar/f/"+postu_id,
+            url:"eliminar/postulado/f/"+postu_id,
             type: "get",
             success:function(data)
             {
                 $('#tabla_postulados').DataTable().ajax.reload();
+                toast.fire({
+                    icon: 'success',
+                    title: 'Eliminado correctamente.'
+                })
             }
         })
 
@@ -434,29 +545,27 @@
             processData: false,//importante enviar este parametro en false
             success:function(data)
             {
-                var html = '';
-                if(data.error)
+                //console.log(data)
+                //console.log(data[2].cont_e)
+                $('#modal_e_excel').modal('show');
+                var newRows = "";
+                //console.log(data[0].status)
+                if(data[0].status==300)
                 {
-                    //console.log(data.error)
-                    const t= Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-danger',
-
-                        },
-                        buttonsStyling: false
-                    })
+                    $('#tabla_e_titulo').text('Total de errores: '+data[2].cont_e);
+                    $.each(data[1].errores, function (i,valor) {
+                        //console.log(valor)
+                        var cad=valor.split('-')
+                        $("#tabla_errores").append("<tr><td>" + cad[0] + "</td><td>  </td><td>"+cad[1]+"</td> </tr>");
 
 
-                    t.fire({
-                    title: 'ERROR',
-                    text: data.error,
-                    icon: 'error',
-                    confirmButtonText: 'Cerrar',
-                    width: '35%',
-                    //timerProgressBar:true,
-                    //timer: 2500
-                    })
+                    });
+                    $('#form_new_postu')[0].reset();
+                    $('#tabla_postulados').DataTable().ajax.reload();
+
                 }
+
+
                 if(data.success)
                 {
                     //html = '<div class="alert alert-success">' + data.success + '</div>';
@@ -490,7 +599,7 @@
             }
     });
 
-    $('#btn_closed_m_excel').trigger('click');
+    //$('#btn_closed_m_excel').trigger('click');
 });
 
     ///
@@ -720,6 +829,8 @@
                         //html = '<div class="alert alert-success">' + data.success + '</div>';
                         $('#form_new_postu')[0].reset();
                         $('#tabla_postulados').DataTable().ajax.reload();
+                        //info= $('#tabla_postulados').DataTable().page.info();
+                        //console.log(info.recordsTotal)
 
                        const t= Swal.mixin({
                             customClass: {
@@ -751,6 +862,7 @@
 
 
             //$('#btn_closed_m').trigger('click');
+
     });
     ///***////
 

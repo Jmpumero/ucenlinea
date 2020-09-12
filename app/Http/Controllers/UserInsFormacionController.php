@@ -20,6 +20,11 @@ use App\Imports\PostuladosImport;
 use Maatwebsite\Excel\Importer;
 use Maatwebsite\Excel\Facades\Excel;
 
+use  App\Exports\ErroresExport;
+use  App\Exports\ErroresvistaExport;
+use App\CustomClass\CedulaVE;
+
+
 class UserInsFormacionController extends Controller
 {
     /**
@@ -51,7 +56,7 @@ class UserInsFormacionController extends Controller
 
 
 
-    public function select_usuarios(Request $request) //select con ajax
+    public function select_usuarios(Request $request) //select con ajax borrar añ final
     {
         /*$term = trim($request->q);
 
@@ -222,6 +227,12 @@ class UserInsFormacionController extends Controller
 
             //validacion de permisos pendiente
 
+
+            $array_e=[];
+            $array_e[]=['status'=>0];
+            $array_e[]= ['errores'=>[]];
+            $array_e[]=['cont_e'=>0];
+            $m_e;
             //**validacion del archivo */
             $messages = [
 
@@ -259,70 +270,35 @@ class UserInsFormacionController extends Controller
                 }
             }//se validan los encabezados
             if (array_search('postulado',$encabezados,true)==null) {
-                $cont_error++;
-                //recoger error
-                return response()->json(['error' => 'No se encontro la columna Postulado']);//mientras tanto
+
+                $array_e[0]['status']=250;
+                $array_e[2]['cont_e']++;
+                array_push ( $array_e[1]['errores'] , 'Error: No se encontro la columna Postulado'  );
 
             }else{
                 if (array_search('supervisor',$encabezados,true)==null) {
-                    $cont_error++;
-                //recoger error
-                    return response()->json(['error' => 'No se encontro la columna Supervisor']);//mientras
+                    $array_e[0]['status']=250;
+                    $array_e[2]['cont_e']++;
+                    array_push ( $array_e[1]['errores'] , 'Error: No se encontro la columna Supervisor'  );
+
+
                 }
 
             }
             //** */
 
-
-
-            $user=Auth::user();
-
-            $em_id=$user->empresa->first()->id;
-
-            foreach ($postulados as $key => $value) {
-                $row=1;
-               foreach ($value as $key2 => $value2) {
-
-                    $row++;
-                    $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
-                    $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
-                    if (is_bool($p_v)) {
-                        if (is_bool($s_v)) {
-                            if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
-                                $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('formacion_id',$id)->get(); //valida repetidos estudiante-formacion
-                                if ($t->count()==0) {
-                                    User_ins_formacion::create([ //se inserta
-                                        'user_id' => $value2['postulado'],
-                                        'formacion_id' =>$id,
-                                        'supervisor_id' => $value2['supervisor'],
-                                    ]);
-                                }else{
-                                    //falta recoge el error
-                                    $cont_error++;
-                                   // dump($row.'  El postulado ya se encuentra registrado en la formacion');
-                                }
-
-                            }
-                        }else{
-                            //falta recoge el error
-                            $cont_error++;
-                        }
-                    }else{
-                        //falta recoge el error
-                        $cont_error++;
-                    }
-               }
+            if ( $array_e[0]['status']==250) {
+                return response()->json( $array_e);
             }
+             $this->validacion_con_ids($postulados,$id,$array_e,$m_e);
 
 
 
-           if ($cont_error>0) {
-                //$request->file('archivo')->store('public');
-                return response()->json(['success' => 'Es el dia del PLAATANOOO chi cheñol']);
-           }
+            // $export = new ErroresExport( $array_e);
 
+          /// return Excel::download($export, 'errores.xlsx');
 
-
+             return response()->json( $array_e); //fino
 
 
            //return response()->json(['error' => 'nope']);
@@ -364,7 +340,156 @@ class UserInsFormacionController extends Controller
         if (is_int($value) and $value>0 ) { //valida que el valor sea un numero entero no negativo mayor a 1
             $p=User::find($value);
             if ($p) {//que exista en el sistema
-                if ($value=='supervisor') { //condicion especial para supervisor
+                if ($evaluado=='supervisor') { //condicion especial para supervisor
+                   if ( !$p->hasRole('Supervisor')) { //OJO CAMBIAR POR supervisor
+                    return($row.'- El usuario NO tiene el rango de supervisor');
+                   }
+                }
+                $p=$p->empresa->first()->id;//se supone que todo usuario registrado pertenece a una empresa
+                if ($p==$em_id) {//el postulado pertence a la empresa
+                    return(true);
+                }else{
+                    return($row.'- El ' .$evaluado. ' NO pertenece a la Empresa');
+                }
+
+            }else{
+                return($row.'- El ' .$evaluado.' NO esta registrado en la UVC');
+            }
+
+        }else{
+            return($row.'- valor NO PERMITIDO para el '.$evaluado);
+        }
+
+
+    }
+
+    public function validacion_con_ids($array,$f_id,&$response,&$m){
+        $user=Auth::user();
+
+            //$users_array[] = ['id' => $u->id, 'text' => $u->ci.' -> '.$nombre];
+        /** matriz a exportar */
+            $i=1;
+            $j=0;
+            $m[0][0]='  Postulado  ';
+            $m[0][1]='  Supervisor  ';
+            $m[0][2]='  ';
+            $m[0][3]='Error';
+        /** */
+
+            $em_id=$user->empresa->first()->id;
+
+            foreach ($array as $key => $value) {
+                $row=1;
+                $j=0;
+
+               foreach ($value as $key2 => $value2) {
+
+                    $m[$i][$j]=$value2['postulado'];
+                    $m[$i][$j+1]=$value2['supervisor'];
+                    $m[$i][$j+2]=' ';
+
+                    $row++;
+                    $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
+                    $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
+                    if (is_bool($p_v)) {
+                        if (is_bool($s_v)) {
+                            if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
+                                $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('formacion_id',$f_id)->get(); //valida repetidos estudiante-formacion
+                                if ($t->count()==0) {
+                                    User_ins_formacion::create([ //se inserta
+                                        'user_id' => $value2['postulado'],
+                                        'formacion_id' =>$f_id,
+                                        'supervisor_id' => $value2['supervisor'],
+                                    ]);
+
+                                    $response[0]['status']=777;
+
+                                   /* $m[$i][$j]=$value2['postulado'];
+                                    $m[$i][$j+1]=$value2['supervisor'];*/
+                                    $m[$i][$j+2]='Tuto normali';
+
+                                }else{
+                                    $response[0]['status']=300;
+                                    $response[2]['cont_e']++;
+                                    array_push ( $response[1]['errores'] , $row.'- El Postulado ya se encuentra registrado en la formacion' );
+
+                                    $m[$i][$j+3]='El Postulado ya se encuentra registrado en la formacion';
+                                }
+
+                            }else{
+                                $response[0]['status']=300;
+                                    $response[2]['cont_e']++;
+                                    array_push ( $response[1]['errores'] , $row.'- El Postulado NO puede ser su propio Supervisor' );
+
+                                    $m[$i][$j+3]='El Postulado NO puede ser su propio Supervisor';
+                            }
+                        }else{
+                                $response[0]['status']=300;
+                                $response[2]['cont_e']++;
+                                array_push ( $response[1]['errores'] , $s_v );
+                                $s = substr($s_v,strpos($s_v, "-")+1);
+
+                                $m[$i][$j+3]=$s;
+                        }
+                    }else{
+                        $response[0]['status']=300;
+                        $response[2]['cont_e']++;
+                        array_push ( $response[1]['errores'] , $p_v );
+
+
+                        $s = substr($p_v,strpos($p_v, "-")+1);
+
+                        $m[$i][$j+3]=$s;
+                    }
+
+                    $i++;
+
+               }
+
+            }
+
+
+
+    }
+
+
+    public function comprobar_valor_ci($value){
+
+        $band=false;
+        $n=strtoupper($value[0]);
+        $ci= substr($value, 1);
+
+        if ($n=='V') {
+
+            if ( ctype_digit($ci)) {
+                $band=true;
+            }
+        }else{
+            if ($n=='E') {
+                if ( ctype_digit($ci)) {
+                    $band=true;
+                }
+            }
+
+        }
+        return($band);
+
+    }
+
+    public function validar_con_cedula($value,$row,$evaluado,$em_id){
+
+
+        if ($this->comprobar_valor_ci($value) ) { //valida que el valor sea un numero entero
+
+            //$id_user=User::where()
+            //$h=User::find(1);
+            $p=User::firstWhere('ci',$value);
+            //dump($p);
+            //dd($h);
+            //dd($p->get());
+
+            if ($p) {//que exista en el sistema
+                if ($evaluado=='supervisor') { //condicion especial para supervisor
                    if ( !$p->hasRole('Supervisor')) { //OJO CAMBIAR POR supervisor
                     return('fila:'.$row.' -->El ' .$evaluado. ' NO tiene el rango de supervisor');
                    }
@@ -386,6 +511,58 @@ class UserInsFormacionController extends Controller
 
 
     }
+
+    public function validacion_con_ci($array,$f_id){
+
+        $user=Auth::user();
+        $cont_error=0;
+        $em_id=$user->empresa->first()->id;
+        //dump($em_id);
+        foreach ($array as $key => $value) {
+            $row=1;
+            foreach ($value as $key2 => $value2) {
+                $row++;
+                $p_v=$this->validar_con_cedula($value2['postulado'],$row,'postulado',$em_id);
+                $s_v=$this->validar_con_cedula($value2['supervisor'],$row,'supervisor',$em_id);
+                if (is_bool($p_v)) {
+                    if (is_bool($s_v)) {
+                        if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
+                            $id_user=User::firstWhere('ci',$value2['postulado'])->id;
+
+                            $t=User_ins_formacion::where('user_id',$id_user)->where('formacion_id',$f_id)->get();
+                            //dump($t->count());
+                            if ($t->count()==0) {
+                                //dump($value2['postulado'].' --'.$value2['supervisor']);
+
+                                 User_ins_formacion::create([ //se inserta
+                                        'user_id' => $id_user,
+                                        'formacion_id' =>$f_id,
+                                        'supervisor_id' => User::firstWhere('ci',$value2['supervisor'])->id,
+                                    ]);
+                            }else{
+                                dump($row.'  El postulado ya se encuentra registrado en la formacion');
+                            }
+
+                        }
+                    }else{
+                        //dump($value2['supervisor']);
+                        //dump($row);
+                        //dump('supervisor'.$value2['supervisor'].'->'.$s_v);
+                       // $cont_error++;
+                    }
+                }else{
+                    //falta recoge el error
+                    //$cont_error++;
+                }
+
+            }
+
+        }
+
+    }
+
+
+
 
     public function pruebas(Request $request)
     {
@@ -410,87 +587,62 @@ class UserInsFormacionController extends Controller
       //dump($error);
       $array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
 
+      $l=[];
+      $l[]=['status'=>0];
+      $l[]= ['errores'=>[]];
+      $l[]=['cont_e'=>0];
+      $m_export;
 
 
-        $l=[];
-        $user=Auth::user();
-        $cont_error=0;
-        $em_id=$user->empresa->first()->id;
-        //dump($em_id);
-        foreach ($array as $key => $value) {
-            $row=1;
-            foreach ($value as $key2 => $value2) {
-                $row++;
-                $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
-                $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
-                if (is_bool($p_v)) {
-                    if (is_bool($s_v)) {
-                        if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
-                            $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('supervisor_id',$value2['supervisor'])->where('formacion_id',1)->get();
-                            dump($t->count());
-                            if ($t->count()==0) {
-                                dump($value2['postulado'].' --'.$value2['supervisor']);
-                                # code...
-                            }else{
-                                dump($row.'  El postulado ya se encuentra registrado en la formacion');
-                            }
+      $this->validacion_con_ids($array,2,$l,$m_export);
 
-                        }
-                    }else{
-                        //dump($value2['supervisor']);
-                        //dump($row);
-                        //dump('supervisor'.$value2['supervisor'].'->'.$s_v);
-                        $cont_error++;
-                    }
-                }else{
-                    //falta recoge el error
-                    $cont_error++;
-                }
 
-            }
+      dump($l);
+      dump($m_export);
+      $d[]=[];
+      foreach ($l[1]['errores'] as $key => $value) {
+          $d[]=['mensaje'=>$value];
+      }
 
-        }
+      //dump($d);
+      //$export = new ErroresExport( $l);
+     // $export = new ErroresExport( $l[1]['errores']); funcionan
+      //$export = new ErroresExport( $array);
+       Excel::download(new ErroresExport($m_export), 'prueba_export.xlsx');
+       //Excel::download(new ErroresvistaExport($l), 'prueba_export.xlsx');
 
-        foreach ($array as $key => $value) { //ineficiente pero seguro para obtener todas las posibles claves presente
-            foreach ($value as $key2 => $value2) {
 
-                foreach ($value2 as $key3 => $value3) {
-                    $l[]=$key3;
-                }
-                break 2;
-
-            }
-        }
-
-        //dump(array_search('postulado',$l,true));
-        //dump(array_search('supervisor',$l,true));
-        /*$p=User::find(2299);
-        if ($p==3) {
-            dump($array);
-        }else{
-            dump($p);
-        }*/
-        //dump();
-       // dump(array_key_exists('postulado',$l));
-
-        /*
-
-            foreach ($q as $item) {
-                //dump($f);
-                $data[] = ['ci' => $item->ci, 'name' => $item->name,'apellido' => $item->apellido,'email' => $item->email,'supervisor' => User::find($item->supervisor_id)->name.' '.User::find($item->supervisor_id)->apellido];
-            }
-
-            $d=json_encode($data);
-            dump($d);*/
             //return response()->json($data);
             //return $q3;
+            /**api para que usa url del cne para las cedulas
+
+
+            $resp=[];
+            $data = CedulaVE::get('V', '27131298', false);
+            dump($data);
+            if ($data["status"]==200) {
+                $resp[]=$data['response'];
+                dump($resp);
+            }*/
 
     }
 
 
 
 
+    public function destroy_all(Request $request,$id) //vacia la lista de postulados
+    {
+        if ($request->ajax()) {
 
+            try {
+                User_ins_formacion::where('formacion_id',$id)->delete();
+            } catch (\Throwable $th) {
+                return "algo salio mal";
+            }
+
+        }
+
+    }
 
 
 

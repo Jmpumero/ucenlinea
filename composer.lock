@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4b0f5b5e1b2b3bac19244c69b34c5365",
+    "content-hash": "9c8e37527f844a4db7edab9a77d293d5",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1172,6 +1172,34 @@
                 "vector"
             ],
             "time": "2019-10-06T11:29:25+00:00"
+        },
+        {
+            "name": "megacreativo/cedulave-api",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/megacreativo/CedulaVE-API.git",
+                "reference": "5bdfa07ac62d2a22d0eec1ae6d5c0dc7a68b7d86"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/megacreativo/CedulaVE-API/zipball/5bdfa07ac62d2a22d0eec1ae6d5c0dc7a68b7d86",
+                "reference": "5bdfa07ac62d2a22d0eec1ae6d5c0dc7a68b7d86",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brayan Rincon",
+                    "email": "brayan262@gmail.com"
+                }
+            ],
+            "description": "CedulaVE API permite consultar datos personales de habitantes de Venezuela inscritos en el CNE mediante su Cédula de Identidad.",
+            "time": "2017-08-11T06:35:54+00:00"
         },
         {
             "name": "monolog/monolog",

@@ -43,9 +43,12 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    Route::get('lista/postulados/{id}', 'UserInsFormacionController@show')->name('postulados.show'); //buena
+    Route::get('lista/postulados/{id}', 'UserInsFormacionController@show')->name('postulados.show'); //buena falt midelware
 
-    Route::get('postulado/eliminar/f/{id}', 'UserInsFormacionController@destroy')->name('postulados.destroy'); //pendiente revisar
+    Route::get('eliminar/postulado/f/{id}', 'UserInsFormacionController@destroy')->name('postulados.destroy'); //pendiente revisar
+
+    Route::get('eliminar/lista/{id}', 'UserInsFormacionController@destroy_all')->name('vaciar lista');
+
 
     Route::post('pruebas/excel', 'UserInsFormacionController@pruebas')->name('postulados.prueba');
     //Route::post('users/update', 'UserController@update')->name('productos.update');
