@@ -51,8 +51,10 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::post('pruebas/excel', 'UserInsFormacionController@pruebas');
+
+    Route::get('download/export', 'UserInsFormacionController@download_excel_er')->name('error_p.download');
    // Route::post('pruebas/excel2', 'UserInsFormacionController@pruebas2');
     //Route::post('users/update', 'UserController@update')->name('productos.update');
 });
 
-Route::get('users/export/', 'UsersController@export');
+Route::get('users/export/', 'UsersController@export');//prueba de descarga excel

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Exports\ErroresExport;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
@@ -46,9 +47,26 @@ class UsersController extends Controller
 
     public function export(Request $request)
     {
-        return Excel::download(new ErroresExport([[1,23,4],[5,6,7]]), 'prueba_export.xlsx');
+        //return Excel::download(new ErroresExport([[1,23,4],[5,6,7]]), 'prueba_export.xlsx');
         //return Excel::download(new UsersExport, 'users.xlsx');
+       Excel::store(new UsersExport, 'superduper_user.xlsx','excels');
+       //return Storage::download('public/storage/excel/','super_user.xlsx');
+       $file= public_path('excel');
+       $file2=storage_path('excel\super_user.xlsx');
 
+       //storage\app\public\excel
+       //return Storage::response($file2,'super_user.xlsx');
+       if ( Storage::exists('public/excel/superduper_user.xlsx')) {
+           dump(storage_path());
+           dump(Storage::size('public/excel/superduper_user.xlsx'));
+
+       // return Storage::download('public/excel/superduper_user.xlsx','superduper_user.xlsx');
+       } Storage::exists('public/excel/superduper_user');
+       return Storage::files('public/excel');
+       //return Storage::download('storage\app','userrr.xlsx');
+
+       //return Storage::download('super_user.xlsx');
+       //dump(Excel::store(new UsersExport, 'store_user.xlsx','disks'));
     }
 
     /**

@@ -219,7 +219,7 @@
 
 
 
-         <!-- Modal para el excel -->
+         <!-- Modal para importal el excel -->
         <div class="modal fade table-responsive"  id="modal_excel" role="dialog">
             <div id="modal_agregar_op" class="modal-dialog modal-dialog-centered " >
                 <div class="modal-content">
@@ -324,7 +324,16 @@
                         <div class="card"></div>
                     </div>
 
+                    <div id="div_descarga" class="card">
+                        <span>Para mas detalles descargue el informe de errores</span>
+                        <form action="{{ url('download/export') }}">
+                            {{ csrf_field() }}
+                            <input type="text"  name="f_id_download" hidden id="vf_id">
+                            <input type="text"  name="user_id_download" hidden id="vu_id" value="{{ Auth::user()->id }}">
+                            <button id="btn_download_excel" type="submit" class="btn btn-sm btn-primary">Descargar</button>
+                        </form>
 
+                    </div>
 
                 <!-- Modal Footer -->
                     <div class="modal-footer">
@@ -519,6 +528,12 @@
         e.preventDefault();
         $('#modal_excel').modal('show');
 
+    });
+
+    $('#btn_download_excel').click(function (e) {
+
+        $('#vf_id').val($('#formas').val());
+        //$('#div_descarga').fadeOut();
     });
 
     $('#form_excel').on('submit', function (event) {
