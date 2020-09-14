@@ -109,10 +109,30 @@ i.icon-mg-sm{
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-
-
   border-radius: 10rem;
 }
+
+
+
+.badge-pill-new {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 90%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 10rem;
+  }
+
+
+
+.badge-verde-b {
+    color: #ffffff;
+    background-color:#00bb2d;
+  }
+
 
 
 .badge-verde-oscuro {
@@ -126,9 +146,14 @@ i.icon-mg-sm{
 }
 
 .badge-oro {
-  color: #111010;
+  color: #fdfdfd;
   background-color: #efb810;
 }
+
+.badge-oro2 {
+    color: #fdfdfd;
+    background-color: #ffae00;
+  }
 
 
 .badge-morado {

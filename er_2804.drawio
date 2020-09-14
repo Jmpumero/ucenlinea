@@ -1,6 +1,6 @@
-<mxfile host="4f38302b-7598-489b-9aad-91fd4e67de2c" modified="2020-09-02T12:40:26.838Z" agent="5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.48.2 Chrome/78.0.3904.130 Electron/7.3.2 Safari/537.36" etag="pKAITXeaXU53Z0rao1K6" version="13.6.5">
+<mxfile host="8d0fb359-d403-4d3c-bf25-1669752741f8" modified="2020-09-14T20:54:51.343Z" agent="5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.49.0 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="MQw-7agenMhgm52veOzj" version="13.1.3">
     <diagram id="Q-9ZEJwYNLiZbHLnAR-u" name="Página-1">
-        <mxGraphModel dx="1588" dy="2180" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#EEEEEE" math="0" shadow="0">
+        <mxGraphModel dx="1679" dy="2180" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#EEEEEE" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -66,7 +66,7 @@
                 <mxCell id="hnK7vFndnWEXmkqV4Ktg-15" value="" style="shape=partialRectangle;top=0;left=0;bottom=0;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;part=1;fontSize=12;strokeColor=#909090;fontColor=#1A1A1A;" parent="hnK7vFndnWEXmkqV4Ktg-14" vertex="1" connectable="0">
                     <mxGeometry width="56" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="_aSyNCbL3cqzcXuv4tZe-14" value="" style="shape=partialRectangle;top=0;left=0;right=0;bottom=0;align=left;verticalAlign=top;fillColor=none;spacingLeft=60;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;dropTarget=0;fontSize=12;strokeColor=#909090;fontColor=#1A1A1A;" parent="hnK7vFndnWEXmkqV4Ktg-1" vertex="1">
+                <mxCell id="_aSyNCbL3cqzcXuv4tZe-14" value="Prioridad" style="shape=partialRectangle;top=0;left=0;right=0;bottom=0;align=left;verticalAlign=top;fillColor=none;spacingLeft=60;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;dropTarget=0;fontSize=12;strokeColor=#909090;fontColor=#1A1A1A;" parent="hnK7vFndnWEXmkqV4Ktg-1" vertex="1">
                     <mxGeometry y="212" width="170" height="38" as="geometry"/>
                 </mxCell>
                 <mxCell id="_aSyNCbL3cqzcXuv4tZe-15" value="" style="shape=partialRectangle;top=0;left=0;bottom=0;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;part=1;fontSize=12;strokeColor=#909090;fontColor=#1A1A1A;" parent="_aSyNCbL3cqzcXuv4tZe-14" vertex="1" connectable="0">

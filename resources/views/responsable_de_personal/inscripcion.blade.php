@@ -130,11 +130,11 @@
                         <button style="margin-top:1%;" type="button" name="" id="btn_confirm_f" class="btn  btn-success" btn-lg btn-block" disabled=true>Confirmar</button>
                     </div>
 
-                    <!--- tabla postulado-->
-                    <div id="card_postulados" class=" card card-outline card-blue table-responsive-sm">
+                    <!--- tabla postulado, pendiente con el tema de muchos usurios-->
+                    <div id="card_postulados" class=" card card-outline card-blue table-responsive-sm" >
                         <div   class="card-body  table-responsive-sm " >
 
-                            <table id="select_new_postulado" class="table table-striped projects text-center">
+                            <table id="select_new_postulado" class="table table-striped projects text-center"  style="height: 250px;">
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 15%">
@@ -145,7 +145,7 @@
                                         </th>
 
                                         <th  style="width: 15%" class="text-center" >
-                                            Correo
+                                            Prioridad
                                         </th>
 
                                         <th style="width: 20%" class="text-center">
@@ -158,7 +158,7 @@
                     </div>
 
                      <!--- tabla supervisor-->
-                     <div style="display: none;" id="card_supervisor" class=" card card-outline card-green table-responsive-sm">
+                     <div style="display: none;" id="card_supervisor" class=" card card-outline card-green table-responsive-sm"   style="height: 250px;">
                         <div   class="card-body" >
 
                             <table id="select_new_supervisor" class="table table-striped projects text-center">
@@ -219,7 +219,7 @@
 
 
 
-         <!-- Modal para importal el excel -->
+         <!-- Modal para importar el excel -->
         <div class="modal fade table-responsive"  id="modal_excel" role="dialog">
             <div id="modal_agregar_op" class="modal-dialog modal-dialog-centered " >
                 <div class="modal-content">
@@ -237,40 +237,36 @@
                     <h5 id="tabla_titulo">carga el archivo excel:</h5>
 
 
+                    <div class="card text-center" >
+                        <form id="form_excel" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+                           <!--<label for="archivo"><b>Archivo: </b></label><br>-->
+                            <input  id="archivo_input" type="file" name="archivo" required>
+                            <!--<button id="btn_activa_excel"  class="btn btn-lg btn-outline-success"><i class="fas fa-cloud-upload-alt"></i></button>-->
 
-                    <form id="form_excel" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <label for="archivo"><b>Archivo: </b></label><br>
-                        <input id="archivo_input" type="file" name="archivo" required>
-                        <input id="btn_enviar_excel" class="btn btn-success" type="submit" value="Enviar" >
-                      </form>
+                    </div>
 
 
 
 
-                      <form id="form_p" action="{{ url('pruebas/excel') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
+
+                      <!--<form id="form_p" action="{{ url('pruebas/excel') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <label for="archivo"><b>Archivo: </b></label><br>
                         <input id="archivo_inputp" type="file" name="archivo" required>
                         <input id="f_id" type="text" name="formacion" hidden>
                         <input id="btn_enviar_p" class="btn btn-success" type="submit" value="prueba" >
-                      </form>
+                      </form>-->
 
 
 
-
-                    <!--{!! Form::open(['id'=>'form_excel','files'=>true]) !!}
-                    {!! Form::file('archivo_excel', ['class' => 'btn  btn-outline-info ','id'=>'excel_input']) !!}-->
 
 
                 <!-- Modal Footer -->
                     <div class="modal-footer">
+                        <input id="btn_enviar_excel" class="btn btn-success" type="submit" value="Enviar" >
                         <button id="btn_closed_m_excel" type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
-                        <div class="form-group">
-
-                           <!-- {{ Form::submit('Enviar', ['class' => 'btn  btn-outline-success ','id' => 'btn_enviar_excel']) }}
-                            {!! Form::close() !!}-->
-                        </div>
+                    </form>
                     </div>
                 </div>
             </div>
@@ -283,8 +279,8 @@
             <div id="modal_e" class="modal-dialog modal-dialog-centered modal-lg" >
                 <div class="modal-content">
                     <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4>Errores</h4>
+                    <div class="modal-header text-center">
+                        <h4 id="titulo_header">Errores</h4>
                         <button type="button" class="close" data-dismiss="modal">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -295,9 +291,9 @@
                     <p class="statusMsg"></p>
                     <h5 id="tabla_e_titulo"></h5>
 
-                    <div   class="card-body table-responsive "  >
+                    <div  style="display: none;" id="div_t_errores" class="card-body table-responsive card-outline card-danger  "  >
 
-                        <div class="table-responsive "  style="height: 250px;" >
+                        <div class="table-responsive "  style="height: 250px;" > <!--para q pueda tener scroll-->
                             <table id="tabla_errores"   class="table table-striped projects">
                                 <thead>
                                     <tr>
@@ -309,7 +305,7 @@
                                         </th>
 
                                         <th  class="text-center" >
-                                            Error
+                                            Errores
                                         </th>
 
                                     </tr>
@@ -324,13 +320,13 @@
                         <div class="card"></div>
                     </div>
 
-                    <div id="div_descarga" class="card">
+                    <div style="display: none;" id="div_descarga" class="card card-outline card-green ">
                         <span>Para mas detalles descargue el informe de errores</span>
                         <form action="{{ url('download/export') }}">
                             {{ csrf_field() }}
                             <input type="text"  name="f_id_download" hidden id="vf_id">
                             <input type="text"  name="user_id_download" hidden id="vu_id" value="{{ Auth::user()->id }}">
-                            <button id="btn_download_excel" type="submit" class="btn btn-sm btn-primary">Descargar</button>
+                            <button id="btn_download_excel" type="submit" class="btn btn-sm btn-outline-primary"><i style="margin-right: 1%" class="fas fa-file-download fa-3x"></i></button>
                         </form>
 
                     </div>
@@ -338,11 +334,7 @@
                 <!-- Modal Footer -->
                     <div class="modal-footer">
                         <button id="btn_closed_m_excel" type="button" class="btn btn-outline-danger" data-dismiss="modal">Cerrar</button>
-                        <form id="form_p2" action="{{ url('pruebas/excel2') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
-                            {{ csrf_field() }}
 
-                            <input id="btn_eder_p" class="btn btn-success" type="submit" value="descarga" >
-                          </form>
                         <div class="form-group">
 
 
@@ -383,13 +375,18 @@
     });
 
 
-    var info
+    var info //esto para el excel
+    var postulado_select=false //para saber si pulso el boton
+    var supervisor_select=false
     var cont_select_sup=false
+    var formacion_select=false
 
     $('#archivo_inputp').click(function (e) {
 
         $('#f_id').val($('#formas').val());
-    });
+    });//ruebas con el excelp
+
+
     $('#formas').on('change', function () {
         if ($('#formas').val()) {
 
@@ -404,6 +401,7 @@
 
     $('#btn_confirm_f').click(function (e) {
                 e.preventDefault();
+                formacion_select=true
                 var id_form=$('#formas').val()
                 $("#btn_deleted_all").prop('disabled', false);
                 $('#_postulados').fadeIn(); //prueba de momento
@@ -523,6 +521,14 @@
         })
 
     });
+
+
+    ///TRATAMIENTO DEL EXCEL
+    /*$('#btn_activa_excel').click(function (e) {
+
+        $('#archivo_input').trigger('click');
+
+    });*/
     /// CARGA DEL EXCEL///
     $('#btn_cargar').click(function (e) {
         e.preventDefault();
@@ -530,6 +536,7 @@
 
     });
 
+    //DESCARGA EL EXCEL//
     $('#btn_download_excel').click(function (e) {
 
         $('#vf_id').val($('#formas').val());
@@ -561,12 +568,16 @@
             {
                 //console.log(data)
                 //console.log(data[2].cont_e)
-                $('#modal_e_excel').modal('show');
+
                 var newRows = "";
                 //console.log(data[0].status)
-                if(data[0].status==300)
+                if(data[0].status==300) //Errores Postulados/Supervisores
                 {
+                    $('#modal_e_excel').modal('show');
+                    $('#div_t_errores').fadeIn();
+                    $('#div_descarga').fadeIn();
                     $('#tabla_e_titulo').text('Total de errores: '+data[2].cont_e);
+                    $("#tabla_errores tr").remove();
                     $.each(data[1].errores, function (i,valor) {
                         //console.log(valor)
                         var cad=valor.split('-')
@@ -579,20 +590,67 @@
 
                 }
 
+                if(data[0].status==250  ) //Mal/sin encabezado
+                {
 
-                if(data.success)
+                    const t= Swal.mixin({
+                            customClass: {
+                                confirmButton: 'btn btn-success btn-alert',
+
+                            },
+                            buttonsStyling: true
+                        })
+
+
+                    t.fire({
+                    title: '!ERROR !',
+                    text: data[1].errores,
+                    icon: 'error',
+                    confirmButtonText: 'Continuar',
+                    width: '35%',
+                    timerProgressBar:true,
+
+                    })
+
+                }
+                if(data[0].status==260  ) //Mal/sin encabezado
+                {
+
+                    const t= Swal.mixin({
+                            customClass: {
+                                confirmButton: 'btn btn-success btn-alert',
+
+                            },
+                            buttonsStyling: true
+                        })
+
+
+                    t.fire({
+                    title: '<strong>!ERROR !</strong>',
+                    text: data[1].errores,
+                    icon: 'error',
+
+                    confirmButtonText: 'Continuar',
+                    width: '35%',
+                    timerProgressBar:true,
+
+                    })
+
+                }
+
+                if(data[0].status==777) //Todo perfecto
                 {
                     //html = '<div class="alert alert-success">' + data.success + '</div>';
                     $('#form_new_postu')[0].reset();
                     $('#tabla_postulados').DataTable().ajax.reload();
 
-                const t= Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success btn-alert',
+                    const t= Swal.mixin({
+                            customClass: {
+                                confirmButton: 'btn btn-success btn-alert',
 
-                        },
-                        buttonsStyling: false
-                    })
+                            },
+                            buttonsStyling: false
+                        })
 
 
                     t.fire({
@@ -605,8 +663,7 @@
                     timer: 2500
                     })
 
-                    //$('#btn_closed_m').trigger('click');
-                    //$('#modal_agregar').modal('hide'); desscuadra la cosa
+
                 }
 
 
@@ -661,7 +718,8 @@
             }
         })
 
-
+        postulado_select=false
+        supervisor_select=false
         var tabla_postulados= $('#select_new_postulado').DataTable({
 
             "destroy":true,
@@ -677,7 +735,16 @@
                 {data: 'ci'},
                 {data: 'name'},
                 //{data: 'apellido'},
-                {data: 'email'},
+                {data: 'prioridad','render' : function (data, type, row) {
+                                if (data.toUpperCase()=='ALTA') {
+                                    return '<span class="badge-pill badge-verde-b ">'+data.toUpperCase()+'</span>'
+                                }
+                                if (data.toUpperCase()=='MEDIA') {
+                                    return '<span class="badge-pill badge-oro2 ">'+data.toUpperCase()+'</span>'
+                                }
+
+                                return '<span class="badge-pill badge-danger">'+data.toUpperCase()+'</span>'
+                            }},
 
 
 
@@ -709,7 +776,7 @@
 
     $('#modal_agregar').on('click', '#btn_select_p', function () {
         //$('#card_postulado').fadeOut();
-
+        postulado_select=true
         if (!cont_select_sup) {
             cont_select_sup=true
         }else{
@@ -780,6 +847,8 @@
     $('#modal_agregar').on('click', '#btn_atras_M', function () {
         $('#card_supervisor').toggle(1000);
         $('#card_postulados').toggle(1100);
+        postulado_select=false
+        supervisor_select=false
 
     });
 
@@ -794,7 +863,7 @@
 
         }
         $(this).closest('tr').css('background', '#b8daba');
-
+        supervisor_select=true
 
         //console.log($('#user_id').val())
         //console.log($('#formacion_id').val())
@@ -807,75 +876,78 @@
 
         event.preventDefault();
         //console.log($(this).serialize())
-        $.ajax({
+        //console.log(postulado_select)
+        if (postulado_select && supervisor_select && formacion_select) {
+            $.ajax({
 
-                url: "{{ route('UserInsFormacion.store') }}",
-                method:"POST",
-                data:$(this).serialize(),
-                dataType:"json",
-                success:function(data)
-                {
-                    var html = '';
-                    if(data.error)
+                    url: "{{ route('UserInsFormacion.store') }}",
+                    method:"POST",
+                    data:$(this).serialize(),
+                    dataType:"json",
+                    success:function(data)
                     {
-                        //console.log(data.error)
+                        var html = '';
+                        if(data.error)
+                        {
+                            //console.log(data.error)
+                            const t= Swal.mixin({
+                                customClass: {
+                                    confirmButton: 'btn btn-danger',
+
+                                },
+                                buttonsStyling: false
+                            })
+
+
+                            t.fire({
+                            title: 'ERROR',
+                            text: data.error,
+                            icon: 'error',
+                            confirmButtonText: 'Cerrar',
+                            width: '35%',
+                            //timerProgressBar:true,
+                            //timer: 2500
+                            })
+                        }
+                        if(data.success)
+                        {
+                            //html = '<div class="alert alert-success">' + data.success + '</div>';
+                            $('#form_new_postu')[0].reset();
+                            $('#tabla_postulados').DataTable().ajax.reload();
+                            //info= $('#tabla_postulados').DataTable().page.info();
+                            //console.log(info.recordsTotal)
+
                         const t= Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-danger',
+                                customClass: {
+                                    confirmButton: 'btn btn-success btn-alert',
 
-                            },
-                            buttonsStyling: false
-                        })
+                                },
+                                buttonsStyling: false
+                            })
 
 
-                        t.fire({
-                        title: 'ERROR',
-                        text: data.error,
-                        icon: 'error',
-                        confirmButtonText: 'Cerrar',
-                        width: '35%',
-                        //timerProgressBar:true,
-                        //timer: 2500
-                        })
+                            t.fire({
+                            title: '!Guardado correctamente!',
+                            text: data.success,
+                            icon: 'success',
+                            confirmButtonText: 'Continuar',
+                            width: '35%',
+                            timerProgressBar:true,
+                            timer: 2500
+                            })
+
+                            //$('#btn_closed_m').trigger('click');
+                            //$('#modal_agregar').modal('hide'); desscuadra la cosa
+                        }
+
+
                     }
-                    if(data.success)
-                    {
-                        //html = '<div class="alert alert-success">' + data.success + '</div>';
-                        $('#form_new_postu')[0].reset();
-                        $('#tabla_postulados').DataTable().ajax.reload();
-                        //info= $('#tabla_postulados').DataTable().page.info();
-                        //console.log(info.recordsTotal)
-
-                       const t= Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-success btn-alert',
-
-                            },
-                            buttonsStyling: false
-                        })
+                });
 
 
-                        t.fire({
-                        title: '!Guardado correctamente!',
-                        text: data.success,
-                        icon: 'success',
-                        confirmButtonText: 'Continuar',
-                        width: '35%',
-                        timerProgressBar:true,
-                        timer: 2500
-                        })
+            }
+                //$('#btn_closed_m').trigger('click');
 
-                        //$('#btn_closed_m').trigger('click');
-                        //$('#modal_agregar').modal('hide'); desscuadra la cosa
-                    }
-
-
-                }
-            });
-
-
-
-            //$('#btn_closed_m').trigger('click');
 
     });
     ///***////

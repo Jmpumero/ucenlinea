@@ -182,28 +182,30 @@ class UserInsFormacionController extends Controller
             if ($formacion->max_matricula) {
                 # code...
             }*/
+            if ((($request->id_user!=null)and ($request->id_sp!=null))and($request->idf!=null))
+            {
 
-            if (User_ins_formacion::where('user_id', $request->id_user)->where('formacion_id',$request->idf)->exists()) {
+                if (User_ins_formacion::where('user_id', $request->id_user)->where('formacion_id',$request->idf)->exists()) {
 
-                //$user=User::find($request->id_user);
-               // $error[] = ['error' => 'El postulado ya se encuentra registrado en la formacion'];
-                //$m= 'El postulado'+'gg'+ 'ya se encuentra registrado en la formacion';
-                return response()->json(['error' => 'El postulado ya se encuentra registrado en la formacion']);
+                    //$user=User::find($request->id_user);
+                // $error[] = ['error' => 'El postulado ya se encuentra registrado en la formacion'];
+                    //$m= 'El postulado'+'gg'+ 'ya se encuentra registrado en la formacion';
+                    return response()->json(['error' => 'El postulado ya se encuentra registrado en la formacion']);
+                }
+
+                if ($request->id_user==$request->id_sp) {
+                    return response()->json(['error' => 'El postulado no puede ser su propio supervisor']);
+                }
+
+
+                $nuevo =new User_ins_formacion;
+                $nuevo->user_id=$request->id_user;
+                $nuevo->formacion_id=$request->idf;
+                $nuevo->supervisor_id=$request->id_sp;
+
+                $nuevo->save();
+
             }
-
-            if ($request->id_user==$request->id_sp) {
-                return response()->json(['error' => 'El postulado no puede ser su propio supervisor']);
-            }
-
-
-            $nuevo =new User_ins_formacion;
-            $nuevo->user_id=$request->id_user;
-            $nuevo->formacion_id=$request->idf;
-            $nuevo->supervisor_id=$request->id_sp;
-
-            $nuevo->save();
-
-
 
             return response()->json(['success' => 'Estudiante añadido a la formacion']);
 
@@ -227,10 +229,7 @@ class UserInsFormacionController extends Controller
             $array_e[]=['cont_e'=>0];
             $m_e;
             //**validacion del archivo */
-            $messages = [
-
-                'archivo.extension' => 'El documento debe ser un archivo Excel'
-            ];
+            $messages = [  'archivo.extension' => 'El documento debe ser un archivo Excel' ];
             $error= Validator::make(
                 [
                     'file'      => $request->file('archivo'),
@@ -245,12 +244,12 @@ class UserInsFormacionController extends Controller
               if($error->fails())
               {
                 $array_e[0]['status']=260;
-                array_push ( $array_e[1]['errores'] , 'Error: Archivo no valido'  );
+                array_push ( $array_e[1]['errores'] , 'El documento debe ser un archivo Excel .xlsx'  );
+                return response()->json( $array_e);
 
               }
               ///** */
             $cont_error=0;
-            $messages=array('errores'=>array('mensaje'=>'','fila'=>''),'exito'=>array('mensaje'=>''));// de prueba
             $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
         /**se buscan los encbezados*/
             $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
@@ -325,7 +324,7 @@ class UserInsFormacionController extends Controller
 
             return datatables()->of(User_ins_formacion::where('formacion_id',$id)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.id','tbl1.ci','tbl1.name','tbl1.email','tbl2.name as supervisor'))
                     ->addColumn('action', function($data){
-                        $button = '<button type="button" name="edit" id="btn_edit_p" data-id="'.$data->id.'" class="inscribir btn btn-success btn-sm">Inscribir</button>';
+                        $button = '<button type="button" name="edit" id="btn_edit_p" data-id="'.$data->id.'" class="examinar btn btn-info btn-sm"><i class="fas fa-search"></i></button>';
 
                         $button .= '<button type="button" name="delete" id ="btn_eliminar_p"    data-id="'.$data->id.'" class="btn-eliminar btn btn-danger btn-sm"><i class="fas fa-trash"  style="margin-right: 0.5rem;" ></i>Borrar</button>';
                         return $button;
@@ -372,76 +371,82 @@ class UserInsFormacionController extends Controller
             $m[0][0]='  Postulado  ';
             $m[0][1]='  Supervisor  ';
             $m[0][2]='  ';
-            $m[0][3]='Error';
+            $m[0][3]='Mensaje';
         /** */
 
             $em_id=$user->empresa->first()->id;
 
-            foreach ($array as $key => $value) {
+            foreach ($array as $key => $value)
+            {
                 $row=1;
                 $j=0;
+               foreach ($value as $key2 => $value2)
+                {
 
-               foreach ($value as $key2 => $value2) {
+                        $m[$i][$j]=$value2['postulado'];
+                        $m[$i][$j+1]=$value2['supervisor'];
+                        $m[$i][$j+2]=' ';
+                        $row++;
 
-                    $m[$i][$j]=$value2['postulado'];
-                    $m[$i][$j+1]=$value2['supervisor'];
-                    $m[$i][$j+2]=' ';
+                    if (!((strcmp($value2['postulado'],'')==0)and(strcmp($value2['supervisor'],'')==0))) //validacion especial para evitar algunos caso donde los vacios... se tomaban en cuenta
+                    {
+                        //dump('row: '.$row.'p: '.$value2['postulado'].' s: '.$value2['supervisor']);
+                        $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
+                        $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
+                        if (is_bool($p_v)) {
+                            if (is_bool($s_v)) {
+                                if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
+                                    $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('formacion_id',$f_id)->get(); //valida repetidos estudiante-formacion
+                                    if ($t->count()==0) {
+                                        User_ins_formacion::create([ //se inserta
+                                            'user_id' => $value2['postulado'],
+                                            'formacion_id' =>$f_id,
+                                            'supervisor_id' => $value2['supervisor'],
+                                        ]);
 
-                    $row++;
-                    $p_v=$this->validar_p_s($value2['postulado'],$row,'postulado',$em_id);
-                    $s_v=$this->validar_p_s($value2['supervisor'],$row,'supervisor',$em_id);
-                    if (is_bool($p_v)) {
-                        if (is_bool($s_v)) {
-                            if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
-                                $t=User_ins_formacion::where('user_id',$value2['postulado'])->where('formacion_id',$f_id)->get(); //valida repetidos estudiante-formacion
-                                if ($t->count()==0) {
-                                    User_ins_formacion::create([ //se inserta
-                                        'user_id' => $value2['postulado'],
-                                        'formacion_id' =>$f_id,
-                                        'supervisor_id' => $value2['supervisor'],
-                                    ]);
+                                        $response[0]['status']=777;
+                                        $m[$i][$j+2]=' ';
+                                        $m[$i][$j+3]='Guardardo Correctamente';
 
-                                    $response[0]['status']=777;
-                                    $m[$i][$j+2]=' ';
-                                    $m[$i][$j+3]='Guardardo Correctamente';
+                                    }else{
+                                        $response[0]['status']=300;
+                                        $response[2]['cont_e']++;
+                                        array_push ( $response[1]['errores'] , $row.'- El Postulado ya se encuentra registrado en la formacion' );
+
+                                        $m[$i][$j+3]='El Postulado ya se encuentra registrado en la formacion';
+                                    }
 
                                 }else{
                                     $response[0]['status']=300;
-                                    $response[2]['cont_e']++;
-                                    array_push ( $response[1]['errores'] , $row.'- El Postulado ya se encuentra registrado en la formacion' );
+                                        $response[2]['cont_e']++;
+                                        array_push ( $response[1]['errores'] , $row.'- El Postulado NO puede ser su propio Supervisor' );
 
-                                    $m[$i][$j+3]='El Postulado ya se encuentra registrado en la formacion';
+                                        $m[$i][$j+3]='El Postulado NO puede ser su propio Supervisor';
                                 }
-
                             }else{
-                                $response[0]['status']=300;
+                                    $response[0]['status']=300;
                                     $response[2]['cont_e']++;
-                                    array_push ( $response[1]['errores'] , $row.'- El Postulado NO puede ser su propio Supervisor' );
+                                    array_push ( $response[1]['errores'] , $s_v );
+                                    $s = substr($s_v,strpos($s_v, "-")+1);
 
-                                    $m[$i][$j+3]='El Postulado NO puede ser su propio Supervisor';
+                                    $m[$i][$j+3]=$s;
                             }
                         }else{
-                                $response[0]['status']=300;
-                                $response[2]['cont_e']++;
-                                array_push ( $response[1]['errores'] , $s_v );
-                                $s = substr($s_v,strpos($s_v, "-")+1);
+                            $response[0]['status']=300;
+                            $response[2]['cont_e']++;
+                            array_push ( $response[1]['errores'] , $p_v );
 
-                                $m[$i][$j+3]=$s;
+
+                            $s = substr($p_v,strpos($p_v, "-")+1);
+
+                            $m[$i][$j+3]=$s;
                         }
-                    }else{
-                        $response[0]['status']=300;
-                        $response[2]['cont_e']++;
-                        array_push ( $response[1]['errores'] , $p_v );
 
 
-                        $s = substr($p_v,strpos($p_v, "-")+1);
-
-                        $m[$i][$j+3]=$s;
                     }
-
                     $i++;
 
-               }
+                }
 
             }
     }
@@ -500,7 +505,7 @@ class UserInsFormacionController extends Controller
 
     }
 
-    public function validacion_con_ci($array,$f_id){
+    public function validacion_con_ci($array,$f_id,&$response,&$m){
 
         $user=Auth::user();
 
@@ -516,62 +521,66 @@ class UserInsFormacionController extends Controller
         $cont_error=0;
         $em_id=$user->empresa->first()->id;
         //dump($em_id);
-        foreach ($array as $key => $value) {
+        foreach ($array as $key => $value)
+        {
             $row=1;
             $j=0;
-            foreach ($value as $key2 => $value2) {
+            foreach ($value as $key2 => $value2)
+            {
                 $m[$i][$j]=$value2['postulado'];
                 $m[$i][$j+1]=$value2['supervisor'];
                 $m[$i][$j+2]=' ';
 
                 $row++;
-                $p_v=$this->validar_con_cedula($value2['postulado'],$row,'postulado',$em_id);
-                $s_v=$this->validar_con_cedula($value2['supervisor'],$row,'supervisor',$em_id);
-                if (is_bool($p_v)) {
-                    if (is_bool($s_v)) {
-                        if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
-                            $id_user=User::firstWhere('ci',$value2['postulado'])->id;
-                            $t=User_ins_formacion::where('user_id',$id_user)->where('formacion_id',$f_id)->get();
-                            if ($t->count()===0) { //ojo
-                                User_ins_formacion::create([ //se inserta
-                                    'user_id' => $value2['postulado'],
-                                    'formacion_id' =>$f_id,
-                                    'supervisor_id' => $value2['supervisor'],
-                                ]);
+                if (!((strcmp($value2['postulado'],'')==0)and(strcmp($value2['supervisor'],'')==0))) //validacion especial para evitar algunos caso donde los vacios... se tomaban en cuenta
+                {
+                    $p_v=$this->validar_con_cedula($value2['postulado'],$row,'postulado',$em_id);
+                    $s_v=$this->validar_con_cedula($value2['supervisor'],$row,'supervisor',$em_id);
+                    if (is_bool($p_v)) {
+                        if (is_bool($s_v)) {
+                            if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
+                                $id_user=User::firstWhere('ci',$value2['postulado'])->id;
+                                $t=User_ins_formacion::where('user_id',$id_user)->where('formacion_id',$f_id)->get();
+                                if ($t->count()===0) { //ojo
+                                    User_ins_formacion::create([ //se inserta
+                                        'user_id' => $value2['postulado'],
+                                        'formacion_id' =>$f_id,
+                                        'supervisor_id' => $value2['supervisor'],
+                                    ]);
 
-                                $response[0]['status']=777;
-                                $m[$i][$j+2]=' ';
-                                $m[$i][$j+3]='Guardardo Correctamente';
+                                    $response[0]['status']=777;
+                                    $m[$i][$j+2]=' ';
+                                    $m[$i][$j+3]='Guardardo Correctamente';
 
+                                }else{
+                                    $response[0]['status']=300;
+                                    $response[2]['cont_e']++;
+                                    array_push ( $response[1]['errores'] , $row.'- El Postulado ya se encuentra registrado en la formacion' );
+
+                                    $m[$i][$j+3]='El Postulado ya se encuentra registrado en la formacion';
+                                }
                             }else{
                                 $response[0]['status']=300;
-                                $response[2]['cont_e']++;
-                                array_push ( $response[1]['errores'] , $row.'- El Postulado ya se encuentra registrado en la formacion' );
+                                    $response[2]['cont_e']++;
+                                    array_push ( $response[1]['errores'] , $row.'- El Postulado NO puede ser su propio Supervisor' );
 
-                                $m[$i][$j+3]='El Postulado ya se encuentra registrado en la formacion';
+                                    $m[$i][$j+3]='El Postulado NO puede ser su propio Supervisor';
                             }
                         }else{
                             $response[0]['status']=300;
-                                $response[2]['cont_e']++;
-                                array_push ( $response[1]['errores'] , $row.'- El Postulado NO puede ser su propio Supervisor' );
-
-                                $m[$i][$j+3]='El Postulado NO puede ser su propio Supervisor';
+                            $response[2]['cont_e']++;
+                            array_push ( $response[1]['errores'] , $s_v );
+                            $s = substr($s_v,strpos($s_v, "-")+1);
+                            $m[$i][$j+3]=$s;
                         }
                     }else{
                         $response[0]['status']=300;
                         $response[2]['cont_e']++;
-                        array_push ( $response[1]['errores'] , $s_v );
-                        $s = substr($s_v,strpos($s_v, "-")+1);
+                        array_push ( $response[1]['errores'] , $p_v );
+                        $s = substr($p_v,strpos($p_v, "-")+1);
                         $m[$i][$j+3]=$s;
                     }
-                }else{
-                    $response[0]['status']=300;
-                    $response[2]['cont_e']++;
-                    array_push ( $response[1]['errores'] , $p_v );
-                    $s = substr($p_v,strpos($p_v, "-")+1);
-                    $m[$i][$j+3]=$s;
                 }
-
                 $i++;
             }
 
@@ -607,9 +616,9 @@ class UserInsFormacionController extends Controller
       }
 
 
-      Excel::store(new ErroresExport($m_export), 'prueba_export.xlsx','public');
+      //Excel::store(new ErroresExport($m_export), 'prueba_export.xlsx','public');
       //return Excel::download(new ErroresExport($m_export), 'prueba_export.xlsx');
-      return redirect()->back();
+      //return redirect()->back();
 
     //dump($d);
       //$export = new ErroresExport( $l);

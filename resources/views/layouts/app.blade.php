@@ -20,6 +20,7 @@
      <!-- Theme style -->
 
     <link rel="stylesheet" href="{{ asset('adminlte/css/adminlte.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminlte/css/extras.css') }}">
 
     <!-- CSS bootstrap only -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
