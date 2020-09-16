@@ -38,21 +38,23 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('inscribir/postulados', 'UserInsFormacionController@store')->name('UserInsFormacion.store'); //añade un postulado a la formacion
 
-
     Route::post('inscribir/postulados/masivo/{id}', 'UserInsFormacionController@import_excel')->name('UserInsFormacion.import'); //añade un postulado a la formacion
 
-
-
     Route::get('lista/postulados/{id}', 'UserInsFormacionController@show')->name('postulados.show'); //buena falt midelware
-
     Route::get('eliminar/postulado/f/{id}', 'UserInsFormacionController@destroy')->name('postulados.destroy'); //pendiente revisar
-
     Route::get('eliminar/lista/{id}', 'UserInsFormacionController@destroy_all')->name('vaciar lista');
-
-
-    Route::post('pruebas/excel', 'UserInsFormacionController@pruebas');
-
     Route::get('download/export', 'UserInsFormacionController@download_excel_er')->name('error_p.download');
+
+    Route::get('postulados/evaluar/todos', 'UserInsFormacionController@expediente_estudiante_all')->name('p.evaluar');
+
+
+
+
+
+
+    Route::get('pruebas/excel', 'UserInsFormacionController@pruebas');
+
+
    // Route::post('pruebas/excel2', 'UserInsFormacionController@pruebas2');
     //Route::post('users/update', 'UserController@update')->name('productos.update');
 });

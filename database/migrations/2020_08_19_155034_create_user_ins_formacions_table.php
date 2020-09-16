@@ -17,7 +17,8 @@ class CreateUserInsFormacionsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('formacion_id');
             $table->unsignedBigInteger('supervisor_id');
-            $table->boolean('retiro')->default(false);
+            $table->unsignedBigInteger('rp_id');
+            //$table->boolean('retiro')->default(false);
 
             $table->foreign('user_id')
                 ->references('id')
@@ -32,7 +33,9 @@ class CreateUserInsFormacionsTable extends Migration
             $table->foreign('supervisor_id')
                 ->references('id')
                 ->on('users');
-                //->onUpdate('cascade'); //revision
+
+            $table->foreign('rp_id')->references('id')->on('users');
+
 
             $table->primary(['user_id', 'formacion_id'], 'user_ins_formacions_user_id_formacion_id_primary');
             $table->timestamps();

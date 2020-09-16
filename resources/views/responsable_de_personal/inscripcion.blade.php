@@ -3,21 +3,7 @@
 @section('content')
 
 
-        <!-- esto fue una prueba para usar ajax
-            <div class="card card-notificacion">
-            <div class="card-header">ajax sin collective</div>
 
-            <div class="card-body">
-
-                <form action="" method="get">
-                    <select name="formaciones[]" id="formaciones"  style="width: 50%" >
-                        <option></option>
-                    </select>
-                </form>
-
-
-            </div>
-        </div>-->
 
         <div class="card card-notifiacion table-responsive" id="c_formaciones">
             <div class="card-header text-center"><h2> Formaciones disponibles</h2> </div>
@@ -48,7 +34,7 @@
                 </a>
 
                 <a href="#">
-                  <button disabled=true type="button" id="btn_expediente" class="btn  btn-outline-info"  style="width: 100%;" data-toggle="tooltip" title="Examinar"  >
+                  <button disabled=true type="button" id="btn_evaluar" class="btn  btn-outline-info"  style="width: 100%;" data-toggle="tooltip" title="Examinar"  >
                      <i class="fas fa-search" style="margin-right: 0.5rem; "></i>Expedientes</button>
                 </a>
 
@@ -328,7 +314,6 @@
                             <input type="text"  name="user_id_download" hidden id="vu_id" value="{{ Auth::user()->id }}">
                             <button id="btn_download_excel" type="submit" class="btn btn-sm btn-outline-primary"><i style="margin-right: 1%" class="fas fa-file-download fa-3x"></i></button>
                         </form>
-
                     </div>
 
                 <!-- Modal Footer -->
@@ -345,7 +330,14 @@
         </div>
 
 
+<!-- Formulario Oculto para los expedientes-->
 
+<form hidden action="{{ url('postulados/evaluar/todos') }}">
+    {{ csrf_field() }}
+    <input type="text"  name="f_id_ev" hidden id="f_id_ev">
+    <input type="text"  name="user_id_ev" hidden id="user_id_ev" value="{{ Auth::user()->id }}">
+    <button hidden id="btn_form_ev" type="submit"></button>
+</form>
 
 
 
@@ -384,8 +376,41 @@
     $('#archivo_inputp').click(function (e) {
 
         $('#f_id').val($('#formas').val());
-    });//ruebas con el excelp
+    });//pruebas con el excelp
 
+    //Para ver todos los expedientes
+    $('#btn_evaluar').click(function (e) {
+       // e.preventDefault();
+       info= $('#tabla_postulados').DataTable().page.info();
+       //console.log()
+       if (info.recordsTotal>0) {
+            $('#f_id_ev').val($('#formas').val());
+            $('#btn_form_ev').trigger('click');
+       }else{
+
+        const t= Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-morado btn-alert',
+
+            },
+            buttonsStyling: false
+        })
+
+
+        t.fire({
+        title: '<strong> !No hay usuarios en la lista para evaluar! </strong>',
+        //text: data.success,
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        width: '35%',
+        //timerProgressBar:true,
+        //timer: 2500
+        })
+
+       }
+
+
+    });
 
     $('#formas').on('change', function () {
         if ($('#formas').val()) {
@@ -394,6 +419,7 @@
            //
             $("#btn_confirm_f").prop('disabled', false);
             $("#btn_agregar").prop('disabled', false);
+            $("#btn_evaluar").prop('disabled', false);
 
         }
 

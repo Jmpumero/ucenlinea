@@ -16,8 +16,8 @@ class CreateExpedienteUsuariosTable extends Migration
         Schema::create('expediente_usuarios', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('formacion_id');
-            $table->integer('num_retiro')->unsigned()->default(0);
-            $table->integer('num_abandono')->unsigned()->default(0);
+            $table->enum('status',['Finalizada','Cursando','Retirada','Abandonada'])->default('Cursando');
+            $table->decimal('calificacion', 5, 3)->default(00.00);
 
             $table->foreign('user_id')
                 ->references('id')

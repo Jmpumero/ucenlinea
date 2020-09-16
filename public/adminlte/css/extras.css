@@ -164,5 +164,15 @@ i.icon-mg-sm{
 
 
 
+.btn-morado {
+    color: #ffffff;
+    background-color: #b235fa;
+    border-color: #b327ac;
+    box-shadow: none;
+  }
 
-
+  .btn-morado:hover {
+    color: #ffffff;
+    background-color: #b235fa;
+    border-color: #b327ac;
+  }

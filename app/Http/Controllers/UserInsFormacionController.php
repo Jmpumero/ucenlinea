@@ -10,6 +10,7 @@ use App\Formacion;
 use Carbon\Carbon;
 use App\Requisicion;
 use App\User_p_empresa;
+use App\Expediente_usuario;
 use App\User_ins_formacion;
 use Illuminate\Http\Request;
 use App\CustomClass\CedulaVE;
@@ -18,8 +19,8 @@ use Maatwebsite\Excel\Importer;
 use App\Imports\PostuladosImport;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
-use  App\Exports\ErroresvistaExport;
 
+use  App\Exports\ErroresvistaExport;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
@@ -54,7 +55,7 @@ class UserInsFormacionController extends Controller
 
     }
 
-    public function select_usuarios(Request $request) //select con ajax borrar añ final
+    public function select_usuarios(Request $request) //select con ajax borrar añ final no se usa
     {
         /*$term = trim($request->q);
 
@@ -116,8 +117,8 @@ class UserInsFormacionController extends Controller
                     ->toJson();
         }
 
-        $em_id=$user->empresa->first()->id;
-        $usuarios=Empresa::find($em_id)->users->dump();
+       // $em_id=$user->empresa->first()->id;
+        //$usuarios=Empresa::find($em_id)->users->dump();
 
 
     }
@@ -128,7 +129,7 @@ class UserInsFormacionController extends Controller
         $user=Auth::user();
         if(request()->ajax())
         {
-            $roles = Role::findByName('Supervisor'); //OJO CAMBIAR A SUPERVISOR
+            $roles = Role::findByName('Supervisor');
             $roles_us=$roles->users;
             $em_id=$user->empresa->first()->id;
             $usuarios=Empresa::find($em_id)->users;
@@ -175,6 +176,8 @@ class UserInsFormacionController extends Controller
      */
     public function store(Request $request)
     {
+        $user=Auth::user();
+
         if ($request->ajax()) {
 
            /* $formacion=Formacion::where('id',$request->idf)->select('max_matricula');
@@ -202,6 +205,7 @@ class UserInsFormacionController extends Controller
                 $nuevo->user_id=$request->id_user;
                 $nuevo->formacion_id=$request->idf;
                 $nuevo->supervisor_id=$request->id_sp;
+                $nuevo->rp_id=$user->id;
 
                 $nuevo->save();
 
@@ -402,6 +406,7 @@ class UserInsFormacionController extends Controller
                                             'user_id' => $value2['postulado'],
                                             'formacion_id' =>$f_id,
                                             'supervisor_id' => $value2['supervisor'],
+                                            'rp_id' => $user->id,
                                         ]);
 
                                         $response[0]['status']=777;
@@ -546,6 +551,7 @@ class UserInsFormacionController extends Controller
                                         'user_id' => $value2['postulado'],
                                         'formacion_id' =>$f_id,
                                         'supervisor_id' => $value2['supervisor'],
+                                        'rp_id' => $user->id,
                                     ]);
 
                                     $response[0]['status']=777;
@@ -591,12 +597,75 @@ class UserInsFormacionController extends Controller
 
 
 
+
+    public function expediente_estudiante_all(Request $request)
+    {
+        $q= User_ins_formacion::where('formacion_id',$request->f_id_ev)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->select('tbl1.id','tbl1.ci','tbl1.name');
+
+
+        $result;
+
+        foreach ($q->get() as $key => $user) {
+            $user_exp=Expediente_usuario::where('user_id',$user->id);
+            if ($user_exp->exists()) {
+                $t_c=Expediente_usuario::where('user_id',$user->id)->count();
+                $c_a=Expediente_usuario::where('user_id',$user->id)->where('status','Finalizada')->count();
+                $c_ab=Expediente_usuario::where('user_id',$user->id)->where('status','Abandonada')->count();
+                $l_c=Expediente_usuario::where('user_id',$user->id)->orderBy('created_at', 'desc')->selectRaw('DATE(created_at) AS Fecha')->first();
+
+                $result[]=['id'=>$user->id,'ci'=>$user->ci,'nombre'=>$user->name,'total_cursos'=>$t_c,'cursos_ap'=>$c_a,'cursos_ab'=>$c_ab,'ult_curso'=>$l_c->Fecha];
+
+            }else{
+                $result[]=['id'=>$user->id,'ci'=>$user->ci,'nombre'=>$user->name,'total_cursos'=>0,'cursos_ap'=>0,'cursos_ab'=>0,'ult_curso'=>''];
+            }
+        }
+        return view('responsable_de_personal.evaluar_expediente')->with('results', $result);
+        //return view('responsable_de_personal.evaluar_expediente',['results'=>$result]);
+       // return view('responsable_de_personal.evaluar_expediente',compact('result'));
+    }
+
     public function pruebas(Request $request)
     {
 
+        $user=Auth::user();
+        dump('aiudaa');
+        dump($user->id);
+        dump( $user->empresa->first()->id);
 
-      //dump($error);
-      $array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
+/*$q3=User_ins_formacion::where('formacion_id',$id)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->join('users as tbl2','tbl2.id','=','user_ins_formacions.supervisor_id')->select('tbl1.ci','tbl1.name','tbl1.email','tbl2.name as supervisor');*/
+
+
+       $q= User_ins_formacion::where('formacion_id',2)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->select('tbl1.id','tbl1.ci','tbl1.name');
+       $q2=User_ins_formacion::join('expediente_usuarios','expediente_usuarios.user_id','=','user_ins_formacions.user_id')->where('user_ins_formacions.formacion_id',2);
+
+       $q3=User_ins_formacion::where('user_ins_formacions.formacion_id',2)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->select('tbl1.id','tbl1.ci','tbl1.name')->join('expediente_usuarios','expediente_usuarios.user_id','=','user_ins_formacions.user_id');
+        dump($q->get());
+      //dump($q2->get());
+      //dump($q3->get());
+
+
+      //$q4=User::where('prioridad','media')->count();
+      //dump($q4);
+
+
+      $result;
+
+      foreach ($q->get() as $key => $user) {
+            $user_exp=Expediente_usuario::where('user_id',$user->id);
+            if ($user_exp->exists()) {
+                $t_c=Expediente_usuario::where('user_id',$user->id)->count();
+                $c_a=Expediente_usuario::where('user_id',$user->id)->where('calificacion','>=',9.5)->count();
+                $c_ab=Expediente_usuario::where('user_id',$user->id)->where('status','Abandonada')->count();
+                $l_c=Expediente_usuario::where('user_id',$user->id)->where('status','Finalizada')->last();
+
+                $result[]=['ci'=>$user->ci,'nombre'=>$user->name,'total_cursos'=>$t_c,'cursos_ap'=>$c_a,'cursos_ab'=>$c_ab,'ult_curso'=>$l_c];
+
+            }else{
+                $result[]=['ci'=>$user->ci,'nombre'=>$user->name,'total_cursos'=>0,'cursos_ap'=>0,'cursos_ab'=>0,'ult_curso'=>' '];
+            }
+        }
+
+      /*$array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
 
       $l=[];
       $l[]=['status'=>0];
@@ -607,13 +676,9 @@ class UserInsFormacionController extends Controller
 
       $this->validacion_con_ids($array,$request->formacion,$l,$m_export);
 
-
+    */
      // dump($l);
       //dump($m_export);
-      $d[]=[];
-      foreach ($l[1]['errores'] as $key => $value) {
-          $d[]=['mensaje'=>$value];
-      }
 
 
       //Excel::store(new ErroresExport($m_export), 'prueba_export.xlsx','public');
