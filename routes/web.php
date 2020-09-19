@@ -41,14 +41,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('inscribir/postulados/masivo/{id}', 'UserInsFormacionController@import_excel')->name('UserInsFormacion.import'); //añade un postulado a la formacion
 
     Route::get('lista/postulados/{id}', 'UserInsFormacionController@show')->name('postulados.show'); //buena falt midelware
-    Route::get('eliminar/postulado/f/{id}', 'UserInsFormacionController@destroy')->name('postulados.destroy'); //pendiente revisar
-    Route::get('eliminar/lista/{id}', 'UserInsFormacionController@destroy_all')->name('vaciar lista');
+    //Route::get('eliminar/postulado/f/{id}/{id_f}', 'UserInsFormacionController@destroy')->name('postulados.destroy'); //remplazada
+    Route::get('eliminar/lista', 'UserInsFormacionController@destroy_all')->name('Eliminar.lista');
     Route::get('download/export', 'UserInsFormacionController@download_excel_er')->name('error_p.download');
 
     Route::get('postulados/evaluar/todos', 'UserInsFormacionController@expediente_estudiante_all')->name('p.evaluar');
 
 
-
+    Route::get('eliminar/postulado/f', 'UserInsFormacionController@destroy')->name('Postulados.destroy'); //pendiente revisar
 
 
 

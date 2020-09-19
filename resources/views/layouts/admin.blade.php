@@ -19,7 +19,7 @@
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <script>window.jQuery || document.write('<script src="/adminlte/plugins/jquery/jquery.min.js"><\/script>')</script>
 
-
+    <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
     <!--sweetalert-->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
@@ -46,7 +46,7 @@
   <link rel="stylesheet" href="{{ asset('adminlte/css/extras.css') }}">
 
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+  <!--<link rel="stylesheet" href="{{ asset('adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">-->
   <!-- Daterange picker -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.css') }}">
   <!-- summernote -->
@@ -373,14 +373,12 @@
 
 
 <!--datatable jquery-->
-<script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<!--<script src="{{ asset('adminlte/plugins/datatables-scroller/js/dataTables.scroller.min.js') }}"></script>
-<script src="{{ asset('adminlte/plugins/datatables-scroller/js/scroller.bootstrap4.min.js') }}"></script>
--->
+<script defer src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }} "></script>
+
 
 <!--<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>-->
 
-<!--<script>window.dataTable || document.write('<script src="adminlte/plugins/datatables/jquery.dataTables.min.js"><\/script>')</script>-->
+
 
 
 
@@ -410,8 +408,8 @@
 <script src="{{ asset('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 <!-- Summernoadminlte/te -->
 <script src="{{ asset('adminlte/plugins/summernote/summernote-bs4.min.js') }}"></script>
-<!-- overlayScrollbars -->
-<script src="{{ ('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+<!-- overlayScrollbars
+<script src="{{ ('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>-->
 
 <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
