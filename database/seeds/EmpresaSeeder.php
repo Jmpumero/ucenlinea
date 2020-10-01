@@ -28,6 +28,6 @@ class EmpresaSeeder extends Seeder
             'rif'     => 'J-00006372-9',
 
         ]);
-        factory(Empresa::class,40)->create();
+        factory(Empresa::class,15)->create();
     }
 }

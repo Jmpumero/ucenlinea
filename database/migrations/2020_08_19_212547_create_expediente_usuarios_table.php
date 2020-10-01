@@ -17,8 +17,10 @@ class CreateExpedienteUsuariosTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('formacion_id');
             $table->enum('status',['Finalizada','Cursando','Retirada','Abandonada'])->default('Cursando');
-            $table->decimal('calificacion', 5, 3)->default(00.00);
-
+            $table->decimal('calificacion_obtenida', 5, 3)->default(00.00);
+            $table->integer('califico_formacion')->unsigned()->nullable()->default(0);
+            $table->integer('califico_facilitador')->unsigned()->nullable()->default(0);
+            $table->integer('calificacion_supervisor')->unsigned()->nullable()->default(0);
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');

@@ -25,7 +25,7 @@ class CreateFormacionsTable extends Migration
             $table->boolean('disponibilidad')->default(false);
             $table->boolean('t_facilitador')->default(false);
             $table->enum('tipo',['interna','externa'])->default('interna');
-            $table->decimal('precio', 5, 2)->default(00000.00);
+            $table->decimal('precio', 7, 2)->default(000.00);
             $table->float('calificacion')->nullable()->default(0.00);
             $table->string('imagen')->nullable();
             $table->smallInteger('max_matricula')->default(-1);

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>RP Admin</title>
+  <title>UVC-TESIS </title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -123,16 +123,16 @@
             <!--USER-->
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <img src="{{ Auth::user()->avatar }}" class="user-image img-circle elevation-2" alt="User Image">
+                <img src="{{ asset(Auth::user()->avatar) }}" class="user-image img-circle elevation-2" alt="User Image">
                 <span class="d-none d-md-inline">{{ Auth::user()->name }} </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <!-- User image -->
                 <li class="user-header bg-white">
-                  <img src="{{ Auth::user()->avatar }}" class="img-circle elevation-2" alt="User Image">
+                  <img src="{{ asset(Auth::user()->avatar) }}" class="img-circle elevation-2" alt="User Image">
                     <!-- NO ESTA TERMINADO-->
                   <p>
-                    Empresa - Algo
+                    Empresa - <strong> </strong>
                     <small>Member since Nov. 2012</small>
                   </p>
                 </li>
@@ -177,7 +177,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
           <!-- Brand Logo -->
           <a href="index3.html" class="brand-link">
-            <img src="adminlte/img/logos/UC_logo.png" alt="Logo" class="navbar-brand-image  elevation-3"
+            <img src="{{ asset('adminlte/img/logos/UC_logo.png') }}" alt="Logo" class="navbar-brand-image  elevation-3"
             width="60" height="70" alt="" style="margin: auto;">
             <span class="brand-text font-weight-light" style="font-size: 1rem;"></span>
           </a>
@@ -191,7 +191,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
 
-
+                    <!--Notificaciones para todos-->
                      <li class="nav-item has-treeview">
                       <a href="#" class="nav-link">
                         <i class="far fa-envelope fa-lg text-green"></i>
@@ -224,6 +224,8 @@
                       </ul>
                     </li>
 
+
+
                     <li class="nav-item has-treeview">
                       <a href="#" class="nav-link">
                         <i class="fas fa-user-friends"></i>
@@ -239,19 +241,30 @@
                             <a href= "{{ route('inscribir/estudiantes') }}" class="nav-link">
                                 <i class="fas fa-clipboard-check"></i>
 
-                                <p>Inscribir personal</p>
+                                <p>Postular personal</p>
                             </a>
                             </li>
                         @endcan
-                        <li class="nav-item">
+
+                        @can('matricular estudiantes en moodle')
+                            <li class="nav-item">
+                            <a href= "{{ route('matricular/estudiantes') }}" class="nav-link">
+                                <i class="fas fa-university"></i>
+
+                                <p>Matricular Formacion</p>
+                            </a>
+                            </li>
+                        @endcan
+                        <!--<li class="nav-item">
                           <a href="modform.html" class="nav-link">
                             <i class="far fa-edit"></i>
                             <p>Modificar inscripción</p>
                           </a>
-                        </li>
+                        </li>-->
 
                       </ul>
                     </li>
+
 
                     <li class="nav-item has-treeview">
                       <a href="rpretiro_estudiante.html" class="nav-link">

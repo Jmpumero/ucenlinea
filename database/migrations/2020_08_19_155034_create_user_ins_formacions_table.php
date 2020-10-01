@@ -20,14 +20,10 @@ class CreateUserInsFormacionsTable extends Migration
             $table->unsignedBigInteger('rp_id');
             //$table->boolean('retiro')->default(false);
 
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
                 //->onDelete('cascade');
 
-            $table->foreign('formacion_id')
-                ->references('id')
-                ->on('formacions');
+            $table->foreign('formacion_id')->references('id')->on('formacions');
                 //->onDelete('cascade');
 
             $table->foreign('supervisor_id')

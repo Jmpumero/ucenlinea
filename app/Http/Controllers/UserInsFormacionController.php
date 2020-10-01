@@ -46,7 +46,7 @@ class UserInsFormacionController extends Controller
             $em_id=$user->empresa->first()->id; //un problema aqui es si el usuario no esta asociado a ninguna empresa, se supone que ese caso no deberia ocurrir ya que todo usuario dentro del sistema pertenece a una empresa
 
             $r=Requisicion::where('empresa_id',$em_id);
-            $formaciones_list=$r->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','sin postulados')->where('disponibilidad',1)->where('fecha_de_inicio','>',$now)->get()->pluck('nombre','id');
+            $formaciones_list=$r->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','sin postulados')->orWhere('status','con postulados')->where('disponibilidad',1)->where('fecha_de_inicio','>',$now)->get()->pluck('nombre','id');
 
             return view('responsable_de_personal.inscripcion',['formaciones_list'=>$formaciones_list]);
         }
@@ -207,6 +207,10 @@ class UserInsFormacionController extends Controller
 
                     $matricula_actual++;
                     $formacion->actual_matricula=$matricula_actual;
+                    if ($formacion->status==='sin postulados') {
+                        $formacion->status='con postulados';
+                    }
+
                     $formacion->save();
 
                 }else{
@@ -258,7 +262,7 @@ class UserInsFormacionController extends Controller
               }
               ///** */
             $cont_error=0;
-            $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
+            //$postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
         /**se buscan los encbezados*/
             $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
             $encabezados=[];
@@ -270,14 +274,14 @@ class UserInsFormacionController extends Controller
                     break 2;
                 }
             }//se validan los encabezados
-            if (array_search('postulado',$encabezados,true)==null) {
+            if (strcasecmp('postulado',$encabezados[0])!=0) {
 
                 $array_e[0]['status']=250;
                 $array_e[2]['cont_e']++;
                 array_push ( $array_e[1]['errores'] , 'Error: No se encontro la columna Postulado'  );
 
             }else{
-                if (array_search('supervisor',$encabezados,true)==null) {
+                if (strcasecmp('supervisor',$encabezados[1])!=0) {
                     $array_e[0]['status']=250;
                     $array_e[2]['cont_e']++;
                     array_push ( $array_e[1]['errores'] , 'Error: No se encontro la columna Supervisor'  );
@@ -292,7 +296,7 @@ class UserInsFormacionController extends Controller
                 return response()->json( $array_e);
             }
 
-             $this->validacion_con_ids($postulados,$id,$array_e,$m_e);
+             $this->validacion_con_ci($postulados,$id,$array_e,$m_e);
 
 
              if ( $array_e[0]['status']==300) {
@@ -352,6 +356,8 @@ class UserInsFormacionController extends Controller
                    if ( !$p->hasRole('Supervisor')) {
                     return($row.'- El usuario NO tiene el rango de supervisor');
                    }
+
+
                 }
                 $p=$p->empresa->first()->id;//se supone que todo usuario registrado pertenece a una empresa
                 if ($p==$em_id) {//el postulado pertence a la empresa
@@ -429,6 +435,7 @@ class UserInsFormacionController extends Controller
 
                                                 $matricula_actual++;
                                                 $formacion->actual_matricula=$matricula_actual;
+                                                $formacion->status='con postulados'; //forma ineficiente
                                                 $formacion->save();
                                             }else{
                                                 $response[0]['status']=300;
@@ -474,14 +481,7 @@ class UserInsFormacionController extends Controller
 
                         }
 
-                    /*}else{
 
-                        $response[0]['status']=300;
-                        $response[2]['cont_e']++;
-                        array_push ( $response[1]['errores'] ,$row. '- Formacion llena' );
-                        $m[$i][$j+3]='Formacion llena: Se alcanzo el numero maximo de postulados permitido en la formacion';
-
-                    }*/
                     $i++;
 
                 }
@@ -574,7 +574,7 @@ class UserInsFormacionController extends Controller
                 $m[$i][$j+2]=' ';
 
                 $row++;
-                if (!((strcmp($value2['postulado'],'')==0)and(strcmp($value2['supervisor'],'')==0))) //validacion especial para evitar algunos caso donde los vacios... se tomaban en cuenta
+                if (!((strcmp($value2['postulado'],'')==0)and(strcmp($value2['supervisor'],'')==0))) //validacion especial para evitar algunos caso donde los vacios consecutivos... se tomaban en cuenta
                 {
                     $p_v=$this->validar_con_cedula($value2['postulado'],$row,'postulado',$em_id);
                     $s_v=$this->validar_con_cedula($value2['supervisor'],$row,'supervisor',$em_id);
@@ -583,14 +583,15 @@ class UserInsFormacionController extends Controller
                             if ($value2['postulado']!=$value2['supervisor']) { //caso postulado y supervisor =les
                                 $id_user=User::firstWhere('ci',$value2['postulado'])->id;
                                 $t=User_ins_formacion::where('user_id',$id_user)->where('formacion_id',$f_id)->get();
+                                $id_superv=User::firstWhere('ci',$value2['supervisor'])->id;
                                 if ($t->count()===0) { //ojo
                                     if ($matricula_max>$matricula_actual) {
 
 
                                         User_ins_formacion::create([ //se inserta
-                                            'user_id' => $value2['postulado'],
+                                            'user_id' => $id_user,
                                             'formacion_id' =>$f_id,
-                                            'supervisor_id' => $value2['supervisor'],
+                                            'supervisor_id' => $id_superv,
                                             'rp_id' => $user->id,
                                         ]);
 
@@ -600,6 +601,7 @@ class UserInsFormacionController extends Controller
 
                                         $matricula_actual++;
                                         $formacion->actual_matricula=$matricula_actual;
+                                        $formacion->status='con postulados';
                                         $formacion->save();
                                     }else{
                                         $response[0]['status']=300;
@@ -678,28 +680,89 @@ class UserInsFormacionController extends Controller
     {
 
 
-        $formacion=Formacion::find(2);
-        $matricula_max=$formacion->max_matricula;
-        $matricula_actual=$formacion->actual_matricula;
-        $user=Auth::user();
-        dump($matricula_max);
-        dump($matricula_actual);
+
+        $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
+        $encabezados=[];
+        foreach ($postulados as $key => $value) { //ineficiente pero seguro para obtener todas las posibles claves presente
+            foreach ($value as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    $encabezados[]=$key3;
+                }
+                break 2;
+            }
+        }//se validan los encabezados
+        //dump($postulados);
+        //dump($encabezados[0]);
+        //dump($encabezados[1]);
+       // dump($encabezados);
+       //$p=User::firstWhere('ci',$value);
+
+       //dump($p);
+      foreach ($postulados as $key => $value)
+      {
+          $row=1;
+          $j=0;
+          foreach ($value as $key2 => $value2)
+          {
+               dump($value2['postulado']);
+               dump($value2['supervisor']);
+               $p=User::firstWhere('ci',$value2['postulado']);
+               dump($p);
+          }
+       }
 
 
-        if ($matricula_max<$matricula_actual)
-        {
 
 
-            $matricula_actual++;
-            $formacion->actual_matricula=$matricula_actual;
-            //$formacion->save();
 
+
+        if (strcasecmp('postulado',$encabezados[0])!=0) {
+
+            dump(array_search('postulado',$encabezados,true));
+            dump('gg');
+        }else{
+            if (strcasecmp('supervisor',$encabezados[1])!=0) {
+                dump(array_search('supervisor',$encabezados,true));
+                dump('gg2');
+
+
+            }
         }
-        //dump( $user->empresa->first()->id);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*$id=[1,100];
+        //dump($id);
+        $postulados=User_ins_formacion::where('formacion_id',2)->get();
+            foreach ($postulados as $key => $value) {
+
+                $existe=DB::table('mdl_inscripcions')->where('user_id',$value->user_id)->where('formacion_id',$value->formacion_id)->exists();
+
+                $r=DB::table('mdl_inscripcions')->where('user_id',$value->user_id)->where('formacion_id',$value->formacion_id)->get();
+                    dump($existe);
+                    dump($r);
+
+            }
+        $supervisores=User::join('user_ins_formacions','user_ins_formacions.user_id','=','id')->select('user_id','formacion_id')->where('formacion_id',2)->get();
+        $facilitadores=User::whereIn('id', $id)->get();
+        dump($postulados);
+        dump($supervisores);
+        dump($facilitadores);*/
+
+
 
     /*
-
-
        $q= User_ins_formacion::where('formacion_id',2)->join('users as tbl1','tbl1.id','=','user_ins_formacions.user_id')->select('tbl1.id','tbl1.ci','tbl1.name');
        $q2=User_ins_formacion::join('expediente_usuarios','expediente_usuarios.user_id','=','user_ins_formacions.user_id')->where('user_ins_formacions.formacion_id',2);
 
@@ -712,55 +775,6 @@ class UserInsFormacionController extends Controller
       //$q4=User::where('prioridad','media')->count();
       //dump($q4);
 
-
-     /* $result;
-
-      foreach ($q->get() as $key => $user) {
-            $user_exp=Expediente_usuario::where('user_id',$user->id);
-            if ($user_exp->exists()) {
-                $t_c=Expediente_usuario::where('user_id',$user->id)->count();
-                $c_a=Expediente_usuario::where('user_id',$user->id)->where('calificacion','>=',9.5)->count();
-                $c_ab=Expediente_usuario::where('user_id',$user->id)->where('status','Abandonada')->count();
-                $l_c=Expediente_usuario::where('user_id',$user->id)->where('status','Finalizada')->last();
-
-                $result[]=['ci'=>$user->ci,'nombre'=>$user->name,'total_cursos'=>$t_c,'cursos_ap'=>$c_a,'cursos_ab'=>$c_ab,'ult_curso'=>$l_c];
-
-            }else{
-                $result[]=['ci'=>$user->ci,'nombre'=>$user->name,'total_cursos'=>0,'cursos_ap'=>0,'cursos_ab'=>0,'ult_curso'=>' '];
-            }
-        }*/
-
-      /*$array = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
-
-      $l=[];
-      $l[]=['status'=>0];
-      $l[]= ['errores'=>[]];
-      $l[]=['cont_e'=>0];
-      $m_export;
-
-
-      $this->validacion_con_ids($array,$request->formacion,$l,$m_export);
-
-    */
-     // dump($l);
-      //dump($m_export);
-
-
-      //Excel::store(new ErroresExport($m_export), 'prueba_export.xlsx','public');
-      //return Excel::download(new ErroresExport($m_export), 'prueba_export.xlsx');
-      //return redirect()->back();
-
-    //dump($d);
-      //$export = new ErroresExport( $l);
-     // $export = new ErroresExport( $l[1]['errores']); funcionan
-      //$export = new ErroresExport( $array);
-      //return (new ErroresExport($m_export))->download('invoices.xlsx');
-        //return Excel::download(new ErroresExport($m_export), 'prueba_export.xlsx');
-       //Excel::download(new ErroresvistaExport($l), 'prueba_export.xlsx');
-
-
-            //return response()->json($data);
-            //return $q3;
             /**api para que usa url del cne para las cedulas
 
 
@@ -772,7 +786,11 @@ class UserInsFormacionController extends Controller
                 dump($resp);
             }*/
 
-    }
+
+        }
+
+
+
 
 
 
@@ -786,6 +804,7 @@ class UserInsFormacionController extends Controller
                 $formacion=Formacion::find($request->f_id_dall);
 
                 $formacion->actual_matricula=0;
+                $formacion->status='sin postulados';
                 $formacion->save();
             } catch (\Throwable $th) {
                 return "algo salio mal";
@@ -820,12 +839,7 @@ class UserInsFormacionController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User_ins_formacion  $user_ins_formacion
-     * @return \Illuminate\Http\Response
-     */
+
 
 
     public function destroy(Request $request)
@@ -839,6 +853,9 @@ class UserInsFormacionController extends Controller
                 $formacion=Formacion::find($request->f_id_bp);
                 $matricula_actual=$formacion->actual_matricula;
                 $formacion->actual_matricula=--$matricula_actual;
+                if ($formacion->actual_matricula===0) {
+                    $formacion->status='sin postulados';
+                }
                 $formacion->save();
 
             } catch (\Throwable $th) {

@@ -41,6 +41,6 @@ class RequisicionSeeder extends Seeder
             't_formacion'     => 'externa',
 
         ]);
-        factory(Requisicion::class,30)->create();
+        factory(Requisicion::class,15)->create();
     }
 }

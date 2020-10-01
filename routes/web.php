@@ -25,10 +25,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::middleware(['auth'])->group(function () {
 
-
-
-    Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')
-                                                        ->middleware('permission:inscribir estudiantes en formacion');
+    /** Responsable de personal */
+    Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')->middleware('permission:inscribir estudiantes en formacion');
 
     Route::get('select/users', 'UserInsFormacionController@select_usuarios')->name('select/users'); //pendiente revisar
 
@@ -50,13 +48,25 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('eliminar/postulado/f', 'UserInsFormacionController@destroy')->name('Postulados.destroy'); //pendiente revisar
 
+    Route::post('pruebas/excel', 'UserInsFormacionController@pruebas')->name('f.pruebas');
+   //* fin rp*//
+
+    /** Responsable de control de estudio */
+
+    Route::get('matriculacion', 'MdlInscripcionController@index')->name('matricular/estudiantes')->middleware('permission:matricular estudiantes en moodle');
+
+    Route::get('facilitadores', 'MdlInscripcionController@facilitador_show')->name('Mdl.facilitadores');
+
+    Route::get('matricular', 'MdlInscripcionController@enrolling')->name('Mdl.matricular');
 
 
-    Route::get('pruebas/excel', 'UserInsFormacionController@pruebas');
+    Route::get('pruebas', 'MdlInscripcionController@pruebas')->name('gg.pruebas');
 
 
-   // Route::post('pruebas/excel2', 'UserInsFormacionController@pruebas2');
-    //Route::post('users/update', 'UserController@update')->name('productos.update');
+
+
+
+
 });
 
 Route::get('users/export/', 'UsersController@export');//prueba de descarga excel

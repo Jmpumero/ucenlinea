@@ -198,7 +198,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
 
             <!-- FIN modal agregar un postulado -->
 
@@ -225,12 +225,11 @@
                     <div class="card text-center" >
                         <form id="form_excel" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
                             {{ csrf_field() }}
-                           <!--<label for="archivo"><b>Archivo: </b></label><br>-->
+
                             <input  id="archivo_input" type="file" name="archivo" required>
-                            <!--<button id="btn_activa_excel"  class="btn btn-lg btn-outline-success"><i class="fas fa-cloud-upload-alt"></i></button>-->
 
                     </div>
-                      <!--<form id="form_p" action="{{ url('pruebas/excel') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
+                     <!-- <form id="form_p" action="{{ url('pruebas/excel') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <label for="archivo"><b>Archivo: </b></label><br>
                         <input id="archivo_inputp" type="file" name="archivo" required>
@@ -632,6 +631,9 @@
         //$('#div_descarga').fadeOut();
     });
 
+
+
+    //envia excel
     $('#form_excel').on('submit', function (event) {
 
         event.preventDefault();

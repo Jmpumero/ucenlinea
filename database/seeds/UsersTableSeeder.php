@@ -22,6 +22,16 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
+        App\User::create([//RCE
+            'name'      => 'Control de Estudio',
+            'email'     => 'rce@gmail.com',
+            'prioridad' => 'alta',
+            'ci'  =>'V2',
+            'status' => true,
+            'sexo' =>'hombre',
+            'password'     => bcrypt('123'),
+
+        ]);
 
         App\User::create([ //estudiante
             'name'      => 'Prueba',
@@ -48,7 +58,6 @@ class UsersTableSeeder extends Seeder
         App\User::create([ //Rp
             'name'      => 'RP2 Prueba',
             'email'     => 'rp2@gmail.com',
-            'prioridad' => 'alta',
             'ci'  =>'V1256789',
             'status' => true,
             'sexo' =>'hombre',
@@ -93,6 +102,6 @@ class UsersTableSeeder extends Seeder
 
 
 
-        factory(User::class,100)->create();
+        //factory(User::class,100)->create();
     }
 }
