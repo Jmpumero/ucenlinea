@@ -63,6 +63,8 @@ class PermissionsSeeder extends Seeder
         $user = User::find(1); //yo
         $user->assignRole('Admin','Responsable de Personal','Supervisor','Responsable de Control de Estudio','Facilitador');
 
+        $user = User::find(3);
+        $user->assignRole('Facilitador');
         //otro
         $user = User::find(4);
         $user->assignRole('Responsable de Personal');

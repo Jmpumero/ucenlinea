@@ -95,18 +95,7 @@ class MdlInscripcionController extends Controller
     public function enroll($postulados,$rol,$form_id)
     {
         foreach ($postulados as $key => $value) {
-            $existe=DB::table('mdl_inscripcions')->where('user_id',$value->user_id)->where('formacion_id',$form_id)->exists();
-
-            if ($existe) {
-                $estu=Mdl_inscripcion::firstWhere('user_id',$value->user_id);
-                $n_rol=$estu->rol_shortname;
-
-                $estu->user_id=$value->user_id;
-                $estu->formacion_id=$form_id;
-                $estu->rol_shortname=$n_rol.','.$rol;
-                $estu->save();
-
-            }else{
+           
                 Mdl_inscripcion::create([ //se inserta
                     'user_id' => $value->user_id,
                     'formacion_id' =>$form_id,
@@ -116,29 +105,27 @@ class MdlInscripcionController extends Controller
                 //otorgar permiso de estudiante en la uvc
                 //$estu=User::find($value->user_id);
 
-            }
+
 
         }
     }
 
 
-    public function verifica_facilitador($facilitadores,&$a_error,$form_id)
+    public function verifica_facilitador($postulados,$facilitadores,&$a_error)
     {
 
-        foreach ($facilitadores as $key => $value) {
+        foreach ($facilitadores as $key => $fa) {
 
-            $existe=DB::table('mdl_inscripcions')->where('user_id',$value->user_id)->where('formacion_id',$form_id)->exists();
+            foreach ($postulados as $key => $post) {
+                if ($post->user_id===$fa->user_id) {
+                    $a_error[0]['status']=500;
+                    $a_error[1]['msj']='El facilitador: '.$fa->name.' '.$fa->ci.',  YA esta inscrito como estudiante para esta Formacion, recuerde que un estudiante NO puede tener el rol de Facilitador para el mismo curso';
+                    return(false);
 
-            if ($existe) {
-
-                $a_error[0]['status']=500;
-                $a_error[1]['msj']='El facilitador: '.$value->name.' '.$value->ci.'  YA esta inscrito como estudiante para esta Formacion, recuerde que un estudiante NO puede tener el rol de Facilitador para el mismo curso';
-
-                return(false);
-
+                }
             }
-
         }
+
         return(true);
     }
 
@@ -158,7 +145,7 @@ class MdlInscripcionController extends Controller
             $supervisores=User::join('user_ins_formacions','user_ins_formacions.supervisor_id','=','id')->select('id as user_id','formacion_id')->where('formacion_id',$request->f_id)->distinct()->get();
 
 
-            $facilitadores=User::whereIn('id', $request->id)->select('id as id_user','name','ci')->get();
+            $facilitadores=User::whereIn('id', $request->id)->select('id as user_id','name','ci')->get();
 
 
             $id_responsable=User_ins_formacion::where('formacion_id',$request->f_id)->first();
@@ -170,18 +157,21 @@ class MdlInscripcionController extends Controller
             $responsable_personal=Usuario_p_empresa::where('empresa_id',$em_id)->join('model_has_roles','model_id','=','usuario_p_empresas.user_id')->where('model_has_roles.role_id',2)->select('user_id')->get();// 2 es el rol de rp
 
 
+            if ($this->verifica_facilitador($postulados,$facilitadores,$array_e)) {
+                $this->enroll($postulados,'student',$request->f_id);
+                $this->enroll($supervisores,'supervisor',$request->f_id);
+                $this->enroll($facilitadores,'teacher',$request->f_id);
+                $this->enroll($responsable_personal,'rpcurso',$request->f_id);
+
+             }else{
+                 return response()->json( $array_e);
+             }
 
 
 
-            $this->enroll($postulados,'student',$request->f_id);
-            $this->enroll($supervisores,'supervisor',$request->f_id);
 
 
-            if ($this->verifica_facilitador($facilitadores,$array_e,$request->f_id)) {
-               //$this->enroll($facilitadores,'facilitador',$request->f_id);
-            }else{
-                return response()->json( $array_e);
-            }
+
 
 
 
@@ -198,7 +188,7 @@ class MdlInscripcionController extends Controller
     public function pruebas(Request $request)
     {
 
-        $id=[1,100];
+        $id=[100];
         dump($id);
         $postulados=User_ins_formacion::where('formacion_id',2)->get();
       /*  dump('******postulados******');
@@ -258,13 +248,25 @@ class MdlInscripcionController extends Controller
 
         }*/
 
-        $facilitadores=User::whereIn('id', $id)->select('id as id_user','name','ci')->get();
-        dump($facilitadores);
+        $facilitadores=User::whereIn('id', $id)->select('id as user_id','name','ci')->get();
+       // dump($facilitadores);
 
+       $valor=true;
+
+       foreach ($facilitadores as $key => $fa) {
+
+        foreach ($postulados as $key => $post) {
+            if ($post->user_id===$fa->user_id) {
+                $valor=false;
+            }
+        }
+        }
+
+        dump($valor);
 
         $id=User_ins_formacion::where('formacion_id',2)->first();
 
-
+        dump($id);
         $user=Auth::user()->find($id->rp_id);
 
         $em_id=$user->empresa->first()->id;
