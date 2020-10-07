@@ -16,19 +16,17 @@ class CreateExpedienteUsuariosTable extends Migration
         Schema::create('expediente_usuarios', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('formacion_id');
+            $table->unsignedBigInteger('supervisor_id');
             $table->enum('status',['Finalizada','Cursando','Retirada','Abandonada'])->default('Cursando');
             $table->decimal('calificacion_obtenida', 5, 3)->default(00.00);
-            $table->integer('califico_formacion')->unsigned()->nullable()->default(0);
-            $table->integer('califico_facilitador')->unsigned()->nullable()->default(0);
-            $table->integer('calificacion_supervisor')->unsigned()->nullable()->default(0);
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users');
+            $table->decimal('califico_formacion', 4,2)->default(-1);
+            $table->decimal('califico_facilitador', 4,2)->default(-1);
+            $table->decimal('calificacion_supervisor', 4,2)->default(-1);
 
 
-            $table->foreign('formacion_id')
-                ->references('id')
-                ->on('formacions');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('formacion_id')->references('id')->on('formacions');
+            $table->foreign('supervisor_id')->references('id')->on('users');
                 //->onDelete('cascade');
 
             $table->primary(['user_id', 'formacion_id'], 'expedientes_usuarios_formacion_id_user_id_primary');

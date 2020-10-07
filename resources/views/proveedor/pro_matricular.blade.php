@@ -129,7 +129,7 @@
         var tabla_f= $('#tabla_formaciones').DataTable({
             "serverSide": true,
             "processing": true,
-            "ajax": "{{ route('matricular/estudiantes') }}",
+            "ajax": "{{ route('matricula/formacion/externa') }}",
 
             "columns": [
                 {data: 'id'},
@@ -233,9 +233,9 @@
         //dataType:"json",
 
         success:function(data){
+            $('#tabla_formaciones').DataTable().ajax.reload();
             if(data[0].status==200) //Todo perfecto
             {
-                $('#tabla_formaciones').DataTable().ajax.reload();
                 const t= Swal.mixin({
                         customClass: {
                             confirmButton: 'btn btn-success btn-alert',
@@ -246,7 +246,7 @@
 
 
                 t.fire({
-                title: '!Matriculado correctamente!',
+                title: '!Formación matriculada!',
                 text: data[1].msj,
                 icon: 'success',
                 confirmButtonText: 'Continuar',
@@ -258,7 +258,7 @@
 
             }
 
-            if(data[0].status==500  ) //Mal/sin encabezado
+            if(data[0].status==500  ) //Mal/
             {
 
                 const t= Swal.mixin({

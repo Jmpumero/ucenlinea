@@ -20,6 +20,7 @@ class CreateFormacionsTable extends Migration
             //$hoy=new DateTime();
             //$hoy=$hoy->format('Y-m-d');
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('empresa_proveedora_id');
             $table->string('nombre',50);
             $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada']);
             $table->boolean('disponibilidad')->default(false);
@@ -27,7 +28,8 @@ class CreateFormacionsTable extends Migration
             $table->enum('tipo',['interna','externa'])->default('interna');
             $table->decimal('precio', 7, 2)->default(000.00);
             $table->float('calificacion')->nullable()->default(0.00);
-            $table->string('imagen')->nullable();
+            $table->string('imagen')->default('adminlte/img/formaciones/default_formation.jpg
+'        );
             $table->smallInteger('max_matricula')->default(-1);
             $table->smallInteger('actual_matricula')->default(0);//pendiente a revision
             //$table->date('fecha_de_inicio')->default($hoy);
@@ -36,6 +38,7 @@ class CreateFormacionsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('empresa_encargada_id')->references('id')->on('empresas');
             $table->unsignedBigInteger('requisicion_id')->unique()->nullable();//quitar nullable luego
             $table->foreign('requisicion_id')->references('id')->on('requisicions');
         });

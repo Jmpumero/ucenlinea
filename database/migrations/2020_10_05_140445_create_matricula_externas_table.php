@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMdlInscripcionsTable extends Migration
+class CreateMatriculaExternasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateMdlInscripcionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mdl_inscripcions', function (Blueprint $table) {
+        Schema::create('matricula_externas', function (Blueprint $table) {
+
             $table->bigIncrements('id');
-           // $table->unsignedBigInteger('empresa_id');
+            //$table->unsignedBigInteger('empresa_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('formacion_id');
 
@@ -23,10 +24,12 @@ class CreateMdlInscripcionsTable extends Migration
             //$table->foreign('empresa_id')->references('id')->on('empresas');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('formacion_id')->references('id')->on('formacions');
-            $table->string('rol_shortname', 200)->nullable()->default('student');
+            $table->string('ci',25);
+            $table->string('nombre',50);
+            $table->string('email',50);
+            $table->string('rol_shortname', 200)->nullable()->default('Estudiante');
 
 
-            //$table->primary(['user_id', 'formacion_id'], 'mdl_inscripcions_user_id_formacion_id_primary');
             $table->timestamps();
         });
     }
@@ -38,6 +41,6 @@ class CreateMdlInscripcionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mdl_inscripcions');
+        Schema::dropIfExists('matricula_externas');
     }
 }

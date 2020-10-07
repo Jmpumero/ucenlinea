@@ -45,7 +45,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         App\User::create([ //Rp
-            'name'      => 'RP1 Prueba',
+            'name'      => 'Responsable de Personal ',
             'email'     => 'rp1@gmail.com',
             'prioridad' => 'alta',
             'ci'  =>'V123456789',
@@ -91,6 +91,15 @@ class UsersTableSeeder extends Seeder
             'name'      => 'estudiante2',
             'email'     => 'estudiante2@algo.com',
             'ci'  =>'V1234568902',
+            'status' => true,
+            'password'     => bcrypt('123'),
+
+        ]);
+
+        App\User::create([ //proveedor
+            'name'      => 'PROVEEDOR',
+            'email'     => 'proveedor@algo.com',
+            'ci'  =>'V102',
             'status' => true,
             'password'     => bcrypt('123'),
 

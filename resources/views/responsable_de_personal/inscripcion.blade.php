@@ -659,7 +659,7 @@
                 {
                     //console.log(data)
                     //console.log(data[2].cont_e)
-
+                    $('#archivo_input').val(''); //limpia el campo del archivo
                     var newRows = "";
                     //console.log(data[0].status)
                     if(data[0].status==300) //Errores Postulados/Supervisores
@@ -761,6 +761,7 @@
                 }
         });
 
+        //$('#archivo_input').val('');
     //$('#btn_closed_m_excel').trigger('click');
     });
 

@@ -43,6 +43,7 @@ class UserInsFormacionController extends Controller
         if ($user->hasPermissionTo('inscribir estudiantes en formacion')) {
             //falta un condicional especial para el rol admin y super-admin
             $now=Carbon::now('-4:00'); // como se cambio la variable  'timezone' =>'America/Caracas' ya no es necesario hacer esta inicializacion bastaria con usar Carbon::now()
+            $now->addDays(2); //fecha limite 3 dias antes del inicio
             $em_id=$user->empresa->first()->id; //un problema aqui es si el usuario no esta asociado a ninguna empresa, se supone que ese caso no deberia ocurrir ya que todo usuario dentro del sistema pertenece a una empresa
 
             $r=Requisicion::where('empresa_id',$em_id);
@@ -131,7 +132,7 @@ class UserInsFormacionController extends Controller
         {
             $roles = Role::findByName('Supervisor');
             $roles_us=$roles->users;
-            $em_id=$user->empresa->first()->id;
+            $em_id=$user->empresa->first()->id;//ojo
             $usuarios=Empresa::find($em_id)->users;
             $q=$roles_us->intersect($usuarios);
 
@@ -145,11 +146,11 @@ class UserInsFormacionController extends Controller
         }
 
         $roles = Role::findByName('Supervisor');
-        $roles_us=$roles->users->dump();
+        $roles_us=$roles->users;
 
         $em_id=$user->empresa->first()->id;
-        $usuarios=Empresa::find($em_id)->users->dump();
-        $r=$roles_us->intersect($usuarios)->dump();
+        $usuarios=Empresa::find($em_id)->users;
+        $r=$roles_us->intersect($usuarios);
         //$super_v=$roles_us->join();
 
 
@@ -285,7 +286,6 @@ class UserInsFormacionController extends Controller
                     $array_e[0]['status']=250;
                     $array_e[2]['cont_e']++;
                     array_push ( $array_e[1]['errores'] , 'Error: No se encontro la columna Supervisor'  );
-
 
                 }
 

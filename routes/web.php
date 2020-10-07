@@ -62,8 +62,19 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('pruebas', 'MdlInscripcionController@pruebas')->name('gg.pruebas');
 
+    /** Proveedor */
+    Route::get('matriculacion/externa', 'MdlInscripcionController@matriculacion_externa_index')->name('matricula/formacion/externa'); //OJO FALTA EL MIDDLEWARE
+
+    Route::get('formaciones/matricula/externa', 'MdlInscripcionController@formaciones_externas')->name('formaciones/m/externa');
+
+    Route::get('matricula/externa', 'MdlInscripcionController@show_external_enroll')->name('externa/m');
 
 
+    /** FACILITADOR*/ //faltan los Midleware
+
+Route::get('formaciones/matricula/facilitador', 'MdlInscripcionController@show_formaciones_facilitador')->name('formaciones/m/facilitador'); //muestras las formaciones del facilitador
+
+Route::get('matricula/formacion', 'MdlInscripcionController@show_matricula_formacion')->name('facilitador/m');
 
 
 

@@ -55,6 +55,23 @@ return [
             'visibility' => 'public',
         ],
 
+        'matriculas'=>[
+            'driver' => 'local',
+            'root' => storage_path('app/public/excel/matriculas'),
+            'url' => env('APP_URL').'/storage/excel/matriculas',
+            'visibility' => 'public',
+        ],
+
+        'actform'=>[
+            'driver' => 'local',
+            'root' => storage_path('app/public/excel/actas_formaciones'),
+            'url' => env('APP_URL').'/storage/excel/actas_formaciones',
+            'visibility' => 'public',
+        ],
+
+
+
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

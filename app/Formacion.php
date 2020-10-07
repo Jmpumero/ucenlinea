@@ -27,10 +27,10 @@ class Formacion extends Model
 
 
 
-    public function requisicion() //inverse one to many
+    /*public function requisicion() //inverse one to many
     {
         return $this->belongsTo('App\Requisicion');
-    }
+    }*/
 
 
 
