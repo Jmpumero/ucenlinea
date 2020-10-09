@@ -20,7 +20,7 @@ class CreateFormacionsTable extends Migration
             //$hoy=new DateTime();
             //$hoy=$hoy->format('Y-m-d');
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('empresa_proveedora_id');
+            $table->unsignedBigInteger('empresa_proveedora_id')->default(1);
             $table->string('nombre',50);
             $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada']);
             $table->boolean('disponibilidad')->default(false);
@@ -32,13 +32,13 @@ class CreateFormacionsTable extends Migration
 '        );
             $table->smallInteger('max_matricula')->default(-1);
             $table->smallInteger('actual_matricula')->default(0);//pendiente a revision
-            //$table->date('fecha_de_inicio')->default($hoy);
+
             $table->dateTime('fecha_de_inicio')->default(Carbon::now());
             $table->dateTime('fecha_de_culminacion')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('empresa_encargada_id')->references('id')->on('empresas');
+            $table->foreign('empresa_proveedora_id')->references('id')->on('empresas');
             $table->unsignedBigInteger('requisicion_id')->unique()->nullable();//quitar nullable luego
             $table->foreign('requisicion_id')->references('id')->on('requisicions');
         });

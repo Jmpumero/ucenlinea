@@ -166,8 +166,8 @@ i.icon-mg-sm{
 
 .btn-morado {
     color: #ffffff;
-    background-color: #b235fa;
-    border-color: #b327ac;
+    background-color: #7579e7;
+    border-color: #7427b3;
     box-shadow: none;
   }
 
@@ -176,6 +176,72 @@ i.icon-mg-sm{
     background-color: #4daa0f;
     border-color: #ffffff;
   }
+
+
+
+
+  .btn-a1 {
+    color: #ffffff;
+    background-color: #48bfe3;
+    border-color: #4ea8de;
+    box-shadow: none;
+  }
+
+  .btn-a1:hover {
+    color: #ffffff;
+    background-color: #7400b8;
+    border-color: #ffffff;
+  }
+
+/*Paleta especial
+#f72585,#7209b7,#3a0ca3,#4361ee,#4cc9f0*/
+
+.card-p1:not(.card-outline) > .card-header {
+    background-color: #f72585;
+  }
+
+  .card-p1:not(.card-outline) > .card-header,
+  .card-p1:not(.card-outline) > .card-header a {
+    color: #ffffff;
+  }
+
+  .card-p1:not(.card-outline) > .card-header a.active {
+    color: #1F2D3D;
+  }
+
+  .card-p1.card-outline {
+    border-top: 4px solid #f72585;
+  }
+
+  .card-p1.card-outline-tabs > .card-header a:hover {
+    border-top: 3px solid #dee2e6;
+  }
+
+  .card-p1.card-outline-tabs > .card-header a.active {
+    border-top: 3px solid #f72585;
+  }
+
+  .card-p2.card-outline {
+    border-top: 4px solid #7209b7;
+  }
+
+  .card-p3.card-outline {
+    border-top: 4px solid #4cc9f0;
+  }
+
+
+
+/*para el strong*/
+
+.strong-msj{
+    font-size:1.35rem;
+    margin-left: 0%;
+    margin-right:1%;
+}
+
+
+
+
 
 
 

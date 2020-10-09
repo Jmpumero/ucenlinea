@@ -76,7 +76,12 @@ Route::get('formaciones/matricula/facilitador', 'MdlInscripcionController@show_f
 
 Route::get('matricula/formacion', 'MdlInscripcionController@show_matricula_formacion')->name('facilitador/m');
 
+/** ESTUDIANTE*/ //faltan los Midleware
+Route::get('formaciones/certificadas', 'ExpedienteUsuarioController@show_formaciones_calificar_certificado_index')->name('est/formaciones/certificadas'); //ve las formaciones/certificado
 
+Route::get('califica/formacion', 'ExpedienteUsuarioController@califica_formacion_facilitador')->name('est/califica/formacion'); //califica formacion
+
+Route::get('certificado/formacion', 'ExpedienteUsuarioController@certificado_donwload')->name('certificado');
 
 });
 

@@ -78,13 +78,13 @@
 
 
 
-<form hidden action="{{ url('matricula/externa') }}">
+<!--<form hidden action="{{ url('matricula/externa') }}">
     {{ csrf_field() }}
     <input type="text"  name="for_id" hidden id="f_id">
 
     <input type="text"  name="user_id" hidden id="user_id" value="{{ Auth::user()->id }}">
     <button hidden id="btn_form_ev" type="submit"></button>
-</form>
+</form>-->
 
 
 

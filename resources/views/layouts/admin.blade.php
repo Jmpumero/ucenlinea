@@ -285,6 +285,19 @@
                         </li>
                         @endhasrole
 
+
+                        @hasrole('Estudiante')
+                        <li class="nav-item">
+
+                        <a href= "{{ route('est/formaciones/certificadas') }}" class="nav-link">
+                            <i class="fas fa-award"></i>
+                            <i class="fas fa-file-invoice"></i>
+
+                            <p> Certificados </p>
+                        </a>
+                        </li>
+                        @endhasrole
+
                         <!--<li class="nav-item">
                           <a href="modform.html" class="nav-link">
                             <i class="far fa-edit"></i>
@@ -432,6 +445,9 @@
 
 
 
+<!-- CDN  para el ranting-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
 
 
 <!-- jQuery UI 1.11.4 -->

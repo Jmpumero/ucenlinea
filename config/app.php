@@ -177,6 +177,7 @@ return [
         Yajra\Datatables\DatatablesServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
         //Megacreativo\API\CedulaVES::class,
 
     ],
@@ -231,6 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
         //'CedulaVE' => Megacreativo\API\Facades\CedulaVE::class,
 
     ],

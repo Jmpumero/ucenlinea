@@ -13,6 +13,7 @@ use App\Expediente_usuario;
 
 use App\User_ins_formacion;
 use Illuminate\Http\Request;
+use App\Certificados_f_estudiante;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Auth\User;
@@ -338,7 +339,7 @@ class MdlInscripcionController extends Controller
 
     }
 
-
+//proveedor
     public function show_external_enroll(Request $request)
     {
 
@@ -348,15 +349,6 @@ class MdlInscripcionController extends Controller
 
             return datatables()->of(Matricula_externa::where('formacion_id',$request->fid))->toJson();
         }
-
-
-        /*$user=Auth::user();
-        $r_id=Formacion::
-
-        $results=Matricula_externa::where('formacion_id',$request->f_id);
-
-        return view('proveedor.pro_download_matricula')->with($results);*/
-        //return view('responsable_de_personal.evaluar_expediente')->with('results', $result)
 
 
     }
@@ -431,7 +423,24 @@ class MdlInscripcionController extends Controller
         $idf=[];
         $user=Auth::user();
 
-        $q1=Matricula_externa::where('user_id',$user->id)->where('rol_shortname','Facilitador')->select('formacion_id')->get();
+
+        $data=DB::table('certificados_f_estudiantes')->where('user_id',$user->id)->where('formacion_id',4)->join('users as tbl_user','certificados_f_estudiantes.user_id','=','tbl_user.id')->join('formacions as tbl_f','certificados_f_estudiantes.formacion_id','=','tbl_f.id')->select('tbl_user.name','certificados_f_estudiantes.codigo_certificado','tbl_f.nombre','tbl_f.empresa_proveedora_id','tbl_f.fecha_de_inicio','tbl_f.fecha_de_culminacion','tbl_user.ci')->get();
+
+       // dump($data);
+        //dump($q[0]['nombre']);
+
+        return view('estudiante.vista_certificado',compact('data'));
+
+
+        /*$q=Expediente_usuario::where('user_id',1)->where('formacion_id',4)->first();
+        $q->califico_formacion=2;
+            $q->califico_facilitador=3;
+            $q->save();*/
+        //dump();
+
+        //$cf=$q->califico_formacion+1;
+        //dump($cf);
+        /*$q1=Matricula_externa::where('user_id',$user->id)->where('rol_shortname','Facilitador')->select('formacion_id')->get();
 
         $q2=Mdl_inscripcion::where('user_id',$user->id)->where('rol_shortname','teacher')->select('formacion_id')->get();
 
@@ -450,12 +459,12 @@ class MdlInscripcionController extends Controller
         $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.imagen as imagen','tblf.nombre as nombre','tblm.nombre as nombre_empresa')->get();
 
         $q=Formacion::whereIn('id',$idf)->get();
-       // dump($q);
+
 
         dump($qw);
-        $q=User_ins_formacion::where('formacion_id',3)->join('users','users.id','=','user_ins_formacions.user_id')->get();
+        $q=User_ins_formacion::where('formacion_id',3)->join('users','users.id','=','user_ins_formacions.user_id')->get();*/
 
-        dump($q);
+
         //$tipo=Formacion::find(3)->tipo;
         //dump($tipo);
         /*$now=Carbon::now();
