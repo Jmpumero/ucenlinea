@@ -279,8 +279,15 @@
 
                         <a href= "{{ route('formaciones/m/facilitador') }}" class="nav-link">
                             <i class="fas fa-cloud-download-alt"></i>
+                            <i class="fas fa-file-signature"></i>
 
                             <p> Descargar matricula </p>
+                        </a>
+
+                        <a href= "{{ route('formaciones/actas/facilitador') }}" class="nav-link">
+                            <i class="fas fa-file-upload"></i>
+
+                            <p> Enviar acta academica</p>
                         </a>
                         </li>
                         @endhasrole

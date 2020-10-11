@@ -84,15 +84,19 @@
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 </head>
-    <body>
-        @php dump($data); @endphp
+    <body >
+        {{--@php dump($f_inicio); @endphp  --}}
         @foreach ($data as $item)
 
 
             <title> Certificado {{ $item->nombre }}</title>
-            <div class="text-center" style="margin-bottom: 10%;">
+            <div class="text-center" style="margin-bottom: 2%;">
                 <h2>Universidad Virtual Corporativa UC</h1>
-                <img src="public/images/logos/UC_logo2.png" alt="">
+
+            </div>
+            <div class="text-center" style="margin-bottom: 5%;">
+
+                <img src="{{ asset('adminlte/img/logos/UC_logo.png') }}" width="80" class="img">
             </div>
 
             <div class="row-cols-lg-12">
@@ -100,7 +104,7 @@
                     <p> codigo de certificado :{{  $item->codigo_certificado}}</p>
                 </div>
 
-                <div class="col-12 text-center" style="margin-bottom: 2%;">
+                <div class="col-12 text-center" style="margin-bottom: 3%;">
                     <h2> La Universidad de Carabobo </h2>
                 </div>
                 <div class="col-6 card text-center ">
@@ -112,13 +116,14 @@
             </div>
 
             <div class="col-12 text-center">
-                <p>Titular de la cedula de identida N°:<strong>{{ $item->ci }}</strong>,quien curso y aprobó la formacion <h3>{{ $item->nombre}} </h3> </p>
+                <p>Titular de la cedula de identida N°:<strong>{{ $item->ci }}</strong>,certifica que curso y aprobó la formacion <h3>{{ $item->nombre}} </h3> </p>
             </div>
 
-            <div class=" text-left" style="margin-left: 4%;">
-                <p> Impartido por:{{ $item->empresa_proveedora_id }}</p>
-                <p> Fecha de inicio:{{  $item->fecha_de_inicio}}</p>
-                <p> Fecha de culminacion:{{ $item->fecha_de_culminacion }}</p>
+            <div class=" text-left" style="margin-left: 4%; margin-top: 8%;">
+                <p> Impartido por: {{ $item->empresa_nombre }}</p>
+                <p> Dirección: {{ $item->direccion }}</p>
+                <p> Fecha de inicio: {{  $f_inicio }}</p>
+                <p> Fecha de culminacion: {{ $f_cul }}</p>
                 <p> Duracion:</p>
             </div>
         @endforeach

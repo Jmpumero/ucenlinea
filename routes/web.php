@@ -72,9 +72,15 @@ Route::middleware(['auth'])->group(function () {
 
     /** FACILITADOR*/ //faltan los Midleware
 
-Route::get('formaciones/matricula/facilitador', 'MdlInscripcionController@show_formaciones_facilitador')->name('formaciones/m/facilitador'); //muestras las formaciones del facilitador
+Route::get('formaciones/matricula/facilitador', 'MdlInscripcionController@show_formaciones_facilitador')->name('formaciones/m/facilitador'); //muestras las formaciones del facilitador para luego obtner la matricula
 
 Route::get('matricula/formacion', 'MdlInscripcionController@show_matricula_formacion')->name('facilitador/m');
+
+Route::get('formaciones/facilitador', 'MdlInscripcionController@show_cargar_acta_facilitador')->name('formaciones/actas/facilitador');
+
+
+Route::post('envia/acta/facilitador', 'MdlInscripcionController@import_acta_excel')->name('facilitador/envia/actas');
+
 
 /** ESTUDIANTE*/ //faltan los Midleware
 Route::get('formaciones/certificadas', 'ExpedienteUsuarioController@show_formaciones_calificar_certificado_index')->name('est/formaciones/certificadas'); //ve las formaciones/certificado

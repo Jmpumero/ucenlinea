@@ -81,13 +81,26 @@ class ExpedienteUsuarioController extends Controller
 
 
         $user=Auth::user();
-        $data=DB::table('certificados_f_estudiantes')->where('user_id',$user->id)->where('formacion_id',$request->id_f)->join('users as tbl_user','certificados_f_estudiantes.user_id','=','tbl_user.id')->join('formacions as tbl_f','certificados_f_estudiantes.formacion_id','=','tbl_f.id')->select('tbl_user.name','certificados_f_estudiantes.codigo_certificado','tbl_f.nombre','tbl_f.empresa_proveedora_id','tbl_f.fecha_de_inicio','tbl_f.fecha_de_culminacion','tbl_user.ci')->get();
+        $data=DB::table('certificados_f_estudiantes')->where('user_id',$user->id)->where('formacion_id',$request->f_id)->join('users as tbl_user','certificados_f_estudiantes.user_id','=','tbl_user.id')->join('formacions as tbl_f','certificados_f_estudiantes.formacion_id','=','tbl_f.id')->join('empresas as tbl_em','tbl_f.empresa_proveedora_id','=','tbl_em.id')->select('tbl_user.name','certificados_f_estudiantes.codigo_certificado','tbl_f.nombre','tbl_f.empresa_proveedora_id','tbl_f.fecha_de_inicio','tbl_f.fecha_de_culminacion','tbl_user.ci','tbl_em.nombre as empresa_nombre','tbl_em.direccion','tbl_f.created_at');
         //$data->toArray();
+        if ($data->exists()) {
+            $data=$data->get();
+            foreach ($data as $key => $value) {
+                $f_inicio= Carbon::parse($value->fecha_de_inicio)->format('d-m-Y ');
+                $f_cul= Carbon::parse($value->fecha_de_culminacion)->format('d-m-Y ');
+            }
 
-        
-        //$pdf = PDF::loadView('estudiante.vista_certificado',compact('data'));
-        // return $pdf->download('ejemplo.pdf');
-        //return view('estudiante.est_certificado_calificar');
+            $pdf = PDF::loadView('estudiante.vista_certificado',compact('data','f_inicio','f_cul'));
+            //$pdf = PDF::loadView('estudiante.vista_certificado',$data);
+            return $pdf->stream( 'Formacion: '.$request->f_id.'_Certificado.pdf');
+        }else{
+            return redirect()->back();
+        }
+
+        //asegurarse que $data no sea vacio
+
+       //no se porque el download no funciona... hace colapsar el serve
+        //return view('estudiante.vista_certificado',compact('data'));
     }
     /**
      * Show the form for creating a new resource.

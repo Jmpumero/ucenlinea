@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Empresa;
 use App\Formacion;
 use Carbon\Carbon;
@@ -9,9 +10,10 @@ use App\Requisicion;
 use App\Mdl_inscripcion;
 use App\Matricula_externa;
 use App\Usuario_p_empresa;
-use App\Expediente_usuario;
 
+use App\Expediente_usuario;
 use App\User_ins_formacion;
+use App\Imports\ActasImport;
 use Illuminate\Http\Request;
 use App\Certificados_f_estudiante;
 use Illuminate\Support\Facades\DB;
@@ -140,13 +142,13 @@ class MdlInscripcionController extends Controller
         }
     }
 
-    public function external_enroll($candidatos,$rol,$form_id,$emp_id) //
+    public function external_enroll($candidatos,$rol,$form_id) //
     {
         foreach ($candidatos as $key => $value) {
             $user=Auth::user()->find($value->user_id);
 
             Matricula_externa::create([ //se inserta
-                'empresa_id' => $emp_id,
+                //'empresa_id' => $emp_id,
                 'user_id' => $value->user_id,
                 'formacion_id' =>$form_id,
                 'ci'=>$user->ci,
@@ -174,12 +176,12 @@ class MdlInscripcionController extends Controller
     }
 
 
-    public function enroll($postulados,$rol,$form_id,$emp_id)
+    public function enroll($postulados,$rol,$form_id)
     {
         foreach ($postulados as $key => $value) {
 
                 Mdl_inscripcion::create([ //se inserta
-                    'empresa_id' => $emp_id,
+                    ///'empresa_id' => $emp_id,
                     'user_id' => $value->user_id,
                     'formacion_id' =>$form_id,
                     'rol_shortname' => $rol,
@@ -265,16 +267,16 @@ class MdlInscripcionController extends Controller
 
             if ($this->verifica_facilitador($postulados,$facilitadores,$array_e)) {
                 if ($tipo==='interna') {
-                    $this->enroll($postulados,'student',$request->f_id,$em_id);
-                    $this->enroll($supervisores,'supervisor',$request->f_id,$em_id);
-                    $this->enroll($facilitadores,'teacher',$request->f_id,$em_id);
-                    $this->enroll($responsable_personal,'rpcurso',$request->f_id,$em_id);
+                    $this->enroll($postulados,'student',$request->f_id);
+                    $this->enroll($supervisores,'supervisor',$request->f_id);
+                    $this->enroll($facilitadores,'teacher',$request->f_id);
+                    $this->enroll($responsable_personal,'rpcurso',$request->f_id);
                 }else {
 
-                    $this->external_enroll($postulados,'Estudiante',$request->f_id,$em_id);
-                    $this->external_enroll($supervisores,'Supervisor',$request->f_id,$em_id);
-                    $this->external_enroll($facilitadores,'Facilitador',$request->f_id,$em_id);
-                    $this->external_enroll($responsable_personal,'Responsable de Personal',$request->f_id,$em_id);
+                    $this->external_enroll($postulados,'Estudiante',$request->f_id);
+                    $this->external_enroll($supervisores,'Supervisor',$request->f_id);
+                    $this->external_enroll($facilitadores,'Facilitador',$request->f_id);
+                    $this->external_enroll($responsable_personal,'Responsable de Personal',$request->f_id);
                     /*version de archivo no usado
                     $archivo[0][0]='CI ';
                     $archivo[0][1]='Nombre  ';
@@ -391,7 +393,7 @@ class MdlInscripcionController extends Controller
 
             }
 
-            $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();
+            $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->where('tblf.status','matriculada')->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();
 
             //$q=Formacion::whereIn('id',$idf)->get();
 
@@ -416,35 +418,19 @@ class MdlInscripcionController extends Controller
 
 
 
+     /*facilitador*/
+    public function show_cargar_acta_facilitador(Request $request){
 
-
-    public function pruebas(Request $request)
-    {
+        if(request()->ajax())
+        {
         $idf=[];
         $user=Auth::user();
 
-
-        $data=DB::table('certificados_f_estudiantes')->where('user_id',$user->id)->where('formacion_id',4)->join('users as tbl_user','certificados_f_estudiantes.user_id','=','tbl_user.id')->join('formacions as tbl_f','certificados_f_estudiantes.formacion_id','=','tbl_f.id')->select('tbl_user.name','certificados_f_estudiantes.codigo_certificado','tbl_f.nombre','tbl_f.empresa_proveedora_id','tbl_f.fecha_de_inicio','tbl_f.fecha_de_culminacion','tbl_user.ci')->get();
-
-       // dump($data);
-        //dump($q[0]['nombre']);
-
-        return view('estudiante.vista_certificado',compact('data'));
-
-
-        /*$q=Expediente_usuario::where('user_id',1)->where('formacion_id',4)->first();
-        $q->califico_formacion=2;
-            $q->califico_facilitador=3;
-            $q->save();*/
-        //dump();
-
-        //$cf=$q->califico_formacion+1;
-        //dump($cf);
-        /*$q1=Matricula_externa::where('user_id',$user->id)->where('rol_shortname','Facilitador')->select('formacion_id')->get();
+        $q1=Matricula_externa::where('user_id',$user->id)->where('rol_shortname','Facilitador')->select('formacion_id')->get();
 
         $q2=Mdl_inscripcion::where('user_id',$user->id)->where('rol_shortname','teacher')->select('formacion_id')->get();
 
-       // dump($q1);
+        // dump($q1);
         foreach ($q1 as $key => $value) {
 
             $idf[]=$value->formacion_id;
@@ -456,58 +442,194 @@ class MdlInscripcionController extends Controller
 
         }
 
-        $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.imagen as imagen','tblf.nombre as nombre','tblm.nombre as nombre_empresa')->get();
+        // $fn=Carbon::parse(Formacion::find(2)->fecha_de_inicio);
+        //$d=$fn->addDay(1);
+        $now=Carbon::now();
+        $now=$now->subDay(1);
+        $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->where('fecha_de_inicio','<',$now)->where('tblf.status','matriculada')->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();
 
-        $q=Formacion::whereIn('id',$idf)->get();
+        //$q=Formacion::whereIn('id',$idf)->get();
 
+            return datatables()->of($qw)
+            ->addColumn('action', function($data){
+                $button = '<button type="button"  id ="btn_cargar" name="btn_ver" data-nf="'.$data->nombre_formacion.'"   data-id="'.$data->id.'" class="examinar btn btn-morado  "><i class="fas fa-file-import fa-lg" style="margin-right: 0.5rem;"></i> Cargar</button>';
 
-        dump($qw);
-        $q=User_ins_formacion::where('formacion_id',3)->join('users','users.id','=','user_ins_formacions.user_id')->get();*/
-
-
-        //$tipo=Formacion::find(3)->tipo;
-        //dump($tipo);
-        /*$now=Carbon::now();
-        $now->addDays(3);
-        $user=Auth::user();
-        $em_id=$user->empresa->first()->id;
-        dump(Requisicion::where('empresa_id',$em_id)->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','con postulados')->where('t_facilitador',0)->where('disponibilidad',1)->where('tipo','externa')->whereDate('fecha_de_inicio','<=',$now)->get());*/
-        //$empresa_id=Formacion::find(2)->requisicion_id;
-        //dump();
-        //->whereDate('created_at', '2016-12-31')
-
-       /* $postulados=User_ins_formacion::where('formacion_id',2)->get();
-
-        $supervisores=User::join('user_ins_formacions','user_ins_formacions.supervisor_id','=','id')->select('id as user_id')->where('formacion_id',2)->distinct()->get();
-        $facilitadores=User::whereIn('id', $idt)->select('id as user_id','name','ci')->get();
-        $id=User_ins_formacion::where('formacion_id',2)->first();
-        $user=Auth::user()->find($id->rp_id);
-        $em_id=$user->empresa->first()->id;
-        $rp=Usuario_p_empresa::where('empresa_id',$em_id)->join('model_has_roles','model_id','=','usuario_p_empresas.user_id')->where('model_has_roles.role_id',2)->get();
+                return $button;
 
 
-        $archivo[0][0]='CI ';
-        $archivo[0][1]='Nombre  ';
-        $archivo[0][2]='Correo';
-        $archivo[0][3]='Rol';
-        $i=1;
-        $j=0;
-       foreach ($postulados as $key => $value) {
-            $user=Auth::user()->find($value->user_id);
-
-            $archivo[$i][0]=$user->ci;
-            $archivo[$i][1]=$user->name;
-            $archivo[$i][2]=$user->email;
-            $archivo[$i][3]='Estudiante';
-            $i++;
+            })
+            ->rawColumns(['action'])
+            ->toJson();
 
         }
-        dump($archivo);*/
+
+        return view('facilitador.fac_cargar_acta');
+
+
+    }
+
+
+    /* facilitador*/
+    public function validacion_est($est,$form_id,&$errores){
+
+        $ci_est=$est['ci'];
+        $nota_est=$est['nota'];
+        //$ci_est='gg123';
+        //$id_est=User::firstWhere('ci',$ci_est)->exists();
+
+        if (User::firstWhere('ci',$ci_est)!=null) {
+            $id_est=User::firstWhere('ci',$ci_est)->id;
+
+            if (Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id)->exists()) {
+
+
+                    if ($nota_est<5) {
+                        Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Abandonada']);
+                    }else{
+                        if ($nota_est>=9.5) {
+                            Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Finalizada','calificacion_obtenida'=>$nota_est]);
+                            //dump('aprobado '.$ci_est);
+                        }
+
+                        if (($nota_est>5)AND($nota_est<9.5)) {
+                            Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Finalizada','calificacion_obtenida'=>$nota_est]);
+                            //dump('reprobado '.$ci_est);
+                        }
+
+                    }
+
+            }else{
+                $array_e[0]['status']=500;
+                array_push ( $array_e[1]['errores'] , 'El estudiante  CI: '.$ci_est .' NO pertenece a la formacion selecionada, verifique el documento'  );
+                //dump($array_e);
+                return response()->json( $array_e);
+            }
+
+        }else{
+            $array_e[0]['status']=500;
+            array_push ( $array_e[1]['errores'] , 'La CI: '.$ci_est .' NO existe en el sistema verifique el documento'  );
+            //dump($array_e);
+            return response()->json( $array_e);
+        }
+
+    }
+
+    //facilitador
+    public function import_acta_excel(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $array_e=[];
+            $array_e[]=['status'=>200];
+            $array_e[]= ['errores'=>[]];
+            $array_e[]=['cont_e'=>0];
+
+            //**validacion del archivo */
+            $messages = [  'archivo.extension' => 'El documento debe ser un archivo Excel' ];
+            $error= Validator::make(
+                [
+                    'file'      => $request->file('archivo'),
+                    'extension' => strtolower($request->file('archivo')->getClientOriginalExtension()),
+                ],
+                [
+                    'file'          => 'required',
+                    'extension'      => 'required|in:xlsx,xls,odt,ods',
+                ],
+                $messages
+                );
+                if($error->fails())
+                {
+                $array_e[0]['status']=260;
+                array_push ( $array_e[1]['errores'] , 'El documento debe ser un archivo Excel .xlsx'  );
+                return response()->json( $array_e);
+
+                }
+
+            $acta= Excel::toArray(new ActasImport,  request()->file('archivo'));
+            $encabezado=[];
+            $notas=[];
+            $p;
+            $i=0;
+            foreach ($acta as $key => $value) {
+                foreach ($value as $key2 => $value2) {
+
+                    if (count($value2)>3) {
+                        if ($i==1) {
+                            $encabezado= $value2;
+                        }
+                        if ($i>1) {
+                            if (is_numeric($value2[3])) {
+                                //dump($value2[3]);
+                                $notas[]=['ci'=>$value2[0],'nota' => (float)$value2[3]];
+                            }else{
+                                $array_e[0]['status']=500;
+                                array_push ( $array_e[1]['errores'] , 'El estudiante  CI: '.$value2[0] .' NO tiene una calificacion valida, verifique el documento'  );
+                                return response()->json( $array_e);
+                            }
+                        }
+                    }else{
+                        $array_e[0]['status']=500;
+                        array_push ( $array_e[1]['errores'] , 'El documento no presenta el formato adecuado (formato de matricula)'  );
+                        return response()->json( $array_e);
+                    }
+                    $i++;
+
+                }
+
+            }
+
+            if (($encabezado[0]=='CI')AND($encabezado[1]=='Nombre')AND($encabezado[2]=='Correo')AND ($encabezado[3]=='Calificacion')) {
+
+                foreach ($notas as $key => $value) {
+                    $this->validacion_est($value,$request->f_id,$array_e);
+                }
+            }else{
+                $array_e[0]['status']=500;
+                array_push ( $array_e[1]['errores'] , 'El documento no presenta el formato adecuado (formato de matricula)'  );
+                //dump($array_e);
+                return response()->json( $array_e);
+            }
+
+               /* if ($array_e[0]['status']==200) {
+                    $forma=Formacion::find($request->f_id);
+                    $forma->status='finalizada';
+                    $forma->save();
+                }*/
+                return response()->json( $array_e); //fino
+        }
+
+
+    }
 
 
 
 
 
+
+
+
+
+    public function pruebas(Request $request)
+    {
+        $idf=[1,2,3,4];
+        $user=Auth::user();
+
+        //$fn=Formacion::find(2)->fecha_de_inicio;
+        //$fn=Carbon::now(Formacion::find(2)->fecha_de_inicio);
+        //$fn=Carbon::parse(Formacion::find(2)->fecha_de_inicio);
+        /* $now=Carbon::now();
+        $now=$now->subDay(1);
+        $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->where('fecha_de_inicio','<',$now)->where('tblf.status','matriculada')->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();
+        dump($qw);*/
+        $p='2,5';
+        $t=4;
+
+        dump((float)($p));
+        dump(is_float($p));
+        dump(is_numeric($p));
+        dump((float)($t));
+        dump(is_float($t));
+        dump(is_numeric($t));
 
         }
 

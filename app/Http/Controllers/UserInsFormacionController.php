@@ -12,14 +12,15 @@ use App\Requisicion;
 use App\User_p_empresa;
 use App\Expediente_usuario;
 use App\User_ins_formacion;
+use App\Imports\ActasImport;
 use Illuminate\Http\Request;
 use App\CustomClass\CedulaVE;
 use  App\Exports\ErroresExport;
 use Maatwebsite\Excel\Importer;
 use App\Imports\PostuladosImport;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 
+use Spatie\Permission\Models\Role;
 use  App\Exports\ErroresvistaExport;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -306,8 +307,9 @@ class UserInsFormacionController extends Controller
 
 
              return response()->json( $array_e); //fino
-
         }
+
+
     }
 
 
@@ -676,29 +678,135 @@ class UserInsFormacionController extends Controller
        // return view('responsable_de_personal.evaluar_expediente',compact('result'));
     }
 
+    public function validacion_est($est,$form_id,&$errores){
+
+        $ci_est=$est['ci'];
+        $nota_est=$est['nota'];
+        //$ci_est='gg123';
+        //$id_est=User::firstWhere('ci',$ci_est)->exists();
+
+        if (User::firstWhere('ci',$ci_est)!=null) {
+            $id_est=User::firstWhere('ci',$ci_est)->id;
+
+            if (Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id)->exists()) {
+
+
+                    if ($nota_est<5) {
+                        Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Abandonada']);
+                    }else{
+                        if ($nota_est>=9.5) {
+                            Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Finalizada','calificacion_obtenida'=>$nota_est]);
+                            //dump('aprobado '.$ci_est);
+                        }
+
+                        if (($nota_est>5)AND($nota_est<9.5)) {
+                            Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Finalizada','calificacion_obtenida'=>$nota_est]);
+                            //dump('reprobado '.$ci_est);
+                        }
+
+                    }
+
+            }else{
+                $array_e[0]['status']=404;
+                array_push ( $array_e[1]['errores'] , 'El estudiante  CI: '.$ci_est .' NO pertenece a la formacion selecionada, verifique el documento'  );
+                dump($array_e);
+                //return response()->json( $array_e);
+            }
+
+        }else{
+            $array_e[0]['status']=403;
+            array_push ( $array_e[1]['errores'] , 'La CI: '.$ci_est .' NO existe en el sistema verifique el documento'  );
+            dump($array_e);
+            //return response()->json( $array_e);
+        }
+
+    }
+
     public function pruebas(Request $request)
     {
 
 
 
-        $postulados = Excel::toArray(new PostuladosImport,  request()->file('archivo'));
-        $encabezados=[];
-        foreach ($postulados as $key => $value) { //ineficiente pero seguro para obtener todas las posibles claves presente
-            foreach ($value as $key2 => $value2) {
-                foreach ($value2 as $key3 => $value3) {
-                    $encabezados[]=$key3;
-                }
-                break 2;
+        $array_e=[];
+        $array_e[]=['status'=>0];
+        $array_e[]= ['errores'=>[]];
+        $array_e[]=['cont_e'=>0];
+
+        //**validacion del archivo */
+        $messages = [  'archivo.extension' => 'El documento debe ser un archivo Excel' ];
+        $error= Validator::make(
+            [
+                'file'      => $request->file('archivo'),
+                'extension' => strtolower($request->file('archivo')->getClientOriginalExtension()),
+            ],
+            [
+                'file'          => 'required',
+                'extension'      => 'required|in:xlsx,xls,odt,ods',
+            ],
+            $messages
+            );
+            if($error->fails())
+            {
+            $array_e[0]['status']=260;
+            array_push ( $array_e[1]['errores'] , 'El documento debe ser un archivo Excel .xlsx'  );
+            return response()->json( $array_e);
+
             }
-        }//se validan los encabezados
-        //dump($postulados);
-        //dump($encabezados[0]);
-        //dump($encabezados[1]);
-       // dump($encabezados);
+
+        $acta= Excel::toArray(new ActasImport,  request()->file('archivo'));
+        $encabezado=[];
+        $notas=[];
+        $p;
+        $i=0;
+        foreach ($acta as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                if (count($value2)==3) {
+                    if ($i==1) {
+                        $encabezado= $value2;
+                    }
+                    if ($i>1) {
+                        if (is_numeric($value2[3])) {
+                            dump($value2[3]);
+                            $notas[]=['ci'=>$value2[0],'nota' => (float)$value2[3]];
+                        }else{
+                            dump('ayyy');
+                        }
+                    }
+                }else{
+                    dump('error  formato incorrecto');
+                }
+
+
+                $i++;
+
+            }
+
+        }
+        //dump($encabezado);
+        if (($encabezado[0]=='CI')AND($encabezado[1]=='Nombre')AND($encabezado[2]=='Correo')AND ($encabezado[3]=='Calificacion')) {
+            dump($acta);
+            dump($encabezado);
+            dump($notas);
+            foreach ($notas as $key => $value) {
+                $this->validacion_est($value,2,$array_e);
+            }
+        }else{
+            $array_e[0]['status']=402;
+            array_push ( $array_e[1]['errores'] , 'El documento no presenta el formato adecuado (formato de matricula)'  );
+
+            //return response()->json( $array_e);
+        }
+
+
+
+
+        //dump($p);
+
+        //dump($encabezados);
        //$p=User::firstWhere('ci',$value);
 
        //dump($p);
-      foreach ($postulados as $key => $value)
+        /*foreach ($postulados as $key => $value)
       {
           $row=1;
           $j=0;
@@ -711,11 +819,6 @@ class UserInsFormacionController extends Controller
           }
        }
 
-
-
-
-
-
         if (strcasecmp('postulado',$encabezados[0])!=0) {
 
             dump(array_search('postulado',$encabezados,true));
@@ -727,7 +830,7 @@ class UserInsFormacionController extends Controller
 
 
             }
-        }
+        }*/
 
 
 
