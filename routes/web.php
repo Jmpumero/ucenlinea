@@ -63,7 +63,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('pruebas', 'MdlInscripcionController@pruebas')->name('gg.pruebas');
 
     /** Proveedor */
-    Route::get('matriculacion/externa', 'MdlInscripcionController@matriculacion_externa_index')->name('matricula/formacion/externa'); //OJO FALTA EL MIDDLEWARE
+
+   // Route::get('matriculacion/externa', 'MdlInscripcionController@matriculacion_externa_index')->name('matricula/formacion/externa'); //OJO FALTA EL MIDDLEWARE
 
     Route::get('formaciones/matricula/externa', 'MdlInscripcionController@formaciones_externas')->name('formaciones/m/externa');
 
@@ -88,6 +89,18 @@ Route::get('formaciones/certificadas', 'ExpedienteUsuarioController@show_formaci
 Route::get('califica/formacion', 'ExpedienteUsuarioController@califica_formacion_facilitador')->name('est/califica/formacion'); //califica formacion
 
 Route::get('certificado/formacion', 'ExpedienteUsuarioController@certificado_donwload')->name('certificado');
+
+
+/** SUPERVISOR*/ //faltan los Midleware
+Route::get('sup/formaciones/calificar', 'ExpedienteUsuarioController@index_supervisor')->name('supervisor/formaciones/principal');
+
+Route::get('formaciones/calificar', 'ExpedienteUsuarioController@show_formaciones_supervisor')->name('sup/tabla/formaciones/disponibles');
+
+Route::get('postulados/calificar', 'ExpedienteUsuarioController@show_postulados_supervisor')->name('sup/tabla/postulados');
+
+
+
+
 
 });
 

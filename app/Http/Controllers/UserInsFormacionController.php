@@ -707,15 +707,16 @@ class UserInsFormacionController extends Controller
                     }
 
             }else{
-                $array_e[0]['status']=404;
-                array_push ( $array_e[1]['errores'] , 'El estudiante  CI: '.$ci_est .' NO pertenece a la formacion selecionada, verifique el documento'  );
-                dump($array_e);
+                $errores[0]['status']=404;
+                //dd($array_e);
+                array_push ( $errores[1]['errores'] , 'El estudiante  CI: '.$ci_est .' NO pertenece a la formacion selecionada, verifique el documento'  );
+                //dd($array_e);
                 //return response()->json( $array_e);
             }
 
         }else{
-            $array_e[0]['status']=403;
-            array_push ( $array_e[1]['errores'] , 'La CI: '.$ci_est .' NO existe en el sistema verifique el documento'  );
+            $errores[0]['status']=403;
+            array_push ( $errores[1]['errores'] , 'La CI: '.$ci_est .' NO existe en el sistema verifique el documento'  );
             dump($array_e);
             //return response()->json( $array_e);
         }
@@ -731,6 +732,8 @@ class UserInsFormacionController extends Controller
         $array_e[]=['status'=>0];
         $array_e[]= ['errores'=>[]];
         $array_e[]=['cont_e'=>0];
+        dump($array_e);
+
 
         //**validacion del archivo */
         $messages = [  'archivo.extension' => 'El documento debe ser un archivo Excel' ];
@@ -760,7 +763,7 @@ class UserInsFormacionController extends Controller
         $i=0;
         foreach ($acta as $key => $value) {
             foreach ($value as $key2 => $value2) {
-                if (count($value2)==3) {
+                if (count($value2)>3) {
                     if ($i==1) {
                         $encabezado= $value2;
                     }
@@ -783,12 +786,18 @@ class UserInsFormacionController extends Controller
 
         }
         //dump($encabezado);
+        if ($encabezado!=null) {
+            # code...
+
         if (($encabezado[0]=='CI')AND($encabezado[1]=='Nombre')AND($encabezado[2]=='Correo')AND ($encabezado[3]=='Calificacion')) {
             dump($acta);
             dump($encabezado);
             dump($notas);
             foreach ($notas as $key => $value) {
-                $this->validacion_est($value,2,$array_e);
+                if ($value!='') {
+                    $this->validacion_est($value,2,$array_e);
+                }
+
             }
         }else{
             $array_e[0]['status']=402;
@@ -796,6 +805,7 @@ class UserInsFormacionController extends Controller
 
             //return response()->json( $array_e);
         }
+    }
 
 
 

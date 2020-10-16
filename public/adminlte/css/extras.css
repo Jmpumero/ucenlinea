@@ -193,6 +193,20 @@ i.icon-mg-sm{
     border-color: #ffffff;
   }
 
+
+  .btn-calificar {
+    border: 2px solid;
+    color:  #efb810;
+    border-color:#efb71000;
+  }
+
+  .btn-calificar:hover {
+    color: #ffffff;
+    background-color: #ff9642;
+    border-color: #ff9642;
+  }
+
+
 /*Paleta especial
 #f72585,#7209b7,#3a0ca3,#4361ee,#4cc9f0*/
 

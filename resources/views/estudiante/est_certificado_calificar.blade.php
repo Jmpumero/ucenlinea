@@ -255,9 +255,6 @@
             </div>
 
 
-
-
-
         </div>
         <div class="card-footer text-center">
             <button style="display: none" id="btn_continuar_f"  class="btn-lg btn-success" ><i class="far fa-thumbs-up" style="margin-right: 0.5rem"></i>Continuar </button>

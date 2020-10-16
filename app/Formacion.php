@@ -32,6 +32,10 @@ class Formacion extends Model
         return Carbon::parse($value)->format('d-m-Y ');
     }
 
+    public function getFechaDeCulminacionAttribute($value){
+        return Carbon::parse($value)->format('d-m-Y ');
+    }
+
     public function getUpdatedAtAttribute($value){
         return Carbon::parse($value)->format('d-m-Y ');
     }

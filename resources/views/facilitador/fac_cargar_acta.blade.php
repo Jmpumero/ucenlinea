@@ -67,7 +67,7 @@
 
                 </div>
                <!--para prueba-->
-                 <!--  <form id="form_p" action="{{ url('pruebas/excel') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
+                  <!-- <form id="form_p" action="{{ url('pruebas/excel') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <label for="archivo"><b>Archivo: </b></label><br>
                     <input id="archivo_inputp" type="file" name="archivo" required>
@@ -179,29 +179,8 @@
             $('#archivo_input').val(''); //limpia el campo del archivo
             var newRows = "";
 
-            if(data[0].status==250  ) //Mal/sin encabezado
-            {
-
-                const t= Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success btn-alert',
-
-                        },
-                        buttonsStyling: true
-                    })
 
 
-                t.fire({
-                title: '!ERROR !',
-                text: data[1].errores,
-                icon: 'error',
-                confirmButtonText: 'Continuar',
-                width: '35%',
-                timerProgressBar:true,
-
-                })
-
-            }
             if(data[0].status==500  ) //Mal/sin encabezado
             {
 
@@ -255,9 +234,9 @@
 
             }
 
-
+            $('#btn_closed_m_excel').trigger('click'); //prueba
         }
-});
+    });
 
 //$('#archivo_input').val('');
 //$('#btn_closed_m_excel').trigger('click');

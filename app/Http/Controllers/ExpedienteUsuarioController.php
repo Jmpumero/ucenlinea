@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
+use App\Formacion;
 
+use Carbon\Carbon;
 use App\Expediente_usuario;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade as PDF;
 //use PDF;
 class ExpedienteUsuarioController extends Controller
 {
@@ -102,11 +103,101 @@ class ExpedienteUsuarioController extends Controller
        //no se porque el download no funciona... hace colapsar el serve
         //return view('estudiante.vista_certificado',compact('data'));
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
+
+    //supervisor
+    public function index_supervisor(){
+        return view('supervisor.sup_califica_estudiantes');
+    }
+
+
+    //supervisor //siempre post carga de notas entonces finalizada y abandonadas
+    public function show_postulados_supervisor(Request $request){
+
+        if(request()->ajax())
+        {
+           $ids_user=[];
+           $user=Auth::user();
+
+           $q=Expediente_usuario::where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',$request->f_id)->where('expediente_usuarios.status','Finalizada') ->orWhere(function($query) use ($user,$request) {
+            $query->where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',$request->f_id)->where('expediente_usuarios.status','Abandonada');
+        })->join('users','users.id','=','expediente_usuarios.user_id')->get();
+
+
+
+           //$q=Formacion::whereIn('id',$idf)->get();
+
+            return datatables()->of($q)
+            ->addColumn('action', function($data){
+                $button = '<button type="button"  id ="btn_calificar" name="btn_ca"    data-id="'.$data->id.'" class="examinar btn btn-calificar btn"><i class="fas fa-star fa-2x" "></i></button>';
+
+                return $button;
+
+
+            })
+            ->rawColumns(['action'])
+            ->toJson();
+
+        }
+
+        return view('supervisor.sup_califica_estudiantes');
+
+
+    }
+
+
+
+     //supervisor
+     public function show_formaciones_supervisor(Request $request){
+
+        if(request()->ajax())
+        {
+            $idf=[];
+            $user=Auth::user();
+
+            $q=Expediente_usuario::where('supervisor_id',$user->id)->where('calificacion_supervisor',-1)->where('status','Finalizada')->orWhere(function($query) use ($user) {
+                $query->where('supervisor_id',$user->id)->where('calificacion_supervisor',-1)->where('status','Abandonada');
+            })->get();
+
+
+            foreach ($q as $key => $value) {
+
+                $idf[]=$value->formacion_id;
+
+            }
+
+            $idf=array_values(array_unique($idf));
+            //de esta forma para variar
+            $now=Carbon::now();
+            $now=$now->subDay(7);
+            $qw = Formacion::whereIn('id',$idf)->where('fecha_de_culminacion','<=',$now)->select('id','imagen','nombre','fecha_de_culminacion')->get();
+
+
+           //$q=Formacion::whereIn('id',$idf)->get();
+
+            return datatables()->of($qw)
+            ->addColumn('action', function($data){
+                $button = '<button type="button"  id ="btn_ver_m" name="btn_ver" data-nf="'.$data->nombre.'"   data-id="'.$data->id.'" class="examinar btn btn-primary btn"><i class="fas fa-search fa-lg" style="margin-right: 0.5rem;"></i>ver</button>';
+
+                return $button;
+
+
+            })
+            ->rawColumns(['action'])
+            ->toJson();
+
+        }
+
+        return view('supervisor.sup_califica_estudiantes');
+
+
+    }
+
+
+
+
+
     public function create()
     {
         //

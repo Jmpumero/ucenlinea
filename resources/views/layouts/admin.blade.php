@@ -259,11 +259,11 @@
 
                         @hasrole('Proveedor')
                         <li class="nav-item">
-                        <a href= "{{ route('matricula/formacion/externa') }}" class="nav-link">
+                        <!--<a href= "" class="nav-link">
                             <i class="fas fa-university"></i>
 
                             <p>Matricular Formación E.</p>
-                        </a>
+                        </a>-->
 
                         <a href= "{{ route('formaciones/m/externa') }}" class="nav-link">
                             <i class="fas fa-cloud-download-alt"></i>
@@ -305,6 +305,9 @@
                         </li>
                         @endhasrole
 
+
+
+
                         <!--<li class="nav-item">
                           <a href="modform.html" class="nav-link">
                             <i class="far fa-edit"></i>
@@ -315,6 +318,17 @@
                       </ul>
                     </li>
 
+                    @hasrole('Supervisor')
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('supervisor/formaciones/principal') }}" class="nav-link">
+                            <i class="fas fa-award"></i>
+                            <i class="fas fa-user-check"></i>
+
+                            <p> Calificar postulados </p>
+                        </a>
+
+                      </li>
+                    @endhasrole
 
                     <li class="nav-item has-treeview">
                       <a href="rpretiro_estudiante.html" class="nav-link">

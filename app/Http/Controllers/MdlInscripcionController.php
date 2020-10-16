@@ -36,7 +36,7 @@ class MdlInscripcionController extends Controller
         {
             $now=Carbon::now();
             $now->addDays(2);
-            return datatables()->of(Formacion::where('status','con postulados')->where('t_facilitador',0)->where('disponibilidad',1)->where('tipo','interna')->whereDate('fecha_de_inicio','<=',$now))->addColumn('action', function($data){
+            return datatables()->of(Formacion::where('status','con postulados')->where('t_facilitador',0)->where('disponibilidad',1)->whereDate('fecha_de_inicio','<=',$now))->addColumn('action', function($data){
                 $button = '<button type="button" name="edit" id="btn_edit_p" data-id="'.$data->id.'" class="examinar btn btn-info btn-sm"><i class="fas fa-search"></i></button>';
 
                 $button .= '<button type="button" name="delete" id ="btn_enroll"    data-id="'.$data->id.'" class="btn-matricular btn btn-success btn-sm"><i class="fas fa-address-book"  style="margin-right: 0.5rem;" ></i>Matricular</button>';
@@ -52,6 +52,7 @@ class MdlInscripcionController extends Controller
 
 
 
+    //OJO en desuso por eliminar
     public function matriculacion_externa_index()
     {
 
@@ -65,7 +66,7 @@ class MdlInscripcionController extends Controller
             $em_id=$user->empresa->first()->id;
             $r=Requisicion::where('empresa_id',$em_id);
             //
-            return datatables()->of(Requisicion::where('empresa_id',$em_id)->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','con postulados')->where('t_facilitador',0)->where('disponibilidad',1)->where('tipo','externa')->whereDate('fecha_de_inicio','<=',$now)->select('formacions.id as id','formacions.nombre','formacions.actual_matricula','formacions.fecha_de_inicio'))
+            return datatables()->of(Requisicion::where('empresa_id',$em_id)->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','con postulados')->where('t_facilitador',0)->where('disponibilidad',1)->whereDate('fecha_de_inicio','<=',$now)->select('formacions.id as id','formacions.nombre','formacions.actual_matricula','formacions.fecha_de_inicio'))
             ->addColumn('action', function($data){
                 $button = '<button type="button" name="edit" id="btn_edit_p" data-id="'.$data->id.'" class="examinar btn btn-info btn-sm"><i class="fas fa-search"></i></button>';
 
@@ -355,13 +356,14 @@ class MdlInscripcionController extends Controller
 
     }
 
+    /** FACILITADOR  */
 //ver la matricula de una formacion como facilitador
     public function show_matricula_formacion(Request $request)
     {
 
         if(request()->ajax())
         {
-            return datatables()->of(User_ins_formacion::where('formacion_id',$request->fid)->join('users','users.id','=','user_ins_formacions.user_id'))->toJson();
+            return datatables()->of(Expediente_usuario::where('formacion_id',$request->fid)->join('users as tbl_us','tbl_us.id','=','expediente_usuarios.user_id')->where('expediente_usuarios.status','Cursando'))->toJson();
         }
 
 
@@ -469,6 +471,37 @@ class MdlInscripcionController extends Controller
     }
 
 
+
+    public function generate_string($input, $strength ) {
+        $input_length = strlen($input);
+        $random_string = '';
+        for($i = 0; $i < $strength; $i++) {
+            $random_character = $input[mt_rand(0, $input_length - 1)];
+            $random_string .= $random_character;
+        }
+
+        return $random_string;
+    }
+
+
+    public function certificado ($ci,$user_id,$form_id)
+    {
+        $empre_r=Formacion::find($form_id)->empresa_proveedora_id;
+        $cadena=$ci;
+        $cadena=$this->generate_string($cadena,7);
+        $codigo=$user_id.$cadena.$form_id;
+
+        if (!(Certificados_f_estudiante::where('user_id',$user_id)->where('formacion_id',$form_id)->exists())) {
+            $cert= new Certificados_f_estudiante;
+            $cert->codigo_certificado=$codigo;
+            $cert->user_id=$user_id;
+            $cert->formacion_id=$form_id;
+            $cert->empresa_res_id=$empre_r;
+            $cert->save();
+        }
+
+    }
+
     /* facilitador*/
     public function validacion_est($est,$form_id,&$errores){
 
@@ -488,10 +521,12 @@ class MdlInscripcionController extends Controller
                     }else{
                         if ($nota_est>=9.5) {
                             Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Finalizada','calificacion_obtenida'=>$nota_est]);
-                            //dump('aprobado '.$ci_est);
+                            // el certificado;
+                            $this->certificado ($ci_est,$id_est,$form_id);
+
                         }
 
-                        if (($nota_est>5)AND($nota_est<9.5)) {
+                        if (($nota_est>=5)AND($nota_est<9.5)) {
                             Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Finalizada','calificacion_obtenida'=>$nota_est]);
                             //dump('reprobado '.$ci_est);
                         }
@@ -499,22 +534,22 @@ class MdlInscripcionController extends Controller
                     }
 
             }else{
-                $array_e[0]['status']=500;
-                array_push ( $array_e[1]['errores'] , 'El estudiante  CI: '.$ci_est .' NO pertenece a la formacion selecionada, verifique el documento'  );
+                $errores[0]['status']=500;
+                array_push ( $errores[1]['errores'] , 'El estudiante  CI: '.$ci_est .' NO pertenece a la formacion selecionada, verifique el documento'  );
                 //dump($array_e);
-                return response()->json( $array_e);
+                return response()->json( $errores);
             }
 
         }else{
-            $array_e[0]['status']=500;
-            array_push ( $array_e[1]['errores'] , 'La CI: '.$ci_est .' NO existe en el sistema verifique el documento'  );
+            $errores[0]['status']=500;
+            array_push ( $errores[1]['errores'] , 'La CI: '.$ci_est .' NO existe en el sistema verifique el documento'  );
             //dump($array_e);
-            return response()->json( $array_e);
+            return response()->json( $errores);
         }
 
     }
 
-    //facilitador
+    //facilitador pendiente de mas pruebas
     public function import_acta_excel(Request $request)
     {
         if ($request->ajax()) {
@@ -558,8 +593,9 @@ class MdlInscripcionController extends Controller
                             $encabezado= $value2;
                         }
                         if ($i>1) {
-                            if (is_numeric($value2[3])) {
+                            if ((is_numeric($value2[3]))AND ((((float)$value2[3])>=0)AND (((float)$value2[3])<=20))) {
                                 //dump($value2[3]);
+
                                 $notas[]=['ci'=>$value2[0],'nota' => (float)$value2[3]];
                             }else{
                                 $array_e[0]['status']=500;
@@ -581,7 +617,12 @@ class MdlInscripcionController extends Controller
             if (($encabezado[0]=='CI')AND($encabezado[1]=='Nombre')AND($encabezado[2]=='Correo')AND ($encabezado[3]=='Calificacion')) {
 
                 foreach ($notas as $key => $value) {
-                    $this->validacion_est($value,$request->f_id,$array_e);
+                    if ($array_e[0]['status']==200) {
+                        $this->validacion_est($value,$request->f_id,$array_e);
+                    }else{
+                        return response()->json( $array_e);
+                    }
+
                 }
             }else{
                 $array_e[0]['status']=500;
@@ -590,18 +631,69 @@ class MdlInscripcionController extends Controller
                 return response()->json( $array_e);
             }
 
-               /* if ($array_e[0]['status']==200) {
+                if ($array_e[0]['status']==200) {
                     $forma=Formacion::find($request->f_id);
                     $forma->status='finalizada';
                     $forma->save();
-                }*/
-                return response()->json( $array_e); //fino
+                }
+                return response()->json( $array_e);
         }
 
 
     }
 
 
+
+    //supervisor
+    public function show_formaciones_supervisor(Request $request){
+
+        if(request()->ajax())
+        {
+           $idf=[];
+           $user=Auth::user();
+
+           $q1=Matricula_externa::where('user_id',$user->id)->where('rol_shortname','Facilitador')->select('formacion_id')->get();
+
+           $q2=Mdl_inscripcion::where('user_id',$user->id)->where('rol_shortname','teacher')->select('formacion_id')->get();
+
+          // dump($q1);
+           foreach ($q1 as $key => $value) {
+
+               $idf[]=$value->formacion_id;
+
+           }
+           foreach ($q2 as $key => $value) {
+
+               $idf[]=$value->formacion_id;
+
+           }
+
+           $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->where('tblf.status','matriculada')->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();
+
+           //$q=Formacion::whereIn('id',$idf)->get();
+
+            return datatables()->of($qw)
+            ->addColumn('action', function($data){
+                $button = '<button type="button"  id ="btn_ver_m" name="btn_ver" data-nf="'.$data->nombre_formacion.'"   data-id="'.$data->id.'" class="examinar btn btn-morado btn-sm"><i class="fas fa-eye" style="margin-right: 0.5rem;"></i>ver</button>';
+
+                return $button;
+
+
+            })
+            ->rawColumns(['action'])
+            ->toJson();
+
+        }
+
+        return view('facilitador.fac_download_matricula');
+
+
+    }
+
+
+
+
+    /*facilitador*/
 
 
 
@@ -611,8 +703,26 @@ class MdlInscripcionController extends Controller
 
     public function pruebas(Request $request)
     {
-        $idf=[1,2,3,4];
+        $idf=[];
         $user=Auth::user();
+
+        $q=Expediente_usuario::where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',2)->where('expediente_usuarios.status','Finalizada') ->orWhere(function($query) use ($user) {
+            $query->where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',2)->where('expediente_usuarios.status','Abandonada');
+        })->join('users','users.id','=','expediente_usuarios.user_id')->get();
+
+
+
+       // $idf=array_values(array_unique($idf));
+        //de esta forma para variar
+        $now=Carbon::now();
+        $now=$now->subDay(7);
+       // $qw = DB::table('formacions as tblf')->whereIn('tblf.id',$idf)->where('fecha_de_culminacion','<=',$now)->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre','tblf.fecha_de_culminacion as fecha')->get();
+
+        //$q=Expediente_usuario::where('supervisor_id',$user->id)->where('formacion_id',2)->join('users','users.id','=','expediente_usuarios.user_id')->get();
+
+        //dump($now);
+
+        dump($q);
 
         //$fn=Formacion::find(2)->fecha_de_inicio;
         //$fn=Carbon::now(Formacion::find(2)->fecha_de_inicio);
@@ -621,15 +731,7 @@ class MdlInscripcionController extends Controller
         $now=$now->subDay(1);
         $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->where('fecha_de_inicio','<',$now)->where('tblf.status','matriculada')->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();
         dump($qw);*/
-        $p='2,5';
-        $t=4;
 
-        dump((float)($p));
-        dump(is_float($p));
-        dump(is_numeric($p));
-        dump((float)($t));
-        dump(is_float($t));
-        dump(is_numeric($t));
 
         }
 
