@@ -706,23 +706,35 @@ class MdlInscripcionController extends Controller
         $idf=[];
         $user=Auth::user();
 
-        $q=Expediente_usuario::where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',2)->where('expediente_usuarios.status','Finalizada') ->orWhere(function($query) use ($user) {
-            $query->where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',2)->where('expediente_usuarios.status','Abandonada');
-        })->join('users','users.id','=','expediente_usuarios.user_id')->get();
+
+        $now=Carbon::now('-4:00');
+        $now->addDays(2); //fecha limite 3 dias antes del inicio
+        $em_id=$user->empresa->first()->id;
+
+        $r=Requisicion::where('empresa_id',$em_id);
+        $formaciones_list=$r->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','sin postulados')->where('disponibilidad',1)->where('fecha_de_inicio','>',$now)->get()->pluck('nombre','id');
 
 
 
-       // $idf=array_values(array_unique($idf));
-        //de esta forma para variar
-        $now=Carbon::now();
-        $now=$now->subDay(7);
-       // $qw = DB::table('formacions as tblf')->whereIn('tblf.id',$idf)->where('fecha_de_culminacion','<=',$now)->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre','tblf.fecha_de_culminacion as fecha')->get();
+        $q1=DB::table('requisicions as tbl_r')->where('tbl_r.empresa_id',$em_id)->join('formacions as tbl_f','tbl_r.id','=','tbl_f.requisicion_id')->where('tbl_f.status','sin postulados')->where('tbl_f.disponibilidad',1)->where('tbl_f.fecha_de_inicio','>',$now)->select('tbl_f.id as formacion_id','tbl_f.nombre as nombre')->get();
 
-        //$q=Expediente_usuario::where('supervisor_id',$user->id)->where('formacion_id',2)->join('users','users.id','=','expediente_usuarios.user_id')->get();
+        $q2=DB::table('requisicions as tbl_r')->where('tbl_r.empresa_id',$em_id)->join('formacions as tbl_f','tbl_r.id','=','tbl_f.requisicion_id')->where('tbl_f.status','con postulados')->where('tbl_f.disponibilidad',1)->where('tbl_f.fecha_de_inicio','>',$now)->select('tbl_f.id as formacion_id','tbl_f.nombre as nombre')->get();
 
-        //dump($now);
+        foreach ($q1 as $key => $value) {
 
-        dump($q);
+            $idf[]=$value->formacion_id;
+
+        }
+        foreach ($q2 as $key => $value) {
+
+            $idf[]=$value->formacion_id;
+
+        }
+
+        $q3=Formacion::whereIn('id',$idf)->get()->pluck('nombre','id');
+        //dump($formaciones_list);
+        //dump($q3);
+
 
         //$fn=Formacion::find(2)->fecha_de_inicio;
         //$fn=Carbon::now(Formacion::find(2)->fecha_de_inicio);

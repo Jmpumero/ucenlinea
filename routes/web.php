@@ -98,7 +98,7 @@ Route::get('formaciones/calificar', 'ExpedienteUsuarioController@show_formacione
 
 Route::get('postulados/calificar', 'ExpedienteUsuarioController@show_postulados_supervisor')->name('sup/tabla/postulados');
 
-
+Route::get('postulados/calificado', 'ExpedienteUsuarioController@calificar_postulado')->name('sup/califica/postulado');
 
 
 

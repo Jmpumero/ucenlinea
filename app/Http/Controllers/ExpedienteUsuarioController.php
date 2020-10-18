@@ -120,13 +120,9 @@ class ExpedienteUsuarioController extends Controller
            $ids_user=[];
            $user=Auth::user();
 
-           $q=Expediente_usuario::where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',$request->f_id)->where('expediente_usuarios.status','Finalizada') ->orWhere(function($query) use ($user,$request) {
-            $query->where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',$request->f_id)->where('expediente_usuarios.status','Abandonada');
+           $q=Expediente_usuario::where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',$request->f_id)->where('expediente_usuarios.status','Finalizada')->where('calificacion_supervisor',-1) ->orWhere(function($query) use ($user,$request) {
+            $query->where('expediente_usuarios.supervisor_id',$user->id)->where('expediente_usuarios.formacion_id',$request->f_id)->where('expediente_usuarios.status','Abandonada')->where('calificacion_supervisor',-1);
         })->join('users','users.id','=','expediente_usuarios.user_id')->get();
-
-
-
-           //$q=Formacion::whereIn('id',$idf)->get();
 
             return datatables()->of($q)
             ->addColumn('action', function($data){
@@ -145,7 +141,6 @@ class ExpedienteUsuarioController extends Controller
 
 
     }
-
 
 
      //supervisor
@@ -195,6 +190,22 @@ class ExpedienteUsuarioController extends Controller
     }
 
 
+    //supervisor
+    public function calificar_postulado(Request $request){
+
+        if(request()->ajax())
+        {
+
+            $user=Auth::user();
+
+            $q=Expediente_usuario::where('user_id',$request->user_id)->where('formacion_id',$request->f_id)->where('supervisor_id',$user->id) ->update(['calificacion_supervisor' => $request->d_postulado]);
+
+
+
+
+
+        }
+    }
 
 
 

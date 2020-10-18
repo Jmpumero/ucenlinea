@@ -112,9 +112,9 @@
         {{ csrf_field() }}
 
         <!--<input type="text"  name="est_id" hidden id="est_id">-->
-        <input type="text"  name="formacion_id" hidden id="formacion_id">
-        <input type="text"  name="d_formacion" hidden id="d_formacion">
-        <input type="text"  name="d_facilitador" hidden id="d_facilitador">
+        <input type="text"  name="user_id" hidden id="user_id">
+        <input type="text"  name="d_postulado" hidden id="d_postulado">
+        <input type="text"  name="f_id" hidden id="f_id">
 
        <button hidden id="btn_env_datos" type="submit"></button>
     </form>
@@ -192,7 +192,7 @@
 
        var formacion_id=$(this).data("id");
        //console.log(formacion_id);
-        //$('#f_id').val(formacion_id);
+        $('#f_id').val(formacion_id);
 
 
         $('#div_formaciones').toggle(1000);
@@ -305,8 +305,6 @@
         }
 
         $('#msj').text(preguntas[cont_resp]);
-        //var nombre=$(this).data("nf");
-        //console.log(nombre)
 
         //iniciacion  de las preguntas
         $("#rate_postulado").rateYo({
@@ -344,6 +342,55 @@
     });
 
 
+
+
+    $('#btn_continuar').click(function (e) {
+        e.preventDefault();
+        $('#d_postulado').val(total_valor /preguntas.length);
+        $('#btn_continuar').fadeOut();
+        $('#div_evalua_postulado').fadeOut();
+        $('#test').fadeIn();
+        $("#rate_postulado").rateYo("destroy");
+        total_valor=0;
+        cont_resp=0;
+
+        $('#btn_env_datos').trigger('click');
+
+    });
+
+
+    $('#form_datos').on('submit', function (event) {
+        //console.log('hola')
+        event.preventDefault();
+        $.ajax({
+
+            url: "{{ route('sup/califica/postulado') }}",
+            method:"GET",
+            data:$(this).serialize(),
+            //dataType:"json",
+            success:function(data)
+            {
+                var toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2800
+                });
+                //$('#div_evalua_facilitador').toggle(800);
+                band=true;
+                $('#div_formaciones').toggle(800);
+                $('#d_postulado').val('');
+                $('#user_id').val('');
+                $('#tabla_formaciones').DataTable().ajax.reload();
+                toast.fire({
+                        icon: 'success',
+                        title: 'Puntuacion Finalizada.'
+                    })
+
+            }
+        });
+
+    });
 
 
 

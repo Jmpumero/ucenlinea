@@ -47,8 +47,23 @@ class UserInsFormacionController extends Controller
             $now->addDays(2); //fecha limite 3 dias antes del inicio
             $em_id=$user->empresa->first()->id; //un problema aqui es si el usuario no esta asociado a ninguna empresa, se supone que ese caso no deberia ocurrir ya que todo usuario dentro del sistema pertenece a una empresa
 
-            $r=Requisicion::where('empresa_id',$em_id);
-            $formaciones_list=$r->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','sin postulados')->orWhere('status','con postulados')->where('disponibilidad',1)->where('fecha_de_inicio','>',$now)->get()->pluck('nombre','id');
+            //bueno esto es ineficiente pero sirve....y es mas facil de leer 
+            $q1=DB::table('requisicions as tbl_r')->where('tbl_r.empresa_id',$em_id)->join('formacions as tbl_f','tbl_r.id','=','tbl_f.requisicion_id')->where('tbl_f.status','sin postulados')->where('tbl_f.disponibilidad',1)->where('tbl_f.fecha_de_inicio','>',$now)->select('tbl_f.id as formacion_id','tbl_f.nombre as nombre')->get();
+
+            $q2=DB::table('requisicions as tbl_r')->where('tbl_r.empresa_id',$em_id)->join('formacions as tbl_f','tbl_r.id','=','tbl_f.requisicion_id')->where('tbl_f.status','con postulados')->where('tbl_f.disponibilidad',1)->where('tbl_f.fecha_de_inicio','>',$now)->select('tbl_f.id as formacion_id','tbl_f.nombre as nombre')->get();
+
+            foreach ($q1 as $key => $value) {
+
+                $idf[]=$value->formacion_id;
+
+            }
+            foreach ($q2 as $key => $value) {
+
+                $idf[]=$value->formacion_id;
+
+            }
+
+            $formaciones_list=Formacion::whereIn('id',$idf)->get()->pluck('nombre','id');
 
             return view('responsable_de_personal.inscripcion',['formaciones_list'=>$formaciones_list]);
         }
