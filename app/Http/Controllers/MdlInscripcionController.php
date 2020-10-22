@@ -7,10 +7,12 @@ use App\Empresa;
 use App\Formacion;
 use Carbon\Carbon;
 use App\Requisicion;
+use App\Motivo_retiro;
 use App\Mdl_inscripcion;
+use App\Facilitador_temp;
+
 use App\Matricula_externa;
 use App\Usuario_p_empresa;
-
 use App\Expediente_usuario;
 use App\User_ins_formacion;
 use App\Imports\ActasImport;
@@ -36,7 +38,7 @@ class MdlInscripcionController extends Controller
         {
             $now=Carbon::now();
             $now->addDays(2);
-            return datatables()->of(Formacion::where('status','con postulados')->where('t_facilitador',0)->where('disponibilidad',1)->whereDate('fecha_de_inicio','<=',$now))->addColumn('action', function($data){
+            return datatables()->of(Formacion::where('status','con postulados')->where('t_facilitador',0)->where('disponibilidad',1)->whereDate('fecha_de_inicio','<',$now))->addColumn('action', function($data){
                 $button = '<button type="button" name="edit" id="btn_edit_p" data-id="'.$data->id.'" class="examinar btn btn-info btn-sm"><i class="fas fa-search"></i></button>';
 
                 $button .= '<button type="button" name="delete" id ="btn_enroll"    data-id="'.$data->id.'" class="btn-matricular btn btn-success btn-sm"><i class="fas fa-address-book"  style="margin-right: 0.5rem;" ></i>Matricular</button>';
@@ -95,8 +97,9 @@ class MdlInscripcionController extends Controller
             $em_id=$user->empresa->first()->id;//ojo
             $usuarios=Empresa::find($em_id)->users;
             $q=$roles_us->intersect($usuarios);
-            //para realizar la consulta mas apropia y dadeterminar los facilitadores optimos en esta tabla, es necesario datos de otro modulo que lamentablemente no esta operativo...(y ya me canse de hacer funcionalidades de otros modulos)
+            //para realizar la consulta mas apropia y adeterminar los facilitadores optimos en esta tabla, es necesario datos de otro modulo que lamentablemente no esta operativo...(y ya me fastidie de hacer funcionalidades de otros modulos)
             //por ello se reaiza esta consulta mas "general" donde se obtienen solo los facilitadores de la empresa de quien esta matriculando
+            $q=Facilitador_temp::join('users','users.id','=','facilitador_id');
 
             return datatables()->of($q)->addColumn('action', function($data){
                 $button = '<button type="button" name="edit"  data-id="'.$data->id.'" class="examinar btn btn-info btn-sm"><i class="fas fa-search"></i></button>';
@@ -703,7 +706,17 @@ class MdlInscripcionController extends Controller
 
     public function pruebas(Request $request)
     {
-        $idf=[];
+
+        $user=Auth::user();
+        $roles = Role::findByName('Estudiante');
+        $roles_us=$roles->users;
+        $em_id=$user->empresa->first()->id;//ojo
+        $usuarios=Empresa::find($em_id)->users;
+        $q=$roles_us->intersect($usuarios);
+        dump($q->where('status',0));
+
+
+       /* $idf=[];
         $user=Auth::user();
 
 
@@ -731,7 +744,7 @@ class MdlInscripcionController extends Controller
 
         }
 
-        $q3=Formacion::whereIn('id',$idf)->get()->pluck('nombre','id');
+        $q3=Formacion::whereIn('id',$idf)->get()->pluck('nombre','id');*/
         //dump($formaciones_list);
         //dump($q3);
 
@@ -749,89 +762,4 @@ class MdlInscripcionController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Mdl_inscripcion  $mdl_inscripcion
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Mdl_inscripcion $mdl_inscripcion)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Mdl_inscripcion  $mdl_inscripcion
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Mdl_inscripcion $mdl_inscripcion)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Mdl_inscripcion  $mdl_inscripcion
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Mdl_inscripcion $mdl_inscripcion)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Mdl_inscripcion  $mdl_inscripcion
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Mdl_inscripcion $mdl_inscripcion)
-    {
-        //
-    }
 }

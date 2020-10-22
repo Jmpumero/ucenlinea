@@ -21,7 +21,7 @@ class PermissionsSeeder extends Seeder
 
         Permission::create(['name' => 'inscribir estudiantes en formacion']);
         Permission::create(['name' => 'matricular estudiantes en moodle']);
-        Permission::create(['name' => 'matricular estudiantes en LMS externo']);
+        Permission::create(['name' => 'Descargar matricula externa']);
 
 
         //Roles list
@@ -53,7 +53,7 @@ class PermissionsSeeder extends Seeder
         ]);
 
         $prov->givePermissionTo([
-            'matricular estudiantes en LMS externo'
+            'Descargar matricula externa'
 
         ]);
 
@@ -90,6 +90,15 @@ class PermissionsSeeder extends Seeder
         $user->assignRole('Responsable de Control de Estudio');
         $user = User::find(9);
         $user->assignRole('Proveedor');
+
+        $user = User::find(10);
+        $user->assignRole('Facilitador');
+        $user = User::find(11);
+        $user->assignRole('Facilitador');
+        $user = User::find(12);
+        $user->assignRole('Facilitador');
+        $user = User::find(13);
+        $user->assignRole('Facilitador');
 
     }
 

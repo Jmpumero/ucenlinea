@@ -25,7 +25,7 @@
                         Fecha de Inicio
                     </th>
                     <th style="width: 15%" class="text-center">
-                    Acción
+                     Acción
                     </th>
                 </tr>
             </thead>
@@ -80,7 +80,7 @@
 
 
                                 <th style="width: 20%" class="text-center">
-                                    Acción
+                                    Resumen
                                 </th>
                             </tr>
                         </thead>
@@ -194,7 +194,8 @@
 
                 {data: 'id'},
                 {data: 'name'},
-                {data: 'action', name: 'btn', orderable: false},
+                {data: 'resumen'},
+                //{data: 'action', name: 'btn', orderable: false},
             ],
 
             "language": {

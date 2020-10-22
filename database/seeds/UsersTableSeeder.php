@@ -1,7 +1,10 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\User;
+use App\Motivo_retiro;
+use App\Facilitador_temp;
+use Illuminate\Database\Seeder;
+
 class UsersTableSeeder extends Seeder
 {
     /**
@@ -106,9 +109,89 @@ class UsersTableSeeder extends Seeder
         ]);
 
 
+        App\User::create([
+            'name'      => 'Desire Delgado',
+            'email'     => 'desire@gmail.com',
+            'prioridad' => 'alta',
+            'ci'  =>'V123',
+            'status' => true,
+            'sexo' =>'mujer',
+            'password'     => bcrypt('123'),
+
+        ]);
 
 
+        App\User::create([
+            'name'      => 'Mirella Herrera',
+            'email'     => 'mirella@gmail.com',
+            'prioridad' => 'alta',
+            'ci'  =>'V1234',
+            'status' => true,
+            'sexo' =>'mujer',
+            'password'     => bcrypt('123'),
 
+        ]);
+
+        App\User::create([
+            'name'      => 'Pedro Perez',
+            'email'     => 'pedrop@gmail.com',
+            'prioridad' => 'alta',
+            'ci'  =>'V12345',
+            'status' => true,
+            'sexo' =>'hombre',
+            'password'     => bcrypt('123'),
+
+        ]);
+
+        App\User::create([
+            'name'      => 'Pedro Perez',
+            'email'     => 'pedrope@gmail.com',
+            'prioridad' => 'alta',
+            'ci'  =>'V12325456',
+            'status' => true,
+            'sexo' =>'hombre',
+            'password'     => bcrypt('123'),
+
+        ]);
+
+
+        /* Motivos*/
+        Motivo_retiro::create([
+            'motivo'      => 'Medico',
+        ]);
+        Motivo_retiro::create([
+            'motivo'      => 'Permiso',
+        ]);
+        Motivo_retiro::create([
+            'motivo'      => 'Vacaciones',
+        ]);
+
+       /* Facilitador_temp::create([
+            'facilitador_id'      => 10,
+            'resumen'      => 'Especialista en Diseño digital, Ing. del Software,etc',
+            'facilitador_empresa_id'=> 1,
+        ]);
+
+        Facilitador_temp::create([
+            'facilitador_id'      => 11,
+            'resumen'      => 'Sistema Operativo,Diseño curricular',
+            'facilitador_empresa_id'=> 1,
+
+        ]);
+
+        Facilitador_temp::create([
+            'facilitador_id'      => 12,
+            'resumen'      => 'Sistema Operativo,Calculo computacional',
+            'facilitador_empresa_id'=> 1,
+
+        ]);
+
+        Facilitador_temp::create([
+            'facilitador_id'      => 13,
+            'resumen'      => 'Algebra lineal,etc',
+            'facilitador_empresa_id'=> 1,
+
+        ]);*/
 
 
         //factory(User::class,100)->create();

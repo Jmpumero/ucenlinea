@@ -22,6 +22,7 @@ class CreateExpedienteUsuariosTable extends Migration
             $table->decimal('califico_formacion', 4,2)->default(-1);
             $table->decimal('califico_facilitador', 4,2)->default(-1);
             $table->decimal('calificacion_supervisor', 4,2)->default(-1);
+            $table->boolean('solicitud_retiro')->nullable()->default(false);
 
 
             $table->foreign('user_id')->references('id')->on('users');

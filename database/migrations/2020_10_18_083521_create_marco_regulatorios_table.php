@@ -20,7 +20,7 @@ class CreateMarcoRegulatoriosTable extends Migration
             $table->string('mr_ruta', 255);
             $table->enum('mr_rol', ['Admin','Responsable de Personal','Supervisor','Responsable de Control de Estudio','Facilitador','Proveedor','Estudiante','Responsable de Contenido','Responsable Administrativo','Responsable Academico']);
 
-            $table->foreign('usuario_id')->references('id')->on('users');
+            $table->foreign('mr_usuario_id')->references('id')->on('users');
 
             $table->timestamps();
         });

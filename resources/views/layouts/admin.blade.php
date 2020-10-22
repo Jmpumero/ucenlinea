@@ -201,16 +201,42 @@
                           <span class="badge badge-danger right">15</span>
                         </p>
                       </a>
+                      @hasrole('Responsable de Personal')
                       <ul class="nav nav-treeview">
                         <li class="nav-item">
-                          <a href="v_not_rp_est.html" class="nav-link">
+                          <a href="{{ route('solicitudes/postulados') }}" class="nav-link">
                             <i class="fas fa-user-graduate"></i>
-                            <p>Estudiantes</p>
+                            <p>Solicitudes de retiro</p>
                             <span class="badge badge-warning right">10</span>
                           </a>
                         </li>
-
                       </ul>
+                      @endhasrole
+
+                      @hasrole('Responsable de Control de Estudio')
+                      <li class="nav-item has-treeview">
+                        <a href="{{ route('tabla/solicitud/retiro/uvc') }}" class="nav-link">
+                          <i class="fas fa-user-minus text-danger-borde2 icon-mg-sm"></i>
+                          <p>
+                            Retirar Estudiante uvc
+
+                          </p>
+                        </a>
+                      </li>
+                      @endhasrole
+
+                      @hasrole('Responsable de Control de Estudio')
+                      <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                          <a href="{{ route('solicitudes/retiro/formacion') }}" class="nav-link">
+                            <i class="fas fa-user-slash"></i>
+                            <p>Retiro de formación</p>
+
+                          </a>
+                        </li>
+                      </ul>
+                      @endhasrole
+
 
                       <ul class="nav nav-treeview">
                         <li class="nav-item">
@@ -223,6 +249,10 @@
 
                       </ul>
                     </li>
+
+
+
+
 
 
 
@@ -302,6 +332,15 @@
 
                             <p> Certificados </p>
                         </a>
+
+
+
+                        <a href= "{{ route('est/retira/formacion') }}" class="nav-link">
+
+                            <i class="fas fa-folder-minus"></i>
+
+                            <p> Retirar formacion </p>
+                        </a>
                         </li>
                         @endhasrole
 
@@ -329,17 +368,17 @@
 
                       </li>
                     @endhasrole
-
+                    @hasrole('Responsable de Personal')
                     <li class="nav-item has-treeview">
-                      <a href="rpretiro_estudiante.html" class="nav-link">
+                      <a href="{{ route('retiro/estudiantes/uvc') }}" class="nav-link">
                         <i class="fas fa-user-minus text-danger-borde2 icon-mg-sm"></i>
                         <p>
                           Retirar estudiante
 
                         </p>
                       </a>
-
                     </li>
+                    @endhasrole
 
                     <li class="nav-item has-treeview">
                       <a href="#" class="nav-link">
@@ -350,13 +389,15 @@
                         </p>
                       </a>
                       <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="rpinscripcion1.html" class="nav-link">
-                            <i class="far fa-file"></i>
+                        @hasrole('Responsable de Control de Estudio')
+                            <li class="nav-item">
+                            <a href="rpinscripcion1.html" class="nav-link">
+                                <i class="far fa-file"></i>
 
-                            <p>documento1</p>
-                          </a>
-                        </li>
+                                <p>Cargar nuevo documento</p>
+                            </a>
+                            </li>
+                        @endhasrole
                         <li class="nav-item">
                           <a href="#" class="nav-link">
                             <i class="far fa-file"></i>
@@ -368,15 +409,7 @@
                     </li>
 
                 <li class="nav-header">EXAMPLES</li>
-                <li class="nav-item">
-                  <a href="pages/calendar.html" class="nav-link">
-                    <i class="nav-icon far fa-calendar-alt"></i>
-                    <p>
-                      Calendar
-                      <span class="badge badge-info right">2</span>
-                    </p>
-                  </a>
-                </li>
+
 
               </ul>
             </nav>
@@ -476,6 +509,8 @@
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
 <script src="{{ asset('adminlte/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+
+<script src="{{ asset('adminlte/plugins/limit-max-length/jquery-maxlength.js') }}"></script>
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>

@@ -14,14 +14,15 @@ class CreateRetiroUvcRpRcesTable extends Migration
     public function up()
     {
         Schema::create('retiro_uvc_rp_rces', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('rp_id');
             $table->unsignedBigInteger('postulado_id');
             $table->enum('status_solicitud', ['PROCESADA', 'NO PROCESADA'])->default('NO PROCESADA');
             $table->foreign('rp_id')->references('id')->on('users');
             $table->foreign('postulado_id')->references('id')->on('users');
 
-
             $table->timestamps();
+
         });
     }
 

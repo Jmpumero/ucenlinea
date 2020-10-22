@@ -24,6 +24,8 @@ class CreateRetiroFormacionRpRcesTable extends Migration
 
             $table->timestamps();
 
+            $table->primary(['postulado_id', 'formacion_retira_id'], 'retiro_rp_rces_formacion_retira_id_postulado_id_primary');
+
         });
     }
 

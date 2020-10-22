@@ -22,6 +22,9 @@ class CreateCertificadosFEstudiantesTable extends Migration
             $table->foreign('formacion_id')->references('id')->on('formacions');
             $table->foreign('empresa_res_id')->references('id')->on('empresas');
             $table->timestamps();
+
+            $table->primary('codigo_certificado');
+            //$table->primary(['user_id', 'formacion_id'], 'certificados_estudiantes_formacion_id_user_id_primary');
         });
     }
 

@@ -21,6 +21,8 @@ class CreateFacilitadorTempsTable extends Migration
             $table->foreign('facilitador_id')->references('id')->on('users');
             $table->foreign('facilitador_empresa_id')->references('id')->on('empresas');
             $table->timestamps();
+
+            $table->primary(['facilitador_id', 'facilitador_empresa_id'], 'facilitador_temps_facilitador_empresa_id_facilitador_id_primary');
         });
     }
 

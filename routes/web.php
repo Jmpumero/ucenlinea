@@ -49,6 +49,25 @@ Route::middleware(['auth'])->group(function () {
     Route::get('eliminar/postulado/f', 'UserInsFormacionController@destroy')->name('Postulados.destroy'); //pendiente revisar
 
     Route::post('pruebas/excel', 'UserInsFormacionController@pruebas')->name('f.pruebas');
+
+    Route::get('ver/solicitudes', 'ExpedienteUsuarioController@solicitudes_retiro_formacion_postulados_index')->name('solicitudes/postulados');
+
+    Route::get('ver/solicitudes/retiro', 'ExpedienteUsuarioController@tabla_solicitudes_post_rp')->name('solicitudes/postulados/retiro');
+
+    Route::get('ver/datos/retiro', 'ExpedienteUsuarioController@datos_modal_solicitudes_post_rp')->name('solicitud/datos/retiro');
+
+
+    Route::get('procesar/datos/retiro', 'ExpedienteUsuarioController@procesar_solicitud_retiro')->name('procesa/solicitud/retiro');
+
+    Route::get('retiro/estudiantes/uvc', 'ExpedienteUsuarioController@index_retiro_uvc')->name('retiro/estudiantes/uvc');
+
+    Route::get('tabla/retiro/estudiantes/uvc', 'ExpedienteUsuarioController@tabla_postulados_retirar_uvc')->name('tabla/retiro/estudiantes/uvc');
+
+    Route::get('rp/enviar/datos/retiro/uvc', 'ExpedienteUsuarioController@enviar_solicitud_retiro_uvc')->name('rp/enviar/datos/retiro/uvc');
+
+
+
+
    //* fin rp*//
 
     /** Responsable de control de estudio */
@@ -58,6 +77,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('facilitadores', 'MdlInscripcionController@facilitador_show')->name('Mdl.facilitadores');
 
     Route::get('matricular', 'MdlInscripcionController@enrolling')->name('Mdl.matricular');
+
+    Route::get('solicitudes/retiro/formacion', 'ExpedienteUsuarioController@tabla_retiro_formacion_rp_rces')->name('solicitudes/retiro/formacion');
+
+    Route::get('solicitudes/retiro/formacion', 'ExpedienteUsuarioController@tabla_retiro_formacion_rp_rces')->name('solicitudes/retiro/formacion');
+
+    Route::get('retiro/formacion/postuado', 'ExpedienteUsuarioController@procesar_retiro_formacion')->name('retiro/postulado/formacion');
+
+    Route::get('tabla/solicitud/retiro/uvc', 'ExpedienteUsuarioController@tabla_retiro_uvc_rp_rces')->name('tabla/solicitud/retiro/uvc');
+
+    Route::get('procesar/solicitud/retiro/uvc', 'ExpedienteUsuarioController@procesar_retiro_uvc')->name('procesar/solicitud/retiro/uvc');
+
 
 
     Route::get('pruebas', 'MdlInscripcionController@pruebas')->name('gg.pruebas');
@@ -89,6 +119,13 @@ Route::get('formaciones/certificadas', 'ExpedienteUsuarioController@show_formaci
 Route::get('califica/formacion', 'ExpedienteUsuarioController@califica_formacion_facilitador')->name('est/califica/formacion'); //califica formacion
 
 Route::get('certificado/formacion', 'ExpedienteUsuarioController@certificado_donwload')->name('certificado');
+
+
+
+Route::get('retirar/formacion', 'ExpedienteUsuarioController@retirar_formacion_index')->name('est/retira/formacion');
+Route::get('t/retirar/formacion', 'ExpedienteUsuarioController@tabla_retira_formacion_index')->name('est/tabla/retira/formacion');
+
+Route::get('solicitud/retirar/formacion', 'ExpedienteUsuarioController@enviar_solicitud_retiro')->name('envia/solicitud/retiro');
 
 
 /** SUPERVISOR*/ //faltan los Midleware

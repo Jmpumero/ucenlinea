@@ -23,6 +23,8 @@ class CreateRetiroFormacionEstRpsTable extends Migration
             $table->foreign('formacion_retira_id')->references('id')->on('formacions');
             $table->foreign('empresa_del_postulado_id')->references('id')->on('empresas');
             $table->timestamps();
+
+            $table->primary(['postulado_id', 'formacion_retira_id'], 'retiro_est_rps_formacion_retira_id_postulado_id_primary');
         });
     }
 
