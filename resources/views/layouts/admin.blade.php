@@ -67,7 +67,13 @@
               <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-              <a href="index3.html" class="nav-link ">Inicio</a>
+              <a href="href="{{ url('/home') }}" class="nav-link ">Inicio</a>
+
+            </li>
+
+            <li class="nav-item d-none d-sm-inline-block">
+
+                <a href="{{ route('formaciones/publicadas') }}" class="nav-link ">Formaciones</a>
             </li>
 
           </ul>
@@ -224,6 +230,21 @@
                         </a>
                       </li>
                       @endhasrole
+
+                      @hasrole('Responsable de Control de Estudio')
+                      <li class="nav-item has-treeview">
+                        <a href="{{ route('formaciones/sinpublicar') }}" class="nav-link">
+                            <i class="fas fa-university"></i>
+                            <i class="fas fa-check"></i>
+
+                          <p>
+                            Publicar formacion
+
+                          </p>
+                        </a>
+                      </li>
+                      @endhasrole
+
 
                       @hasrole('Responsable de Control de Estudio')
                       <ul class="nav nav-treeview">
@@ -391,7 +412,7 @@
                       <ul class="nav nav-treeview">
                         @hasrole('Responsable de Control de Estudio')
                             <li class="nav-item">
-                            <a href="rpinscripcion1.html" class="nav-link">
+                            <a href="{{ route('carga/doc/marco/regulatorio') }}" class="nav-link">
                                 <i class="far fa-file"></i>
 
                                 <p>Cargar nuevo documento</p>
@@ -434,7 +455,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url('/home') }}">Inicio</a></li>
 
                   </ol>
                 </div><!-- /.col -->

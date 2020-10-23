@@ -11,6 +11,7 @@ use App\Motivo_retiro;
 use App\Mdl_inscripcion;
 use App\Facilitador_temp;
 
+use App\Marco_regulatorio;
 use App\Matricula_externa;
 use App\Usuario_p_empresa;
 use App\Expediente_usuario;
@@ -713,9 +714,14 @@ class MdlInscripcionController extends Controller
         $em_id=$user->empresa->first()->id;//ojo
         $usuarios=Empresa::find($em_id)->users;
         $q=$roles_us->intersect($usuarios);
-        dump($q->where('status',0));
+        $now=Carbon::now();
+        $nom='CV Josem.pdf';
 
 
+        $qw = Formacion::where('publicar',0)->select('id','nombre','imagen')->get();
+
+        dump($qw);
+    }
        /* $idf=[];
         $user=Auth::user();
 
@@ -758,7 +764,7 @@ class MdlInscripcionController extends Controller
         dump($qw);*/
 
 
-        }
+
 
 
 

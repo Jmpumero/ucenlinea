@@ -24,7 +24,7 @@ class CreateFormacionsTable extends Migration
             $table->string('nombre',50);
             $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada']);
             $table->boolean('disponibilidad')->default(false);
-            $table->boolean('t_facilitador')->default(false);
+            $table->boolean('publicar')->default(false);
             $table->enum('tipo',['interna','externa'])->default('interna');
             $table->decimal('precio', 7, 2)->default(000.00);
             $table->float('calificacion')->nullable()->default(0.00);

@@ -55,6 +55,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'marco_regulatorio'=>[
+            'driver' => 'local',
+            'root' => storage_path('app/public/marco_regulatorio'),
+            'url' => env('APP_URL').'/storage/marco_regulatorio',
+            'visibility' => 'public',
+        ],
+
         'matriculas'=>[
             'driver' => 'local',
             'root' => storage_path('app/public/excel/matriculas'),

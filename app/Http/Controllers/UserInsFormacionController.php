@@ -266,7 +266,7 @@ class UserInsFormacionController extends Controller
                 ],
                 [
                     'file'          => 'required',
-                    'extension'      => 'required|in:xlsx,xls,odt,ods',
+                    'extension'      => 'required|in:xlsx,xls',
                 ],
                 $messages
               );

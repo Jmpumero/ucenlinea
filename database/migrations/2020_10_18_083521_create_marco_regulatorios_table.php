@@ -18,6 +18,7 @@ class CreateMarcoRegulatoriosTable extends Migration
             $table->unsignedBigInteger('mr_usuario_id');
             $table->string('mr_nombre', 255);
             $table->string('mr_ruta', 255);
+            $table->string('mr_url', 255);
             $table->enum('mr_rol', ['Admin','Responsable de Personal','Supervisor','Responsable de Control de Estudio','Facilitador','Proveedor','Estudiante','Responsable de Contenido','Responsable Administrativo','Responsable Academico']);
 
             $table->foreign('mr_usuario_id')->references('id')->on('users');

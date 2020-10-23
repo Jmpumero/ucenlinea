@@ -89,7 +89,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('procesar/solicitud/retiro/uvc', 'ExpedienteUsuarioController@procesar_retiro_uvc')->name('procesar/solicitud/retiro/uvc');
 
 
+    Route::get('carga/doc/marco/regulatorio','HomeController@cargar_marco_regulatorio_index')->name('carga/doc/marco/regulatorio');
 
+    Route::post('guardar/documento','HomeController@guardar_documento_marco_regulatorio')->name('guardar/doc');
+
+
+    Route::get('formaciones/no/publicada','HomeController@index_formaciones_no_publicadas')->name('formaciones/sinpublicar');
+
+    Route::get('publicar/formaciones','HomeController@publica_formacion')->name('publicar');
+
+    //Route::post('pruebas/excel', 'UserInsFormacionController@pruebas')->name('f.pruebas');
+
+    /** EXTRAS */
+    Route::get('formaciones/publicadas','HomeController@index_formaciones_publicadas')->name('formaciones/publicadas');
     Route::get('pruebas', 'MdlInscripcionController@pruebas')->name('gg.pruebas');
 
     /** Proveedor */
