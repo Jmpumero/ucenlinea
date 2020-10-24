@@ -180,6 +180,8 @@ i.icon-mg-sm{
 
 
 
+
+
   .btn-a1 {
     color: #ffffff;
     background-color: #48bfe3;
@@ -374,10 +376,14 @@ div.dataTables_wrapper div.dataTables_filter {
 
 
 
-
-
-
 .inline{
   display:inline-block;
   padding:0;
+}
+
+.costo
+{
+    color: #000000;
+    font-weight:200;
+    font-size: 250%;
 }

@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>UVC-TESIS </title>
+  <title>UVC-Universidad de Carabobo </title>
+  <link href="{{ asset('adminlte/img/logos/UC_logo_icono.png') }}" rel="icon">
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -53,6 +54,9 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/summernote/summernote-bs4.css') }}">
 
   <link href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
+
+  <link href="{{ asset('mentor/vendor/animate.css/animate.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('mentor/vendor/aos/aos.css') }}" rel="stylesheet">
   <!-- Google Font: Source Sans Pro -->
   <!--<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">-->
 </head>
@@ -530,7 +534,7 @@
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
 <script src="{{ asset('adminlte/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script src="{{ asset('adminlte/plugins/limit-max-length/jquery-maxlength.js') }}"></script>
 <script>
   $.widget.bridge('uibutton', $.ui.button)
@@ -568,7 +572,9 @@
 <!--para iconos ionic -->
 <!--<script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>-->
 
-
+<script>
+    AOS.init();
+  </script>
 
 </body>
 </html>

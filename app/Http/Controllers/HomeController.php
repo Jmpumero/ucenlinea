@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\File;
 use App\Marco_regulatorio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -152,7 +153,7 @@ class HomeController extends Controller
             $idf=[];
             $user=Auth::user();
 
-            $qw = Formacion::where('publicar',0)->select('id','nombre','imagen','fecha_de_inicio')->get();
+            $qw = Formacion::where('publicar',0)->where('disponibilidad',1)->select('id','nombre','imagen','fecha_de_inicio')->get();
 
             //$q=Formacion::whereIn('id',$idf)->get();
 
@@ -191,8 +192,10 @@ class HomeController extends Controller
 
     public function index_formaciones_publicadas(){
 
+        $now=Carbon::now();
+        $qw = DB::table('formacions as tbl_f')->where('tbl_f.publicar',1)->where('tbl_f.fecha_de_inicio','>=',$now)->orWhere('tbl_f.formacion_libre',1)->join('empresas as tbl_em','tbl_em.id','=','tbl_f.empresa_proveedora_id')->select('tbl_f.id','tbl_f.nombre','tbl_f.imagen','tbl_f.f_resumen','tbl_f.formacion_libre','tbl_f.precio','tbl_f.fecha_de_inicio','tbl_em.nombre as nombre_empresa')->get();
 
-         return view('formaciones_publicadas');
+         return view('formaciones_publicadas')->with('results', $qw);
 
     }
 }

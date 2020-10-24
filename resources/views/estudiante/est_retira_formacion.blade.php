@@ -80,7 +80,6 @@
             <h5 id="tabla_titulo"></h5>
 
 
-
                 <form  id="form_datos"  method="GET">
                     {{ csrf_field() }}
 

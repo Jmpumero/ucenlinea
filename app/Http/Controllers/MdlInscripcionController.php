@@ -147,7 +147,7 @@ class MdlInscripcionController extends Controller
         }
     }
 
-    public function external_enroll($candidatos,$rol,$form_id) //
+    public function external_enroll($candidatos,$rol,$form_id) //no usada
     {
         foreach ($candidatos as $key => $value) {
             $user=Auth::user()->find($value->user_id);
@@ -223,6 +223,38 @@ class MdlInscripcionController extends Controller
     }
 
 
+    public function libre_enroll(Request $request)
+    {
+        if(request()->ajax())
+        {
+            $user=Auth::user();
+
+            if (!(Mdl_inscripcion::where('user_id',$user->id)->where('formacion_id',$request->form_id)->exists())) {
+                Mdl_inscripcion::create([ //se inserta
+                    ///'empresa_id' => $emp_id,
+                    'user_id' => $user->id,
+                    'formacion_id' =>$request->form_id,
+                    'rol_shortname' => 'student',
+
+                ]);
+
+                //crear un nuevo registro en el expediente del estudiante
+                $exp= new Expediente_usuario;
+                $exp->user_id=$user->id;
+                $exp->formacion_id=$request->form_id;
+                //$s_id=User_ins_formacion::where('user_id',$value->user_id)->first()->supervisor_id;
+                //$exp->supervisor_id=$s_id; en este caso no se coloca supervisor
+                $exp->save();
+            }
+
+        }else {
+            return redirect('/home');
+        }
+
+
+
+    }
+
     public function verifica_facilitador($postulados,$facilitadores,&$a_error)
     {
 
@@ -271,36 +303,19 @@ class MdlInscripcionController extends Controller
 
 
             if ($this->verifica_facilitador($postulados,$facilitadores,$array_e)) {
-                if ($tipo==='interna') {
+                //if ($tipo==='interna') {
                     $this->enroll($postulados,'student',$request->f_id);
                     $this->enroll($supervisores,'supervisor',$request->f_id);
                     $this->enroll($facilitadores,'teacher',$request->f_id);
                     $this->enroll($responsable_personal,'rpcurso',$request->f_id);
-                }else {
+                //}else {
 
-                    $this->external_enroll($postulados,'Estudiante',$request->f_id);
+                   /* $this->external_enroll($postulados,'Estudiante',$request->f_id);
                     $this->external_enroll($supervisores,'Supervisor',$request->f_id);
                     $this->external_enroll($facilitadores,'Facilitador',$request->f_id);
-                    $this->external_enroll($responsable_personal,'Responsable de Personal',$request->f_id);
-                    /*version de archivo no usado
-                    $archivo[0][0]='CI ';
-                    $archivo[0][1]='Nombre  ';
-                    $archivo[0][2]='Correo';
-                    $archivo[0][3]='Rol';
-                    $i=1;
+                    $this->external_enroll($responsable_personal,'Responsable de Personal',$request->f_id);*/
 
-                    $this->external_enroll_file($archivo,$i,$postulados,'Estudiante',$request->f_id);
-                    $this->external_enroll_file($archivo,$i,$supervisores,'Supervisor',$request->f_id);
-                    $this->external_enroll_file($archivo,$i,$facilitadores,'Facilitador',$request->f_id);
-                    $this->external_enrol_file($archivo,$i,$responsable_personal,'Responsable de Personal',$request->f_id);
-
-                    $n_archivo=$em_id.'_'.$request->f_id.'_Matricula.xlsx';
-                    Excel::store(new External_Enrolling_Export($archivo), $n_archivo,'matriculas');
-                    //$n_archivo=$em_id.'_'.$request->f_id.'_Matricula.csv';
-                    //Excel::store(new External_Enrolling_Export($archivo), $n_archivo,'matriculas');
-                    */
-
-                }
+               // }
 
 
              }else{
@@ -354,7 +369,7 @@ class MdlInscripcionController extends Controller
         {
 
 
-            return datatables()->of(Matricula_externa::where('formacion_id',$request->fid))->toJson();
+            return datatables()->of(Mdl_inscripcion::where('formacion_id',$request->fid))->toJson();
         }
 
 
@@ -718,7 +733,7 @@ class MdlInscripcionController extends Controller
         $nom='CV Josem.pdf';
 
 
-        $qw = Formacion::where('publicar',0)->select('id','nombre','imagen')->get();
+        $qw = DB::table('formacions as tbl_f')->where('tbl_f.publicar',1)->join('empresas as tbl_em','tbl_em.id','=','tbl_f.empresa_proveedora_id')->select('tbl_f.nombre','tbl_f.imagen','tbl_f.f_resumen','tbl_f.formacion_libre','tbl_f.precio','tbl_f.fecha_de_inicio','tbl_em.nombre as nombre_empresa')->get();
 
         dump($qw);
     }

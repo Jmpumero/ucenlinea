@@ -82,8 +82,11 @@
     <div id="div_evalua_postulado" class="card card-outline card-p1" style="display: none;" >
         <div class="row text-center">
 
-            <div id="test" class="row col-12" style="margin-left: 0%">
-                <div class="col-5 text-center " style="margin-top: 1%; margin-left: 1%;">
+
+
+                <div id="test" class="row col-12" style="margin-left: 0%" >
+
+                <div class="col-5 text-center " data-aos="zoom-in" style="margin-top: 1%; margin-left: 1%;">
                     <div class="card card-outline card-p3" style="margin-bottom: 1%">
 
                         <strong id="msj" class="strong-msj">.</strong>
@@ -95,8 +98,8 @@
                 <div class="col-4 text-center"    style="margin-right: 1%; margin-top: 1%;">
                     <p id="rate_postulado"></p>
                 </div>
-            </div>
 
+            </div>
 
 
 

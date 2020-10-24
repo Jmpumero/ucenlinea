@@ -133,6 +133,8 @@ Route::get('califica/formacion', 'ExpedienteUsuarioController@califica_formacion
 Route::get('certificado/formacion', 'ExpedienteUsuarioController@certificado_donwload')->name('certificado');
 
 
+Route::get('formacion/libre','MdlInscripcionController@libre_enroll')->name('inscribirse/formacion/libre');
+
 
 Route::get('retirar/formacion', 'ExpedienteUsuarioController@retirar_formacion_index')->name('est/retira/formacion');
 Route::get('t/retirar/formacion', 'ExpedienteUsuarioController@tabla_retira_formacion_index')->name('est/tabla/retira/formacion');
