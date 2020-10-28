@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\User;
 use Validator;
 use App\Formacion;
 use Carbon\Carbon;
 use Illuminate\Http\File;
 use App\Marco_regulatorio;
 use Illuminate\Http\Request;
+use App\Certificados_f_estudiante;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +23,10 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    /*public function __construct() //importaten ya que hay controladores y rutas que  no necesitan estar logueados
     {
         $this->middleware('auth');
-    }
+    }*/
 
     /**
      * Show the application dashboard.
@@ -33,7 +35,42 @@ class HomeController extends Controller
      */
     public function index()
     {
+        /*$user=Auth::user();
+        $em_id=$user->empresa->first()->id;
+
+        $n_retiro= DB::table('retiro_formacion_est_rps as tbl_ret')->where('tbl_ret.empresa_del_postulado_id',$em_id)->where('tbl_ret.status_solicitud','NO PROCESADA')->join('users as tbl_us','tbl_ret.postulado_id','=','tbl_us.id')->count();*/
+        //return view('home')->with('n_rp_retiro',$n_retiro);
         return view('home');
+    }
+
+
+    public function verificar_certificado_index()
+    {
+
+        return view('verificar_certificado.verificar_certificado');
+    }
+
+    public function verificar_certificado(Request $request)
+    {
+        if(request()->ajax())
+         {
+            $a_msj=[];
+            $a_msj[]=['status'=>400];
+            $a_msj[]= ['msj'=>'Certificado NO encontrado'];
+            $error=0;
+            $user=User::firstWhere('ci',$request->ci);
+            if ($user!=null) {
+                if ( Certificados_f_estudiante::where('codigo_certificado',$request->codigo)->where('user_id',$user->id)->exists()) {
+
+                    $a_msj[0]['status']=200;
+                    $a_msj[1]['msj']='!Certificado validado!';
+                }
+            }
+
+            return response()->json( $a_msj);
+
+         }
+        return view('verificar_certificado.verificar_certificado');
     }
 
 
@@ -193,7 +230,7 @@ class HomeController extends Controller
     public function index_formaciones_publicadas(){
 
         $now=Carbon::now();
-        $qw = DB::table('formacions as tbl_f')->where('tbl_f.publicar',1)->where('tbl_f.fecha_de_inicio','>=',$now)->orWhere('tbl_f.formacion_libre',1)->join('empresas as tbl_em','tbl_em.id','=','tbl_f.empresa_proveedora_id')->select('tbl_f.id','tbl_f.nombre','tbl_f.imagen','tbl_f.f_resumen','tbl_f.formacion_libre','tbl_f.precio','tbl_f.fecha_de_inicio','tbl_em.nombre as nombre_empresa')->get();
+        $qw = DB::table('formacions as tbl_f')->where('tbl_f.publicar',1)->where('tbl_f.fecha_de_inicio','>=',$now)->join('empresas as tbl_em','tbl_em.id','=','tbl_f.empresa_proveedora_id')->select('tbl_f.id','tbl_f.nombre','tbl_f.imagen','tbl_f.f_resumen','tbl_f.formacion_libre','tbl_f.precio','tbl_f.fecha_de_inicio','tbl_em.nombre as nombre_empresa')->get();
 
          return view('formaciones_publicadas')->with('results', $qw);
 

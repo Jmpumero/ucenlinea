@@ -71,7 +71,7 @@
               <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-              <a href="href="{{ url('/home') }}" class="nav-link ">Inicio</a>
+              <a href="href="{{ url('/') }}" class="nav-link ">Inicio</a>
 
             </li>
 
@@ -202,77 +202,51 @@
                      with font-awesome or any other icon font library -->
 
                     <!--Notificaciones para todos-->
-                     <li class="nav-item has-treeview">
-                      <a href="#" class="nav-link">
-                        <i class="far fa-envelope fa-lg text-green"></i>
-                        <p>
-                          Notificaciones
-                          <i class="fas fa-angle-left right"></i>
-                          <span class="badge badge-danger right">15</span>
-                        </p>
-                      </a>
-                      @hasrole('Responsable de Personal')
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="{{ route('solicitudes/postulados') }}" class="nav-link">
-                            <i class="fas fa-user-graduate"></i>
-                            <p>Solicitudes de retiro</p>
-                            <span class="badge badge-warning right">10</span>
-                          </a>
-                        </li>
-                      </ul>
-                      @endhasrole
-
-                      @hasrole('Responsable de Control de Estudio')
-                      <li class="nav-item has-treeview">
-                        <a href="{{ route('tabla/solicitud/retiro/uvc') }}" class="nav-link">
-                          <i class="fas fa-user-minus text-danger-borde2 icon-mg-sm"></i>
-                          <p>
-                            Retirar Estudiante uvc
-
-                          </p>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="far fa-envelope fa-lg text-green"></i>
+                            <p>
+                            Notificaciones
+                            <i class="fas fa-angle-left right"></i>
+                            <span class="badge badge-danger right"></span>
+                            </p>
                         </a>
-                      </li>
-                      @endhasrole
 
-                      @hasrole('Responsable de Control de Estudio')
-                      <li class="nav-item has-treeview">
-                        <a href="{{ route('formaciones/sinpublicar') }}" class="nav-link">
-                            <i class="fas fa-university"></i>
-                            <i class="fas fa-check"></i>
+                        <ul class="nav nav-treeview">
+                            @hasrole('Responsable de Personal')
+                                <li class="nav-item"><span class=" badge badge-success" > Responsable de personal: </span>
+                                <a href="{{ route('solicitudes/postulados') }}" class="nav-link">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <p>Solicitudes de retiro</p>
+                                    <span class="badge badge-warning right"></span>
+                                </a>
+                                </li>
+                            @endhasrole
 
-                          <p>
-                            Publicar formacion
-
-                          </p>
-                        </a>
-                      </li>
-                      @endhasrole
-
-
-                      @hasrole('Responsable de Control de Estudio')
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="{{ route('solicitudes/retiro/formacion') }}" class="nav-link">
-                            <i class="fas fa-user-slash"></i>
-                            <p>Retiro de formación</p>
-
-                          </a>
-                        </li>
-                      </ul>
-                      @endhasrole
+                            @hasrole('Responsable de Control de Estudio')
+                                <li class="nav-item has-treeview"><span class=" badge badge-morado" > Control de estudio: </span>
+                                    <a href="{{ route('tabla/solicitud/retiro/uvc') }}" class="nav-link">
+                                    <i class="fas fa-user-minus text-danger-borde2 icon-mg-sm"></i>
+                                    <p>
+                                        Retiros de UVC
+                                    </p>
+                                    </a>
+                                </li>
 
 
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="v_not_rp_prove.html" class="nav-link">
-                            <i class="fas fa-pencil-alt"></i>
-                            <p>Inscripciones</p>
-                            <span class="badge badge-primary right">5</span>
-                          </a>
-                        </li>
+                                <li class="nav-item">
+                                <a href="{{ route('solicitudes/retiro/formacion') }}" class="nav-link">
+                                    <i class="fas fa-user-slash"></i>
+                                    <i class="fas fa-folder"></i>
+                                    <p>Retiros de formación </p>
 
-                      </ul>
+                                </a>
+                                </li>
+
+                            @endhasrole
+
+
+                        </ul>
                     </li>
 
 
@@ -280,7 +254,7 @@
 
 
 
-
+                    <!--Formaciones-->
                     <li class="nav-item has-treeview">
                       <a href="#" class="nav-link">
                         <i class="fas fa-user-friends"></i>
@@ -290,35 +264,48 @@
                         </p>
                       </a>
 
+
+
                       <ul class="nav nav-treeview">
-                        @can('inscribir estudiantes en formacion')
-                            <li class="nav-item">
-                            <a href= "{{ route('inscribir/estudiantes') }}" class="nav-link">
-                                <i class="fas fa-clipboard-check"></i>
+                        @hasrole('Responsable de Personal')
+                            @can('inscribir estudiantes en formacion')
+                                <li class="nav-item"><span class=" badge badge-success" > Responsable de personal: </span>
+                                <a href= "{{ route('inscribir/estudiantes') }}" class="nav-link">
+                                    <i class="fas fa-clipboard-check"></i>
 
-                                <p>Postular personal</p>
-                            </a>
+                                    <p>Postular personal</p>
+                                </a>
+                                </li>
+                            @endcan
+                        @endhasrole
+                        @hasrole('Responsable de Control de Estudio')
+                            @can('matricular estudiantes en moodle')
+                                <li class="nav-item"><span class=" badge badge-morado" > Control de estudio: </span>
+                                <a href= "{{ route('matricular/estudiantes') }}" class="nav-link">
+                                    <i class="fas fa-university"></i>
+
+                                    <p>Matricular Formación</p>
+                                </a>
+                                </li>
+                            @endcan
+
+
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('formaciones/sinpublicar') }}" class="nav-link">
+                                    <i class="fas fa-university"></i>
+                                    <i class="fas fa-check"></i>
+
+                                <p>
+                                    Publicar formacion
+
+                                </p>
+                                </a>
                             </li>
-                        @endcan
-
-                        @can('matricular estudiantes en moodle')
-                            <li class="nav-item">
-                            <a href= "{{ route('matricular/estudiantes') }}" class="nav-link">
-                                <i class="fas fa-university"></i>
-
-                                <p>Matricular Formación</p>
-                            </a>
-                            </li>
-                        @endcan
-
+                        @endhasrole
 
                         @hasrole('Proveedor')
-                        <li class="nav-item">
-                        <!--<a href= "" class="nav-link">
-                            <i class="fas fa-university"></i>
+                        <li class="nav-item"><span class=" badge badge-oro2" > Proveedor: </span>
 
-                            <p>Matricular Formación E.</p>
-                        </a>-->
 
                         <a href= "{{ route('formaciones/m/externa') }}" class="nav-link">
                             <i class="fas fa-cloud-download-alt"></i>
@@ -330,7 +317,7 @@
 
 
                         @hasrole('Facilitador')
-                        <li class="nav-item">
+                        <li class="nav-item"><span class=" badge badge-verde-oscuro" > Facilitador: </span>
 
                         <a href= "{{ route('formaciones/m/facilitador') }}" class="nav-link">
                             <i class="fas fa-cloud-download-alt"></i>
@@ -349,7 +336,7 @@
 
 
                         @hasrole('Estudiante')
-                        <li class="nav-item">
+                        <li class="nav-item"> <span class=" badge badge-info" > Estudiante: </span>
 
                         <a href= "{{ route('est/formaciones/certificadas') }}" class="nav-link">
                             <i class="fas fa-award"></i>
@@ -372,27 +359,22 @@
 
 
 
-                        <!--<li class="nav-item">
-                          <a href="modform.html" class="nav-link">
-                            <i class="far fa-edit"></i>
-                            <p>Modificar inscripción</p>
-                          </a>
-                        </li>-->
+                        @hasrole('Supervisor')
+                        <li class="nav-item has-treeview"><span class=" badge badge-primary" > Supervisor: </span>
+                            <a href="{{ route('supervisor/formaciones/principal') }}" class="nav-link">
+                                <i class="fas fa-award"></i>
+                                <i class="fas fa-user-check"></i>
+
+                                <p> Calificar postulados </p>
+                            </a>
+
+                        </li>
+                        @endhasrole
 
                       </ul>
                     </li>
 
-                    @hasrole('Supervisor')
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('supervisor/formaciones/principal') }}" class="nav-link">
-                            <i class="fas fa-award"></i>
-                            <i class="fas fa-user-check"></i>
 
-                            <p> Calificar postulados </p>
-                        </a>
-
-                      </li>
-                    @endhasrole
                     @hasrole('Responsable de Personal')
                     <li class="nav-item has-treeview">
                       <a href="{{ route('retiro/estudiantes/uvc') }}" class="nav-link">
@@ -415,25 +397,20 @@
                       </a>
                       <ul class="nav nav-treeview">
                         @hasrole('Responsable de Control de Estudio')
-                            <li class="nav-item">
-                            <a href="{{ route('carga/doc/marco/regulatorio') }}" class="nav-link">
-                                <i class="far fa-file"></i>
+                            <li class="nav-item"><span class=" badge badge-morado" > Control de estudio: </span>
+                                <a href="{{ route('carga/doc/marco/regulatorio') }}" class="nav-link">
+                                    <i class="far fa-file"></i>
 
-                                <p>Cargar nuevo documento</p>
+                                    <p>Cargar nuevo documento</p>
                             </a>
                             </li>
                         @endhasrole
-                        <li class="nav-item">
-                          <a href="#" class="nav-link">
-                            <i class="far fa-file"></i>
-                            <p>etc</p>
-                          </a>
-                        </li>
+
 
                       </ul>
                     </li>
 
-                <li class="nav-header">EXAMPLES</li>
+                <li class="nav-header"></li>
 
 
               </ul>
@@ -459,7 +436,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ url('/home') }}">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Inicio</a></li>
 
                   </ol>
                 </div><!-- /.col -->

@@ -150,6 +150,8 @@ class ExpedienteUsuarioController extends Controller
 
             $user_exp= DB::table('expediente_usuarios')->where('user_id',$user->id)->where('formacion_id',$request->formacion_id)->update(['califico_formacion' => $request->d_formacion,'califico_facilitador' => $request->d_facilitador]);
 
+            //$user_cert= DB::table('certificados_f_estudiantes')->where('user_id',$user->id)->where('formacion_id',$request->formacion_id)->update(['califico_formacion' => $request->d_formacion,'califico_facilitador' => $request->d_facilitador]);
+
         }
 
         return view('estudiante.est_certificado_calificar');

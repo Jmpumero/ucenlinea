@@ -81,7 +81,7 @@ class UsersTableSeeder extends Seeder
 
         /** estudiantes*/
 
-        App\User::create([ //estudiante
+        App\User::create([ //estudiante 7
             'name'      => 'estudiante1',
             'email'     => 'estudiante1@algo.com',
             'ci'  =>'V1234568901',

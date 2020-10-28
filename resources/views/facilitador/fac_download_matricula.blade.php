@@ -204,39 +204,7 @@
 
             buttons: [
 
-                    {
-                        extend:    'pdfHtml5',
-                        text:      '<i class="fa fa-file-pdf"></i>PDF',
-                        title:'Matricula para la formacion: '+ form_name + '-UVC',
-                        titleAttr: 'PDF',
-                        className: 'btns btn-app export pdf',
-                        footer: true, //nose par q es esto
-                        exportOptions: {
-                        columns: [ 0, 1, 2], //colummnas involucradas mucho cuidado con esto
-                        //stripHtml: false, /* Aquí indicamos que no se eliminen las imágenes */
-                        },
 
-                        customize:function(doc) {
-
-                            doc.styles.title = {
-                                color: '#4c8aa0',
-                                fontSize: '30',
-                                alignment: 'center'
-                            }
-                            doc.styles['td:nth-child(2)'] = {
-                                width: '100px',
-                                'max-width': '100px'
-                            },
-                            doc.styles.tableHeader = {
-                                fillColor:'#4c8aa0',
-                                color:'white',
-                                alignment:'center'
-                            },
-                            doc.content[1].margin = [ 100, 0, 100, 0 ]
-
-                        }
-
-                    },
 
                     {
                         extend:    'excelHtml5',
@@ -257,26 +225,8 @@
 
 
 
-                    },
-                    {
-                        extend:    'csvHtml5',
-                        text:      '<i class="fa fa-file-csv"></i>CSV',
-                        title:'Matricula para la formacion: '+ form_name + '-UVC',
-                        titleAttr: 'CSV',
-                        className: 'btns btn-app export csv',
-
-
-                    },
-                    {
-                        extend:    'print',
-                        text:      '<i class="fa fa-print"></i>Imprimir',
-                        title:'Matricula para la formacion: '+ form_name + '-UVC',
-                        titleAttr: 'Imprimir',
-                        className: 'btns btn-app export imprimir',
-                        footer: true,
-
-
                     }
+
 
                 ]
 

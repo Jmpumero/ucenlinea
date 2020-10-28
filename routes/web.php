@@ -11,6 +11,22 @@
 |
 */
 
+//Route::get('validar/certificado','HomeController@verificar_certificado_index')->name('validar/certificado');
+
+Route::get('valida/certificado','HomeController@verificar_certificado')->name('valida/certificado');
+
+Route::get('validar/certificado', function () {
+    return view('verificar_certificado.verificar_certificado');
+});
+
+//Route::get('formaciones/publicadas','HomeController@index_formaciones_publicadas')->name('formaciones/publicadas');
+
+//Auth::routes(['formaciones/publicadas'=>false]);
+Route::get('formaciones/publicadas','HomeController@index_formaciones_publicadas')->name('formaciones/publicadas');
+/*Route::group(['middleware' => ['web']], function () {
+    Route::get('formaciones/publicadas','HomeController@index_formaciones_publicadas')->name('formaciones/publicadas');
+});*/
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -67,9 +83,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-
-   //* fin rp*//
-
     /** Responsable de control de estudio */
 
     Route::get('matriculacion', 'MdlInscripcionController@index')->name('matricular/estudiantes')->middleware('permission:matricular estudiantes en moodle');
@@ -101,7 +114,12 @@ Route::middleware(['auth'])->group(function () {
     //Route::post('pruebas/excel', 'UserInsFormacionController@pruebas')->name('f.pruebas');
 
     /** EXTRAS */
-    Route::get('formaciones/publicadas','HomeController@index_formaciones_publicadas')->name('formaciones/publicadas');
+    //formaciones publicadas
+   // Route::get('formaciones/publicadas','HomeController@index_formaciones_publicadas')->name('formaciones/publicadas');
+
+
+
+
     Route::get('pruebas', 'MdlInscripcionController@pruebas')->name('gg.pruebas');
 
     /** Proveedor */

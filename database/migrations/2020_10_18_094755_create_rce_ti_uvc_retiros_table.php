@@ -21,6 +21,8 @@ class CreateRceTiUvcRetirosTable extends Migration
             $table->foreign('retirado_id')->references('id')->on('users');
             $table->foreign('empresa_retirado_id')->references('id')->on('empresas');
             $table->timestamps();
+
+            $table->primary(['retirado_id', 'empresa_retirado_id'], 'retirado_id_retiro_uvc_id_primary');
         });
     }
 

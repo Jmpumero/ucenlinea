@@ -25,7 +25,7 @@ class CreateFormacionsTable extends Migration
             $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada']);
             $table->boolean('disponibilidad')->default(false);
             $table->boolean('publicar')->default(false);
-            $table->boolean('tipo_libre')->default(false);
+            $table->boolean('t_facilitador')->default(false);
             $table->enum('tipo',['interna','externa'])->default('interna');
             $table->decimal('precio', 7, 2)->default(000.00);
             $table->float('calificacion')->nullable()->default(0.00);
@@ -34,8 +34,8 @@ class CreateFormacionsTable extends Migration
 
             $table->smallInteger('max_matricula')->default(-1);
             $table->smallInteger('actual_matricula')->default(0);
-            $table->boolean('formacion_libre')->nullable()->default(false);
-            $table->text('f_resumen')->nullable()->default('text');
+            $table->boolean('formacion_libre')->default(false);
+            $table->text('f_resumen')->nullable();
             //$table->string('categoria',50); //esto deberia ser una id a otra tabla,como no se si otro modulo ltenga esa tabla lo usare asi para efecto de ejemplo
             $table->dateTime('fecha_de_inicio')->default(Carbon::now());
             $table->dateTime('fecha_de_culminacion')->nullable();

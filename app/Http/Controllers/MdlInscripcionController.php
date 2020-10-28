@@ -39,7 +39,7 @@ class MdlInscripcionController extends Controller
         {
             $now=Carbon::now();
             $now->addDays(2);
-            return datatables()->of(Formacion::where('status','con postulados')->where('t_facilitador',0)->where('disponibilidad',1)->whereDate('fecha_de_inicio','<',$now))->addColumn('action', function($data){
+            return datatables()->of(Formacion::where('status','con postulados')->where('t_facilitador',0)->where('formacion_libre',0)->where('disponibilidad',1)->whereDate('fecha_de_inicio','<',$now))->addColumn('action', function($data){
                 $button = '<button type="button" name="edit" id="btn_edit_p" data-id="'.$data->id.'" class="examinar btn btn-info btn-sm"><i class="fas fa-search"></i></button>';
 
                 $button .= '<button type="button" name="delete" id ="btn_enroll"    data-id="'.$data->id.'" class="btn-matricular btn btn-success btn-sm"><i class="fas fa-address-book"  style="margin-right: 0.5rem;" ></i>Matricular</button>';
@@ -735,7 +735,25 @@ class MdlInscripcionController extends Controller
 
         $qw = DB::table('formacions as tbl_f')->where('tbl_f.publicar',1)->join('empresas as tbl_em','tbl_em.id','=','tbl_f.empresa_proveedora_id')->select('tbl_f.nombre','tbl_f.imagen','tbl_f.f_resumen','tbl_f.formacion_libre','tbl_f.precio','tbl_f.fecha_de_inicio','tbl_em.nombre as nombre_empresa')->get();
 
-        dump($qw);
+        $usuario_id=User::firstWhere('ci','V20959966');
+
+        if ($usuario_id===null) {
+            dump($usuario_id);
+        }else {
+            $q=Certificados_f_estudiante::where('codigo_certificado','gege')->where('user_id',$usuario_id->id)->exists();
+        }
+
+        $a_msj=[];
+            $a_msj[]=['status'=>400];
+            $a_msj[]= ['msj'=>'Certificado NO encontrado'];
+
+        dump($a_msj);
+
+        $a_msj[0]['status']=200;
+        $a_msj[1]['msj']='!Certificado validado!';
+        //$a_msj[]=['msj'=>'!Certificado validado!'];
+        dump($a_msj);
+
     }
        /* $idf=[];
         $user=Auth::user();

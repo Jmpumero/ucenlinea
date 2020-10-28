@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Formaciones Disponibles</title>
+  <title>Verificar certificado</title>
   <meta content="" name="descriptison">
   <meta content="" name="keywords">
 
@@ -30,6 +30,7 @@
   <link href="{{ asset('mentor/vendor/owl.carousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
   <link href="{{ asset('mentor/vendor/animate.css/animate.min.css') }}" rel="stylesheet">
   <link href="{{ asset('mentor/vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
 
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -62,8 +63,8 @@
       <nav class="nav-menu d-none d-lg-block">
         <ul>
           <li><a href="{{ url('/') }}">Inicio</a></li>
-          <!--<li><a href="about.html">About</a></li>
-          <li class="active"><a href="courses.html">Courses</a></li>
+          <li><a href="{{ route('formaciones/publicadas') }}">Formaciones</a></li>
+          <!--<li class="active"><a href="courses.html">Courses</a></li>
           <li><a href="trainers.html">Trainers</a></li>
           <li><a href="events.html">Events</a></li>
           <li><a href="pricing.html">Pricing</a></li>
@@ -100,8 +101,7 @@
     <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs">
       <div class="container">
-        <h2>Formaciones</h2>
-        <p></p>
+
       </div>
     </div><!-- End Breadcrumbs -->
 
@@ -109,75 +109,46 @@
     <section id="courses" class="courses">
       <div class="container" data-aos="fade-up">
 
-        <div class="row" data-aos="zoom-in" data-aos-delay="100">
+        <div  data-aos="zoom-in" data-aos-delay="100">
+            <div class="card card-outline card-green" style="width: 80%;">
+                <form  id="form_datos"  method="GET" class="text-center">
+                    {{ csrf_field() }}
 
 
-            @foreach ($results as $item)
-
-
-                <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
-                    <div class="course-item">
-                    <img src="{{ asset($item->imagen) }}" class="img-fluid" alt="...">
-                        @if ($item->formacion_libre===1)
-                            <div class="ribbon-wrapper ribbon-xl">
-                                <div class="ribbon bg-success text-lg">
-                                    Gratis
-                                </div>
-                            </div>
-                        @endif
-
-                    <div class="course-content">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4>Content</h4>
-                        @if ($item->formacion_libre===1)
-                            <p class="price">$0</p>
-                        @else
-                            <p class="price">${{ $item->precio }}</p>
-                        @endif
+                    <div class="form-row  text-center"   style="margin-top: 3%;">
+                        <label for="select_ci" class="col-md-4 col-form-label text-center">Nacionalidad</label>
+                        <div class="select2-purple">
+                            <select id="select_ci" class="select2" data-placeholder="Seleccione" data-dropdown-css-class="select2-green" style="width: 80%;">
+                                <option>V</option>
+                                <option>E</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" placeholder="Cedula" type="text" name="ci" id="ci" style="width: 80%;" required>
                         </div>
 
-                        <h3><a href="#">{{ $item->nombre }}</a></h3>
-                        <p>{{ $item->f_resumen }}</p>
-
-
-                        <div class="trainer d-flex justify-content-between align-items-center">
-                            <div class="trainer-profile d-flex align-items-center">
-                            <span>From:</span>&nbsp;<span>{{ $item->nombre_empresa }}</span>
-                            </div>
-
-                        </div>
-
-                        <div class="trainer d-flex justify-content-between align-items-center">
-                        <div class="trainer-profile d-flex align-items-center">
-                        <!-- <img src="{{ asset('mentor/img/trainers/trainer-3.jpg') }}" class="img-fluid" alt="">-->
-
-                            @if ($item->formacion_libre===1)
-
-                                <span>Inicia:</span>&nbsp;<span>{{ Carbon\Carbon::now()->format('d-m-Y ') }}</span>
-                            @else
-                                <span>Inicia:</span>&nbsp;<span>{{ Carbon\Carbon::parse($item->fecha_de_inicio)->format('d-m-Y ') }}</span>
-                            @endif
-
-
-                        </div>
-                        <div class="trainer-rank d-flex align-items-center">
-                            @if ($item->formacion_libre===1)
-                                @hasrole('Estudiante')
-                                    <button type="button"
-                                   id="btn_enroll" data-id="{{ $item->id }}" class="btn btn-primary">Inscribirse</button>
-                                @endhasrole
-                            @endif
-
-                            <button type="button"  id ="btn_ver" name="btn_ver"  class="btn btn-outline-success "><i class="fas fa-search"></i></button>
-                            &nbsp;&nbsp;
-
-                        </div>
-                        </div>
                     </div>
-                    </div>
-                </div> <!-- End Course Item-->
 
-            @endforeach
+                    <div class="form-row" style="margin-top: 3%; margin-bottom: 3%;">
+
+                        <label for="codigo" class="col-md-4 col-form-label">Codigo del certificado:</label>
+                        <div class="col-md-4">
+                            <input class="form-control" placeholder="Codigo" type="text" name="codigo" id="codigo" required>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <button  class="btn btn-outline-success " id="btn_v" > Verificar</button>
+
+                   <button hidden class="btn btn-outline-success " id="btn_env_datos" type="submit"> Verificar</button>
+                </form>
+            </div>
+
+
+
 
         </div>
 
@@ -248,13 +219,14 @@
   <script src="{{ asset('mentor/vendor/owl.carousel/owl.carousel.min.js') }}"></script>
   <script src="{{ asset('mentor/vendor/aos/aos.js') }}"></script>
   <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
-
+  <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
   <!-- Template Main JS File -->
   <script src="{{ asset('mentor/js/main.js') }}"></script>
 
 
 
-  <script>
+
+<script>
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -262,50 +234,127 @@
     });
 
 
+    $(document).ready(function() {
 
-
-   $('body').on('click', '#btn_enroll', function (e) {
-        e.preventDefault();
-       // $('#descripcion').val($('#des_retiro').val()); no hace falta
-        $(this).hide();
-        //console.log($(this).data("id"))
-
-        $.ajax({
-
-            url: "{{ route('inscribirse/formacion/libre') }}",
-            method:"GET",
-            data: {
-                "form_id": $(this).data("id"),
-
-                },
-            success:function(data)
-            {
-
-                const t= Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success btn-alert',
-
-                    },
-                    buttonsStyling: false
-                })
-
-
-                    t.fire({
-                    title: '!Inscripcion completada!',
-                    text: data.success,
-                    icon: 'success',
-                    confirmButtonText: 'Continuar',
-                    width: '35%',
-                    timerProgressBar:true,
-                    //timer: 2500
-                    })
-
-            }
-
-        });
+        $('#select_ci').select2()
 
 
     });
+
+
+
+// calificacion esta parte es sumamente inifeciente pero por falta tiempo... asi se queda
+
+
+
+    $('#btn_v').click(function (e) {
+        e.preventDefault();
+       // $('#descripcion').val($('#des_retiro').val()); no hace falta
+        $('#ci').val($('#select_ci').val()+$('#ci').val());
+        $('#btn_env_datos').trigger('click');
+        //console.log($('#ci').val())
+
+
+
+
+    });
+
+
+
+
+    $('#form_datos').on('submit', function (event) {
+
+        event.preventDefault();
+        $.ajax({
+
+            url: "{{ route('valida/certificado') }}",
+            method:"GET",
+            data:$(this).serialize(),
+            //dataType:"json",
+            success:function(data)
+            {
+                console.log(data);
+                $('#ci').val('');
+                $('#codigo').val('');
+
+                if(data[0].status==400  ) //Mal/sin encabezado
+                {
+
+                    const t= Swal.mixin({
+                            customClass: {
+                                confirmButton: 'btn btn-success btn-alert',
+
+                            },
+                            buttonsStyling: true
+                        })
+
+
+                    t.fire({
+                    title: '<strong>!Datos no validos !</strong>',
+                    text: data[1].msj,
+                    icon: 'error',
+
+                    confirmButtonText: 'Continuar',
+                    width: '35%',
+                    timerProgressBar:true,
+
+                    })
+
+                }
+
+            if(data[0].status==200) //Todo perfecto
+            {
+
+
+                const t= Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success btn-alert',
+
+                        },
+                        buttonsStyling: false
+                    })
+
+
+                t.fire({
+                title: data[1].msj,
+                //text: data.success,
+                icon: 'success',
+                confirmButtonText: 'Continuar',
+                width: '35%',
+                timerProgressBar:true,
+                //timer: 2500
+                })
+
+
+            }
+
+
+            }
+        });
+
+    });
+
+
+//fin calificacion
+
+//ver certificado
+    $('body').on('click', '#btn_ver_c', function (e) {
+        e.preventDefault();
+        $('#f_id').val($(this).data("id"));
+        $('#btn_env_f').trigger('click');
+        //console.log($('#f_id').val())
+    });
+
+    $('#form_certificado').on('sumit', function () {
+        console.log('submit')
+
+    });
+
+//
+
+
+
+
 
 
 
