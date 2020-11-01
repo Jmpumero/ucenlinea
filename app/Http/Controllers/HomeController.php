@@ -52,12 +52,6 @@ class HomeController extends Controller
             $ruta=$doc->mr_ruta;
             return Storage::response($ruta);
         }
-
-        //$file= . "/marco_regulatorio/documento facilitador.pdf";
-        //dump(storage_path());
-        //dump(storage_path('app/public/marco_regulatorio'));
-        //return response()->file('C:\laragon\www\uvc-tesis\storage\app\marco_regulatorio\gg.pdf');
-
         //return Storage::response('marco_regulatorio/CONTRATO DE MAURA PUMERO.pdf'); //bien
         //return response()->download($pathToFile);
 
@@ -252,33 +246,7 @@ class HomeController extends Controller
 
     }
 
-    //responsable de control de estudio? (no terminada)
-    public function tabla_index_documentos(Request $request){
-        if(request()->ajax())
-         {
-            $idf=[];
-            $user=Auth::user();
 
-            $qw = Marcao_regulatorio::all();
-
-            //$q=Formacion::whereIn('id',$idf)->get();
-
-             return datatables()->of($qw)
-             ->addColumn('action', function($data){
-                 $button = '<button type="button"  id ="btn_ver_m" name="btn_ver"    data-id="'.$data->id.'" class="examinar btn btn-danger btn-sm"><i class="fas fa-trash" style="margin-right: 0.5rem;"></i>borrar</button>';
-
-                 return $button;
-
-
-             })
-             ->rawColumns(['action'])
-             ->toJson();
-
-         }
-
-         return view('facilitador.fac_download_matricula');
-
-    }
 
 
     //responable de control de estudio

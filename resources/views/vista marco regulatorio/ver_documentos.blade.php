@@ -6,7 +6,7 @@
 
 <div class="card">
         <div class="card-header">
-            <h3 class="card-title"></h3>
+            <h3 class="card-title"> <strong> Documentos del Marco Regulatorio</strong>  </h3>
 
         </div>
         @foreach ($datos as $item)
@@ -19,11 +19,56 @@
                      //dump($value[0]['rol']);
                     @endphp
 
-                     <div>
-                        @if ($value[0]['rol']=='Supervisor')
-                         <span class=" badge badge-primary" > {{$value[0]['rol']  }} </span>
-                        @endif
-                         <div class="container" data-aos="fade-up">
+                     <div style="margin-top: 2%">
+                        @switch($value[0]['rol'])
+
+                            @case('Responsable de Personal')
+                                <span class=" badge badge-success" style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                                @break
+
+                            @case('Responsable de Control de Estudio')
+                                <span class=" badge badge-morado" style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Proveedor')
+                                <span class=" badge badge-oro2" style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Facilitador')
+                                <span class=" badge badge-verde-oscuro" style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Estudiante')
+                                <span class=" badge badge-info" style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Supervisor')
+                                <span class=" badge badge-primary" style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Responsable de Contenido')
+                                <span class=" badge badge-secondary" style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Responsable Administrativo')
+                                <span class=" badge badge-fabulous style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Responsable de TI')
+                                <span class=" badge badge-dark style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Responsable Academico')
+                                <span class=" badge badge-ver-azul style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                            @case('Admin')
+                                <span class=" badge badge-naranja style="font-size: 100%" > {{$value[0]['rol']  }} </span>
+                            @break
+
+                        @endswitch
+
+                         <div style="margin-left: 1%; margin-top:1%;" class="container" data-aos="fade-up">
 
                             <div class="row" data-aos="zoom-in" data-aos-delay="100">
 
@@ -83,7 +128,7 @@
     });
 
     $(document).ready(function () {
-       $('img').EZView();
+       //$('img').EZView();
 
 
     });

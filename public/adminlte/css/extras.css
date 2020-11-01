@@ -162,6 +162,21 @@ i.icon-mg-sm{
 }
 
 
+.badge-fabulous {
+    color: #ffffff;
+    background-color: #f32cd2;
+  }
+
+  .badge-ver-azul {
+    color: #ffffff;
+    background-color: #0b8f84;
+  }
+
+
+  .badge-naranja {
+    color: #ffffff;
+    background-color: #e85d04;
+  }
 
 
 .btn-morado {
