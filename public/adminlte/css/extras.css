@@ -209,6 +209,30 @@ i.icon-mg-sm{
   }
 
 
+  .btn-publica {
+    border: 2px solid;
+    color:  #06af1c;
+    border-color:#efb71000;
+  }
+
+  .btn-publica:hover {
+    color: #ffffff;
+    background-color: #036621;
+    border-color: #efb71000;
+  }
+
+  .btn-oculta {
+    border: 2px solid;
+    color:  #b718c5;
+    border-color:#efb71000;
+  }
+
+  .btn-oculta:hover {
+    color: #ffffff;
+    background-color: #91049e;
+    border-color: #efb71000;
+  }
+
 /*Paleta especial
 #f72585,#7209b7,#3a0ca3,#4361ee,#4cc9f0*/
 

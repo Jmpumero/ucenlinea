@@ -86,14 +86,12 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                   UVC
+                   UC en línea
                 </div>
 
                 <div class="links">
                     <a href="{{ url('validar/certificado') }}">Validar Certificados</a>
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
+
 
                 </div>
             </div>

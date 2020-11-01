@@ -116,7 +116,9 @@ Route::middleware(['auth'])->group(function () {
     /** EXTRAS */
     //formaciones publicadas
    // Route::get('formaciones/publicadas','HomeController@index_formaciones_publicadas')->name('formaciones/publicadas');
+   Route::get('ver/reglamentos','HomeController@ver_marco_regulatorio_index')->name('ver/marco/regulatorio');
 
+   Route::get('descargar/documento/{nombre}','HomeController@descarga_documento');
 
 
 

@@ -83,23 +83,23 @@ class UsersTableSeeder extends Seeder
 
         App\User::create([ //estudiante 7
             'name'      => 'estudiante1',
-            'email'     => 'estudiante1@algo.com',
+            'email'     => 'estudiante1@gmail.com',
             'ci'  =>'V1234568901',
             'status' => true,
             'password'     => bcrypt('123'),
 
         ]);
 
-        App\User::create([ //estudiante
+        App\User::create([ //estudiante8
             'name'      => 'estudiante2',
-            'email'     => 'estudiante2@algo.com',
+            'email'     => 'estudiante2@gmail.com',
             'ci'  =>'V1234568902',
             'status' => true,
             'password'     => bcrypt('123'),
 
         ]);
 
-        App\User::create([ //proveedor
+        App\User::create([ //proveedor9
             'name'      => 'PROVEEDOR',
             'email'     => 'proveedor@algo.com',
             'ci'  =>'V102',
@@ -134,7 +134,7 @@ class UsersTableSeeder extends Seeder
 
         App\User::create([
             'name'      => 'Pedro Perez',
-            'email'     => 'pedrop@gmail.com',
+            'email'     => 'pedro@gmail.com',
             'prioridad' => 'alta',
             'ci'  =>'V12345',
             'status' => true,
@@ -145,11 +145,23 @@ class UsersTableSeeder extends Seeder
 
         App\User::create([
             'name'      => 'Pedro Perez',
-            'email'     => 'pedrope@gmail.com',
+            'email'     => 'pedroperez@gmail.com',
             'prioridad' => 'alta',
             'ci'  =>'V12325456',
             'status' => true,
             'sexo' =>'hombre',
+            'password'     => bcrypt('123'),
+
+        ]);
+
+
+        App\User::create([ //supervisor 14
+            'name'      => 'SP2 ',
+            'email'     => 'sp2@gmail.com',
+            'prioridad' => 'alta',
+            'ci'  =>'V12567456342',
+            'status' => true,
+            'sexo' =>'mujer',
             'password'     => bcrypt('123'),
 
         ]);

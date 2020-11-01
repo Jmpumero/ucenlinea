@@ -24,7 +24,7 @@
                        Fecha de inicio
                     </th>
                     <th  style="width: 15%" class="text-center" >
-                        Publicar
+                       Acción
                     </th>
 
 

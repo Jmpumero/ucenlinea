@@ -44,6 +44,103 @@ class HomeController extends Controller
     }
 
 
+    public function descarga_documento($nombre){
+
+
+        $doc=Marco_regulatorio::firstWhere('mr_nombre_rol',$nombre);
+        if ($doc!=null) {
+            $ruta=$doc->mr_ruta;
+            return Storage::response($ruta);
+        }
+
+        //$file= . "/marco_regulatorio/documento facilitador.pdf";
+        //dump(storage_path());
+        //dump(storage_path('app/public/marco_regulatorio'));
+        //return response()->file('C:\laragon\www\uvc-tesis\storage\app\marco_regulatorio\gg.pdf');
+
+        //return Storage::response('marco_regulatorio/CONTRATO DE MAURA PUMERO.pdf'); //bien
+        //return response()->download($pathToFile);
+
+    }
+
+    public function ver_marco_regulatorio_index(){
+
+        $user=Auth::user();
+        $matriz[]=['Admin'=>[]];
+        $matriz[]=['Responsable de Personal'=>[]];
+        $matriz[]=['Supervisor'=>[]];
+        $matriz[]=['Facilitador'=>[]];
+        $matriz[]=['Estudiante'=>[]];
+        $matriz[]=['Responsable de Contenido'=>[]];
+        $matriz[]=['Responsable de Control de Estudio'=>[]];
+        $matriz[]=['Responsable Administrativo'=>[]];
+        $matriz[]=['Responsable de TI'=>[]];
+        $matriz[]=['Responsable Academico'=>[]];
+        $matriz[]=['Proveedor'=>[]];
+
+        $roles=$user->getRoleNames();
+        $q=Marco_regulatorio::whereIn('mr_rol',$roles)->select('mr_nombre','mr_nombre_rol','mr_ruta','mr_url','mr_rol')->get();
+
+        foreach ($q as $key => $item) {
+
+
+            switch ($item->mr_rol) {
+                case 'Admin':
+                    array_push ( $matriz[0]['Admin'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+                case 'Responsable de Personal':
+                    array_push ( $matriz[1]['Responsable de Personal'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+                case 'Supervisor':
+                    array_push ( $matriz[2]['Supervisor'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+                case 'Facilitador':
+                    array_push ( $matriz[3]['Facilitador'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+                case 'Estudiante':
+                    array_push ( $matriz[4]['Estudiante'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+                case 'Responsable de Contenido':
+                    array_push ( $matriz[5]['Responsable de Contenido'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+                case 'Responsable de Control de Estudio':
+                    array_push ( $matriz[6]['Responsable de Control de Estudio'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+
+                case 'Responsable Administrativo':
+                    array_push ( $matriz[7]['Responsable Administrativo'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+
+                case 'Responsable de TI':
+                    array_push ( $matriz[8]['Responsable de TI'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+                case 'Responsable  Academico':
+                    array_push ( $matriz[9]['Responsable Academico'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+
+                case 'Proveedor':
+                    array_push ( $matriz[10]['Proveedor'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'nombre_rol'=>$item->mr_nombre_rol]  );
+                    break;
+            }
+
+
+
+        }
+
+        return view('vista marco regulatorio.ver_documentos')->with('datos',$matriz);
+
+    }
+
+
     public function verificar_certificado_index()
     {
 
@@ -120,13 +217,13 @@ class HomeController extends Controller
             //obtenemos el nombre del archivo
             $now=Carbon::now();
             $nombre = $file->getClientOriginalName();
+            $t=explode('.',$nombre);
+            $nombre_rol =$t[0].'_'.$request->rol.'.'.$t[1];
 
-
-
-            $path=$request->file('archivo')->storeAs('marco_regulatorio', $nombre);//lo guardo en el disco especificado con el nombre dado y se guarada el path
-            $url = Storage::url($nombre);
+            $path=$request->file('archivo')->storeAs('marco_regulatorio', $nombre_rol);//lo guardo en el disco especificado con el nombre dado y se guarada el path
+            $url = Storage::url($nombre_rol);
             $user=Auth::user();
-            $this->guardar_doc_DB($user->id,$nombre,$path,$url,$request->rol);
+            $this->guardar_doc_DB($user->id,$nombre,$nombre_rol,$path,$url,$request->rol);
 
                 return response()->json( $array_e);
 
@@ -135,13 +232,14 @@ class HomeController extends Controller
     }
 
     //responsable de control de estudio
-    public function guardar_doc_DB($user_id,$nombre,$path,$url,$rol){
+    public function guardar_doc_DB($user_id,$nombre,$nombre_rol,$path,$url,$rol){
 
        $band=Marco_regulatorio::where('mr_nombre',$nombre)->where('mr_rol',$rol)->exists();
        if (!$band) {
             $marco_r= new Marco_regulatorio;
             $marco_r->mr_usuario_id=$user_id;
             $marco_r->mr_nombre=$nombre;
+            $marco_r->mr_nombre_rol=$nombre_rol;
             $marco_r->mr_ruta=$path;
             $marco_r->mr_url=$url;
             $marco_r->mr_rol=$rol;
@@ -189,14 +287,22 @@ class HomeController extends Controller
          {
             $idf=[];
             $user=Auth::user();
-
-            $qw = Formacion::where('publicar',0)->where('disponibilidad',1)->select('id','nombre','imagen','fecha_de_inicio')->get();
+            $now=Carbon::now();
+            $qw = Formacion::where('disponibilidad',1)->where('fecha_de_inicio','>=',$now)->select('id','nombre','imagen','fecha_de_inicio','publicar')->get();
 
             //$q=Formacion::whereIn('id',$idf)->get();
 
              return datatables()->of($qw)
              ->addColumn('action', function($data){
-                 $button = '<button type="button"  id ="btn_publicar" name="btn_ver"    data-id="'.$data->id.'" class="examinar btn btn-outline-success btn"><i class="fas fa-check" "></i></button>';
+                 if ($data->publicar===0) {
+
+                    $button = '<button type="button"  id ="btn_publicar" name="btn_ver"    data-id="'.$data->id.'" class="examinar btn btn-publica btn-lg"><i class="fas fa-eye" "></i></button>';
+                 }else{
+
+                    $button = '<button type="button"  id ="btn_publicar" name="btn_ver"    data-id="'.$data->id.'" class="examinar btn btn-oculta btn-lg"><i class="fas fa-eye-slash" "></i></button>';
+
+                 }
+
 
                  return $button;
 
@@ -217,7 +323,12 @@ class HomeController extends Controller
         if(request()->ajax())
          {
             $formacion=Formacion::find($request->f_id);
-            $formacion->publicar=true;
+            if ($formacion->publicar) {
+                $formacion->publicar=false;
+            }else{
+                $formacion->publicar=true;
+            }
+
             $formacion->save();
 
          }
@@ -226,7 +337,7 @@ class HomeController extends Controller
 
     }
 
-
+    //responable de control de estudio
     public function index_formaciones_publicadas(){
 
         $now=Carbon::now();

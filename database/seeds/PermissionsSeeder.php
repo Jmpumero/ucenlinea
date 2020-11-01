@@ -82,6 +82,9 @@ class PermissionsSeeder extends Seeder
         $user = User::find(6);
         $user->assignRole('Supervisor');
 
+        $user = User::find(14);
+        $user->assignRole('Supervisor');
+
         $user = User::find(7);
         $user->assignRole('Estudiante');
         $user = User::find(8);

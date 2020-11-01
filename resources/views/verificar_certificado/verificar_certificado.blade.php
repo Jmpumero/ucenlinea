@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Verificar certificado</title>
+  <title>UC en línea </title>
   <meta content="" name="descriptison">
   <meta content="" name="keywords">
 
@@ -131,7 +131,7 @@
 
                     <div class="form-row" style="margin-top: 3%; margin-bottom: 3%;">
 
-                        <label for="codigo" class="col-md-4 col-form-label">Codigo del certificado:</label>
+                        <label for="codigo" class="col-md-4 col-form-label">Código del Certificado:</label>
                         <div class="col-md-4">
                             <input class="form-control" placeholder="Codigo" type="text" name="codigo" id="codigo" required>
                         </div>

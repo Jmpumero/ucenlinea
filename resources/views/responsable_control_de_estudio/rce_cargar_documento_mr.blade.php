@@ -22,10 +22,7 @@
             <form id="form_documento" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
                 {{ csrf_field() }}
               <div class="card-body">
-               <!-- <div class="form-group">
-                  <label for="exampleInputEmail1">Nombre</label>
-                  <input name="d_nombre" required type="text" class="form-control" id="exampleInputEmail1" placeholder="Nombre del documento">
-                </div>-->
+              
                 <div class="form-group">
                   <label for="rol">Rol</label>
                   <select name="rol" id="select_roles" class="select2-purple" data-placeholder="Seleccione un Rol" data-dropdown-css-class="select2-purple" style="width: 100%;">

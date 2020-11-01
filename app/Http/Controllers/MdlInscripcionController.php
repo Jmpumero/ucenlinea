@@ -730,29 +730,84 @@ class MdlInscripcionController extends Controller
         $usuarios=Empresa::find($em_id)->users;
         $q=$roles_us->intersect($usuarios);
         $now=Carbon::now();
-        $nom='CV Josem.pdf';
+
+        $user=Auth::user();
+        //$matriz=[];
+        $matriz[]=['Admin'=>[]];
+        $matriz[]=['Responsable de Personal'=>[]];
+        $matriz[]=['Supervisor'=>[]];
+        $matriz[]=['Facilitador'=>[]];
+        $matriz[]=['Estudiante'=>[]];
+        $matriz[]=['Responsable de Contenido'=>[]];
+        $matriz[]=['Responsable de Control de Estudio'=>[]];
+        $matriz[]=['Responsable Administrativo'=>[]];
+        $matriz[]=['Responsable de TI'=>[]];
+        $matriz[]=['Responsable Academico'=>[]];
+        $matriz[]=['Proveedor'=>[]];
+
+        $roles=$user->getRoleNames();
+        $q=Marco_regulatorio::whereIn('mr_rol',$roles)->select('mr_nombre','mr_ruta','mr_url','mr_rol')->get();
+
+        foreach ($q as $key => $item) {
 
 
-        $qw = DB::table('formacions as tbl_f')->where('tbl_f.publicar',1)->join('empresas as tbl_em','tbl_em.id','=','tbl_f.empresa_proveedora_id')->select('tbl_f.nombre','tbl_f.imagen','tbl_f.f_resumen','tbl_f.formacion_libre','tbl_f.precio','tbl_f.fecha_de_inicio','tbl_em.nombre as nombre_empresa')->get();
+            switch ($item->mr_rol) {
+                case 'Admin':
+                    array_push ( $matriz[0]['Admin'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
 
-        $usuario_id=User::firstWhere('ci','V20959966');
+                case 'Responsable de Personal':
+                    array_push ( $matriz[1]['Responsable de Personal'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
 
-        if ($usuario_id===null) {
-            dump($usuario_id);
-        }else {
-            $q=Certificados_f_estudiante::where('codigo_certificado','gege')->where('user_id',$usuario_id->id)->exists();
+                case 'Supervisor':
+                    array_push ( $matriz[2]['Supervisor'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+
+                case 'Facilitador':
+                    array_push ( $matriz[3]['Facilitador'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+
+                case 'Estudiante':
+                    array_push ( $matriz[4]['Estudiante'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+
+                case 'Responsable de Contenido':
+                    array_push ( $matriz[5]['Responsable de Contenido'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+
+                case 'Responsable de Control de Estudio':
+                    array_push ( $matriz[6]['Responsable de Control de Estudio'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+
+
+                case 'Responsable Administrativo':
+                    array_push ( $matriz[7]['Responsable Administrativo'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+
+
+                case 'Responsable de TI':
+                    array_push ( $matriz[8]['Responsable de TI'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+
+                case 'Responsable  Academico':
+                    array_push ( $matriz[9]['Responsable Academico'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+
+                case 'Proveedor':
+                    array_push ( $matriz[10]['Proveedor'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
+                    break;
+            }
+
+
+
         }
 
-        $a_msj=[];
-            $a_msj[]=['status'=>400];
-            $a_msj[]= ['msj'=>'Certificado NO encontrado'];
 
-        dump($a_msj);
 
-        $a_msj[0]['status']=200;
-        $a_msj[1]['msj']='!Certificado validado!';
-        //$a_msj[]=['msj'=>'!Certificado validado!'];
-        dump($a_msj);
+        dump($matriz);
+
+
 
     }
        /* $idf=[];

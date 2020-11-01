@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>UVC-Universidad de Carabobo </title>
+  <title>UC en línea </title>
   <link href="{{ asset('adminlte/img/logos/UC_logo_icono.png') }}" rel="icon">
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -71,7 +71,7 @@
               <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-              <a href="href="{{ url('/') }}" class="nav-link ">Inicio</a>
+              <a href="{{ url('/') }}" class="nav-link ">Inicio</a>
 
             </li>
 
@@ -217,7 +217,7 @@
                                 <li class="nav-item"><span class=" badge badge-success" > Responsable de personal: </span>
                                 <a href="{{ route('solicitudes/postulados') }}" class="nav-link">
                                     <i class="fas fa-user-graduate"></i>
-                                    <p>Solicitudes de retiro</p>
+                                    <p>Procesar Retiros</p>
                                     <span class="badge badge-warning right"></span>
                                 </a>
                                 </li>
@@ -228,7 +228,7 @@
                                     <a href="{{ route('tabla/solicitud/retiro/uvc') }}" class="nav-link">
                                     <i class="fas fa-user-minus text-danger-borde2 icon-mg-sm"></i>
                                     <p>
-                                        Retiros de UVC
+                                        Retirar de la  UC en línea
                                     </p>
                                     </a>
                                 </li>
@@ -238,7 +238,7 @@
                                 <a href="{{ route('solicitudes/retiro/formacion') }}" class="nav-link">
                                     <i class="fas fa-user-slash"></i>
                                     <i class="fas fa-folder"></i>
-                                    <p>Retiros de formación </p>
+                                    <p>Retirar de la Formación </p>
 
                                 </a>
                                 </li>
@@ -273,7 +273,7 @@
                                 <a href= "{{ route('inscribir/estudiantes') }}" class="nav-link">
                                     <i class="fas fa-clipboard-check"></i>
 
-                                    <p>Postular personal</p>
+                                    <p>Postular Colaboradores</p>
                                 </a>
                                 </li>
                             @endcan
@@ -296,7 +296,7 @@
                                     <i class="fas fa-check"></i>
 
                                 <p>
-                                    Publicar formacion
+                                    Publicar Formación
 
                                 </p>
                                 </a>
@@ -310,7 +310,7 @@
                         <a href= "{{ route('formaciones/m/externa') }}" class="nav-link">
                             <i class="fas fa-cloud-download-alt"></i>
 
-                            <p> Descargar matricula </p>
+                            <p> Descargar Matricula </p>
                         </a>
                         </li>
                         @endhasrole
@@ -323,13 +323,13 @@
                             <i class="fas fa-cloud-download-alt"></i>
                             <i class="fas fa-file-signature"></i>
 
-                            <p> Descargar matricula </p>
+                            <p> Descargar Matricula </p>
                         </a>
 
                         <a href= "{{ route('formaciones/actas/facilitador') }}" class="nav-link">
                             <i class="fas fa-file-upload"></i>
 
-                            <p> Enviar acta academica</p>
+                            <p> Enviar Acta Académica</p>
                         </a>
                         </li>
                         @endhasrole
@@ -342,7 +342,7 @@
                             <i class="fas fa-award"></i>
                             <i class="fas fa-file-invoice"></i>
 
-                            <p> Certificados </p>
+                            <p> Obtener Certificado </p>
                         </a>
 
 
@@ -351,7 +351,7 @@
 
                             <i class="fas fa-folder-minus"></i>
 
-                            <p> Retirar formacion </p>
+                            <p> Retirar de Formación </p>
                         </a>
                         </li>
                         @endhasrole
@@ -365,7 +365,7 @@
                                 <i class="fas fa-award"></i>
                                 <i class="fas fa-user-check"></i>
 
-                                <p> Calificar postulados </p>
+                                <p> Calificar Colaboradores </p>
                             </a>
 
                         </li>
@@ -380,7 +380,7 @@
                       <a href="{{ route('retiro/estudiantes/uvc') }}" class="nav-link">
                         <i class="fas fa-user-minus text-danger-borde2 icon-mg-sm"></i>
                         <p>
-                          Retirar estudiante
+                          Retirar Estudiante
 
                         </p>
                       </a>
@@ -391,17 +391,27 @@
                       <a href="#" class="nav-link">
                         <i class="far fa-folder-open"></i>
                         <p>
-                          Marco regulatorio
+                          Marco Regulatorio
                           <i class="fas fa-angle-left right"></i>
                         </p>
                       </a>
                       <ul class="nav nav-treeview">
+
+
+                        <li class="nav-item">
+                            <a href="{{ route('ver/marco/regulatorio') }}" class="nav-link">
+                                <i class="fas fa-book-reader"></i>
+
+
+                                <p>Ver Documentos</p>
+                            </a>
+                        </li>
                         @hasrole('Responsable de Control de Estudio')
                             <li class="nav-item"><span class=" badge badge-morado" > Control de estudio: </span>
                                 <a href="{{ route('carga/doc/marco/regulatorio') }}" class="nav-link">
-                                    <i class="far fa-file"></i>
+                                    <i class="fas fa-folder-plus"></i>
 
-                                    <p>Cargar nuevo documento</p>
+                                    <p>Cargar Nuevo Documento</p>
                             </a>
                             </li>
                         @endhasrole
@@ -539,9 +549,10 @@
 
 <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
-
-
 <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
+
+<script src="{{ asset('adminlte/plugins/Image-PDF-Viewer-EZView/EZView.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/Image-PDF-Viewer-EZView/draggable.js') }}"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>-->
 
 <!-- AdminLTE App -->
