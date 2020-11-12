@@ -22,7 +22,7 @@ class CreateFormacionsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('empresa_proveedora_id')->default(1);
             $table->string('nombre',50);
-            $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada']);
+            $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada','cerrada']);
             $table->boolean('disponibilidad')->default(false);
             $table->boolean('publicar')->default(false);
             $table->boolean('t_facilitador')->default(false);

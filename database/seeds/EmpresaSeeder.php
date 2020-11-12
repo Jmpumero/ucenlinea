@@ -18,16 +18,22 @@ class EmpresaSeeder extends Seeder
         ]);
 
         Empresa::create([
-            'nombre'      => 'Alguna empresa',
+            'nombre'      => 'Amazon',
             'rif'     => 'G-211111111-4',
 
         ]);
 
-        Empresa::create([
+        /*Empresa::create([
             'nombre'      => 'Polar',
             'rif'     => 'J-00006372-9',
 
+        ]);*/
+
+        Empresa::create([
+            'nombre'      => 'Open English',
+            'rif'     => 'K-5555555-4',
+
         ]);
-        factory(Empresa::class,15)->create();
+        //factory(Empresa::class,15)->create();
     }
 }

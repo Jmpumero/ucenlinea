@@ -186,11 +186,12 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
           <!-- Brand Logo -->
-          <a href="index3.html" class="brand-link">
+          <a href="{{ url('/') }}" class="brand-link">
             <img src="{{ asset('adminlte/img/logos/UC_logo.png') }}" alt="Logo" class="navbar-brand-image  elevation-3"
             width="60" height="70" alt="" style="margin: auto;">
-            <span class="brand-text font-weight-light" style="font-size: 1rem;"></span>
+            <span class="brand-text font-weight-light" style="font-size: 1rem;"> <strong>UC en línea</strong></span>
           </a>
+
 
           <!-- Sidebar -->
           <div class="sidebar">

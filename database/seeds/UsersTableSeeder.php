@@ -14,18 +14,21 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        App\User::create([
-            'name'      => 'Jose Medina',
-            'email'     => 'jmpumero@gmail.com',
+
+        App\User::create([ //       1
+            'name'      => 'ADMIN',
+            'email'     => 'admin@gmail.com',
             'prioridad' => 'alta',
-            'ci'  =>'V20959966',
+            'ci'  =>'V1',
             'status' => true,
             'sexo' =>'hombre',
             'password'     => bcrypt('123'),
 
         ]);
 
-        App\User::create([//RCE
+
+
+        App\User::create([//RCE     2
             'name'      => 'Control de Estudio',
             'email'     => 'rce@gmail.com',
             'prioridad' => 'alta',
@@ -36,19 +39,30 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
-        App\User::create([ //estudiante
-            'name'      => 'Prueba',
-            'email'     => 'prueba@algo.com',
-            'prioridad' => 'baja',
-            'ci'  =>'V123456',
+        App\User::create([ // estudiante 3
+            'name'      => 'Jose Medina',
+            'email'     => 'jmpumero@gmail.com',
+            'prioridad' => 'alta',
+            'ci'  =>'V20959966',
+            'status' => true,
+            'sexo' =>'hombre',
+            'password'     => bcrypt('123'),
+
+        ]);
+
+        App\User::create([ //estudiante     4
+            'name'      => 'Jordan H',
+            'email'     => 'jh@gmail.com',
+            'prioridad' => 'media',
+            'ci'  =>'V1423456',
             'status' => true,
             'sexo' =>'mujer',
             'password'     => bcrypt('123'),
 
         ]);
 
-        App\User::create([ //Rp
-            'name'      => 'Responsable de Personal ',
+        App\User::create([ //Rp 5
+            'name'      => 'Responsable de Personal A.',
             'email'     => 'rp1@gmail.com',
             'prioridad' => 'alta',
             'ci'  =>'V123456789',
@@ -58,18 +72,10 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
-        App\User::create([ //Rp
-            'name'      => 'RP2 Prueba',
-            'email'     => 'rp2@gmail.com',
-            'ci'  =>'V1256789',
-            'status' => true,
-            'sexo' =>'hombre',
-            'password'     => bcrypt('123'),
 
-        ]);
 
-        App\User::create([ //supervisor
-            'name'      => 'SP1 Prueba',
+        App\User::create([ //supervisor 6
+            'name'      => 'A. Supervisor 1',
             'email'     => 'sp1@gmail.com',
             'prioridad' => 'alta',
             'ci'  =>'V125678912',
@@ -79,37 +85,31 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
+        App\User::create([ //supervisor 7
+            'name'      => 'A. Supervisor 2',
+            'email'     => 'sp2@gmail.com',
+            'prioridad' => 'alta',
+            'ci'  =>'V12567912',
+            'status' => true,
+            'sexo' =>'hombre',
+            'password'     => bcrypt('123'),
+
+        ]);
+
         /** estudiantes*/
 
-        App\User::create([ //estudiante 7
-            'name'      => 'estudiante1',
-            'email'     => 'estudiante1@gmail.com',
-            'ci'  =>'V1234568901',
-            'status' => true,
-            'password'     => bcrypt('123'),
 
-        ]);
-
-        App\User::create([ //estudiante8
-            'name'      => 'estudiante2',
-            'email'     => 'estudiante2@gmail.com',
-            'ci'  =>'V1234568902',
-            'status' => true,
-            'password'     => bcrypt('123'),
-
-        ]);
-
-        App\User::create([ //proveedor9
-            'name'      => 'PROVEEDOR',
-            'email'     => 'proveedor@algo.com',
+        App\User::create([ //proveedor  8
+            'name'      => 'PROVEEDOR Open E.',
+            'email'     => 'pro@gmail.com',
             'ci'  =>'V102',
             'status' => true,
             'password'     => bcrypt('123'),
 
         ]);
 
-
-        App\User::create([
+            /** facilitadores*/
+        App\User::create([//    9
             'name'      => 'Desire Delgado',
             'email'     => 'desire@gmail.com',
             'prioridad' => 'alta',
@@ -121,7 +121,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
 
-        App\User::create([
+        App\User::create([  //10
             'name'      => 'Mirella Herrera',
             'email'     => 'mirella@gmail.com',
             'prioridad' => 'alta',
@@ -132,7 +132,7 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
-        App\User::create([
+        App\User::create([//    11
             'name'      => 'Pedro Perez',
             'email'     => 'pedro@gmail.com',
             'prioridad' => 'alta',
@@ -143,7 +143,7 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
-        App\User::create([
+        App\User::create([//    12
             'name'      => 'Pedro Perez',
             'email'     => 'pedroperez@gmail.com',
             'prioridad' => 'alta',
@@ -154,14 +154,36 @@ class UsersTableSeeder extends Seeder
 
         ]);
 
-
-        App\User::create([ //supervisor 14
-            'name'      => 'SP2 ',
-            'email'     => 'sp2@gmail.com',
+        App\User::create([ // estudiante 13
+            'name'      => 'Maura Pumero',
+            'email'     => 'mpumero@gmail.com',
             'prioridad' => 'alta',
-            'ci'  =>'V12567456342',
+            'ci'  =>'V4467336',
             'status' => true,
             'sexo' =>'mujer',
+            'password'     => bcrypt('123'),
+
+        ]);
+
+        App\User::create([ // estudiante 14
+            'name'      => 'Noel Galindo',
+            'email'     => 'ng@gmail.com',
+            'prioridad' => 'media',
+            'ci'  =>'V5555555',
+            'status' => true,
+            'sexo' =>'hombre',
+            'password'     => bcrypt('123'),
+
+        ]);
+
+
+        App\User::create([ // estudiante 15
+            'name'      => 'Ismael Salinas',
+            'email'     => 'is@gmail.com',
+            'prioridad' => 'baja',
+            'ci'  =>'V22222222',
+            'status' => true,
+            'sexo' =>'hombre',
             'password'     => bcrypt('123'),
 
         ]);

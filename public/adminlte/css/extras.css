@@ -194,7 +194,19 @@ i.icon-mg-sm{
 
 
 
+  .bg-info2 {
+    background-color: #ff7d7d !important;
+  }
 
+  .bg-info2,
+  .bg-info2 > a {
+    color: #ffffff !important;
+  }
+
+  .bg-info2.btn:hover {
+    border-color: #ff7d7d;
+    color: #110909;
+  }
 
 
   .btn-a1 {

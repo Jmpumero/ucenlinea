@@ -532,8 +532,8 @@ class MdlInscripcionController extends Controller
         if (User::firstWhere('ci',$ci_est)!=null) {
             $id_est=User::firstWhere('ci',$ci_est)->id;
 
-            if (Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id)->exists()) {
-
+            if (Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id)->where('status','Cursando')->exists()) { //
+                // if (Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id)->where('solicitud_retiro',false)->exists()) esta forma beneficia al  estudiante...
 
                     if ($nota_est<5) {
                         Expediente_usuario::where('user_id',$id_est)->where('formacion_id',$form_id) ->update(['status' => 'Abandonada']);
@@ -724,89 +724,12 @@ class MdlInscripcionController extends Controller
     {
 
         $user=Auth::user();
-        $roles = Role::findByName('Estudiante');
-        $roles_us=$roles->users;
-        $em_id=$user->empresa->first()->id;//ojo
-        $usuarios=Empresa::find($em_id)->users;
-        $q=$roles_us->intersect($usuarios);
-        $now=Carbon::now();
+        if (Expediente_usuario::where('user_id',3)->where('formacion_id',3)->where('status','Cursando')->exists()) {
+           dump('chi cheñol');
 
-        $user=Auth::user();
-        //$matriz=[];
-        $matriz[]=['Admin'=>[]];
-        $matriz[]=['Responsable de Personal'=>[]];
-        $matriz[]=['Supervisor'=>[]];
-        $matriz[]=['Facilitador'=>[]];
-        $matriz[]=['Estudiante'=>[]];
-        $matriz[]=['Responsable de Contenido'=>[]];
-        $matriz[]=['Responsable de Control de Estudio'=>[]];
-        $matriz[]=['Responsable Administrativo'=>[]];
-        $matriz[]=['Responsable de TI'=>[]];
-        $matriz[]=['Responsable Academico'=>[]];
-        $matriz[]=['Proveedor'=>[]];
-
-        $roles=$user->getRoleNames();
-        $q=Marco_regulatorio::whereIn('mr_rol',$roles)->select('mr_nombre','mr_ruta','mr_url','mr_rol')->get();
-
-        foreach ($q as $key => $item) {
-
-
-            switch ($item->mr_rol) {
-                case 'Admin':
-                    array_push ( $matriz[0]['Admin'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-                case 'Responsable de Personal':
-                    array_push ( $matriz[1]['Responsable de Personal'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-                case 'Supervisor':
-                    array_push ( $matriz[2]['Supervisor'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-                case 'Facilitador':
-                    array_push ( $matriz[3]['Facilitador'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-                case 'Estudiante':
-                    array_push ( $matriz[4]['Estudiante'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-                case 'Responsable de Contenido':
-                    array_push ( $matriz[5]['Responsable de Contenido'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-                case 'Responsable de Control de Estudio':
-                    array_push ( $matriz[6]['Responsable de Control de Estudio'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-
-                case 'Responsable Administrativo':
-                    array_push ( $matriz[7]['Responsable Administrativo'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-
-                case 'Responsable de TI':
-                    array_push ( $matriz[8]['Responsable de TI'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-                case 'Responsable  Academico':
-                    array_push ( $matriz[9]['Responsable Academico'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-
-                case 'Proveedor':
-                    array_push ( $matriz[10]['Proveedor'] , ['rol'=>$item->mr_rol,'nombre'=>$item->mr_nombre,'ruta'=>$item->mr_ruta,'url'=>$item->mr_url]  );
-                    break;
-            }
-
-
-
+        }else{
+            dump('gg');
         }
-
-
-
-        dump($matriz);
-
 
 
     }

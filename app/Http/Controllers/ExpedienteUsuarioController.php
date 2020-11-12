@@ -447,7 +447,7 @@ class ExpedienteUsuarioController extends Controller
              Retiro_uvc_rp_rce::where('postulado_id',$request->user_id)->update(['status_solicitud' => 'PROCESADA']);
 
              //actualiza expediente
-             Expediente_usuario::where('user_id',$request->user_id)->where('status','Cursando') ->update(['status' => 'Retirada']);
+             Expediente_usuario::where('user_id',$request->user_id)->where('status','Cursando') ->update(['status' => 'Retiro UVC']);
              //desmatricula
              Mdl_inscripcion::where('user_id',$request->user_id)->where('rol_shortname','student')->delete();
 

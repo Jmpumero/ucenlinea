@@ -46,7 +46,7 @@
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4>Carga de acta de culminacion</h4>
+                    <h4>Carga  Acta de Culminacion</h4>
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -55,8 +55,10 @@
                 <!-- Modal Body -->
             <div class="modal-body">
                 <p class="statusMsg"></p>
-                <h5 id="tabla_titulo">carga el archivo excel:</h5>
-
+                <h5 id="tabla_titulo">Matricula Excel:</h5>
+                <div class="card bg-info2">
+                    <p >  Recuerde que el archivo solicitado es el documento correspondiente a la Matricula de la formación. Puede descargarlo en la opcion: <strong>Formaciones >> Descargar Matricula</strong> </p>
+                </div>
 
                  <div class="card text-center" >
                     <form id="form_excel" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
@@ -228,7 +230,7 @@
                 confirmButtonText: 'Continuar',
                 width: '35%',
                 timerProgressBar:true,
-                timer: 2500
+                timer: 4500
                 })
 
 

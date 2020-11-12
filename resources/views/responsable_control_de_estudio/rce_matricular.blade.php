@@ -224,8 +224,94 @@
 
     $('#form_facilitador').on('submit', function (e) {
        e.preventDefault();
-        console.log('enviando')
+        //console.log('enviando')
         //console.log($(this).serialize())
+        console.log($("input:checkbox:checked").length)
+        if (($("input:checkbox:checked").length)>0) {
+
+            $.ajax({
+
+                url: "{{ route('Mdl.matricular') }}",
+                method:"GET",
+                data:$(this).serialize(),
+                //dataType:"json",
+
+                success:function(data){
+
+                    if(data[0].status==200) //Todo perfecto
+                    {
+                        $('#tabla_formaciones').DataTable().ajax.reload();
+                        const t= Swal.mixin({
+                                customClass: {
+                                    confirmButton: 'btn btn-success btn-alert',
+
+                                },
+                                buttonsStyling: false
+                            })
+
+                            $('#btn_closed_m').trigger('click');
+                        t.fire({
+                        title: '!Matriculado correctamente!',
+                        text: data[1].msj,
+                        icon: 'success',
+                        confirmButtonText: 'Continuar',
+                        width: '35%',
+                        timerProgressBar:true,
+                        timer: 2500
+                        })
+
+
+                    }
+
+                    if(data[0].status==500  ) //Mal/sin encabezado
+                    {
+
+                        const t= Swal.mixin({
+                                customClass: {
+                                    confirmButton: 'btn btn-success btn-alert',
+
+                                },
+                                buttonsStyling: true
+                            })
+
+
+                        t.fire({
+                        title: '!ERROR !',
+                        text: data[1].msj,
+                        icon: 'error',
+                        confirmButtonText: 'Continuar',
+                        width: '35%',
+                        timerProgressBar:true,
+
+                        })
+
+                    }
+
+                }
+
+            });
+
+        }else{
+            const t= Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success btn-alert',
+
+                        },
+                        buttonsStyling: true
+                    })
+
+
+                t.fire({
+                title: 'Seleccione  uno o mas Facilitador(es)',
+                //text: data[1].msj,
+                icon: 'error',
+                confirmButtonText: 'Continuar',
+                width: '35%',
+                timerProgressBar:true,
+
+                })
+        }
+        /*
        $.ajax({
 
         url: "{{ route('Mdl.matricular') }}",
@@ -286,7 +372,7 @@
         }
 
     });
-
+    */
    });
         //probando los check
     $(document).on('change','input[type="checkbox"]' ,function(e) {
