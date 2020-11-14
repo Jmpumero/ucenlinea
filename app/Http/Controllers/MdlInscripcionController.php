@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\External_Enrolling_Export;
 
@@ -181,6 +182,32 @@ class MdlInscripcionController extends Controller
     }
 
 
+
+    public function email_aviso_inscripcion($postulado,$rol,$form_id){
+
+        $subject = "Notificación de Inscripción - Uc en línea";
+        $p=User::find($postulado);
+        $for = $p->email;
+        //dump($for);
+        $form=Formacion::find($form_id);
+        $name=$p->name;
+        $ci=$p->ci;
+        $nombre_f=$form->nombre;
+        $fecha=$form->fecha_de_inicio;
+        $imagenf=$form->imagen;
+        $data=['name'=>$name,'ci'=>$ci,'nombre_f'=>$nombre_f,'fecha'=>$fecha,'imagen'=>$imagenf];
+        //resources\emails\aviso_de_matriculacion_estudiante.blade.php
+        Mail::send('emails.aviso_de_matriculacion_estudiante',['data'=>$data], function($msj) use($subject,$for){
+            $msj->from("uc.en.linea@gmail.com","UC en linea");
+            $msj->subject($subject);
+            $msj->to($for);
+        });
+        //return redirect()->back();
+    }
+
+
+
+
     public function enroll($postulados,$rol,$form_id)
     {
         foreach ($postulados as $key => $value) {
@@ -192,6 +219,8 @@ class MdlInscripcionController extends Controller
                     'rol_shortname' => $rol,
 
                 ]);
+                    //
+
                 //otorgar permisos en la uvc de esto se encargaria TI pero...
 
                 //se le otorga el rol de estudiante y se crea el expediente
@@ -199,6 +228,7 @@ class MdlInscripcionController extends Controller
                     $estu=Auth::user()->find($value->user_id);
                     $estu->assignRole('Estudiante');
 
+                    $this->email_aviso_inscripcion($value->user_id,$rol,$form_id); //prueba
                     //crear un nuevo registro en el expediente del estudiante
                     $exp= new Expediente_usuario;
                     $exp->user_id=$value->user_id;
@@ -724,12 +754,15 @@ class MdlInscripcionController extends Controller
     {
 
         $user=Auth::user();
-        if (Expediente_usuario::where('user_id',3)->where('formacion_id',3)->where('status','Cursando')->exists()) {
-           dump('chi cheñol');
+        $name='Jose Medina';
+        $ci='v20959966';
+        $nombre_f='seguridad';
+        $fecha='20/12/20';
+        $data=[];
+        $data=['name'=>$name,'ci'=>$ci,'nombre_f'=>$nombre_f,'fecha'=>$fecha];
 
-        }else{
-            dump('gg');
-        }
+        dump($data['name']);
+
 
 
     }
