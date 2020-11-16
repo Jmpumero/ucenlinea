@@ -85,7 +85,7 @@
           <!-- SEARCH FORM -->
           <form class="form-inline ml-3">
             <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <input class="form-control form-control-navbar" type="search" placeholder="Buscar" aria-label="Search">
               <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
@@ -105,7 +105,7 @@
             <li class="nav-item dropdown">
               <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-bell fa-lg text-white"></i>
-                <span class="badge badge-danger navbar-badge">15</span>
+                <span class="badge badge-danger navbar-badge"></span>
               </a>
               <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <span class="dropdown-item dropdown-header">15 Notifications</span>

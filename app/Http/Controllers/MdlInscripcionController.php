@@ -373,7 +373,7 @@ class MdlInscripcionController extends Controller
 
             $r=Requisicion::where('empresa_id',$em_id);
 
-            return datatables()->of(Requisicion::where('empresa_id',$em_id)->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','matriculada')->where('disponibilidad',1)->where('tipo','externa')->select('formacions.id as id','formacions.imagen','formacions.nombre as nombre','formacions.fecha_de_inicio'))
+            return datatables()->of(Requisicion::where('empresa_proveedora_id',$em_id)->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','matriculada')->where('disponibilidad',1)->where('tipo','externa')->select('formacions.id as id','formacions.imagen','formacions.nombre as nombre','formacions.fecha_de_inicio'))
             ->addColumn('action', function($data){
                 $button = '<button type="button"  id ="btn_ver_m" name="btn_ver" data-nf="'.$data->nombre.'" data-id="'.$data->id.'" class="examinar btn btn-morado btn-sm"><i class="fas fa-eye" style="margin-right: 0.5rem;"></i>ver</button>';
 
@@ -398,8 +398,8 @@ class MdlInscripcionController extends Controller
         if(request()->ajax())
         {
 
-
-            return datatables()->of(Mdl_inscripcion::where('formacion_id',$request->fid))->toJson();
+            return datatables()->of(Expediente_usuario::where('formacion_id',$request->fid)->join('users as tbl_us','tbl_us.id','=','expediente_usuarios.user_id')->where('expediente_usuarios.status','Cursando'))->toJson();
+            //return datatables()->of(Mdl_inscripcion::where('formacion_id',$request->fid))->toJson();
         }
 
 
@@ -603,6 +603,8 @@ class MdlInscripcionController extends Controller
     {
         if ($request->ajax()) {
 
+            $now=Carbon::now();
+
             $array_e=[];
             $array_e[]=['status'=>200];
             $array_e[]= ['errores'=>[]];
@@ -683,6 +685,7 @@ class MdlInscripcionController extends Controller
                 if ($array_e[0]['status']==200) {
                     $forma=Formacion::find($request->f_id);
                     $forma->status='finalizada';
+                    $forma->fecha_de_culminacion=$now;
                     $forma->save();
                 }
                 return response()->json( $array_e);

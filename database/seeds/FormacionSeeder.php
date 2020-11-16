@@ -197,20 +197,20 @@ class FormacionSeeder extends Seeder
         ]);
 
         Formacion::create([
-            'empresa_proveedora_id' => 1,
+            'empresa_proveedora_id' => 3,
             'nombre'    => 'Ingles Intermedio',
             'status'    => 'sin postulados',
             'disponibilidad'    => true,
             'publicar'    => false,
             't_facilitador'   => false,
-            'tipo'  => 'interna',
+            'tipo'  => 'externa',
             'precio'    => 100,
             'calificacion' => 0,
             'imagen'    => 'adminlte/img/formaciones/banderai.png',
             'max_matricula' =>5,
             'actual_matricula' =>0,
             'formacion_libre'    => false,
-            'f_resumen'    => 'Exiiiito',
+            'f_resumen'    => 'Exiiiito, aprende ingles con wachu',
             'fecha_de_inicio'=>$now->addWeek(),
             'requisicion_id'=>3,
 
