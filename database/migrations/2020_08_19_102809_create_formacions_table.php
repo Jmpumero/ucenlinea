@@ -55,9 +55,9 @@ class CreateFormacionsTable extends Migration
      */
     public function down()
     {
-        //Schema::dropIfExists('formacions');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::dropIfExists('formacions');
+
         Schema::drop('formacions');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+
     }
 }
