@@ -373,7 +373,7 @@ class MdlInscripcionController extends Controller
 
             $r=Requisicion::where('empresa_id',$em_id);
 
-            return datatables()->of(Requisicion::where('empresa_proveedora_id',$em_id)->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','matriculada')->where('disponibilidad',1)->where('tipo','externa')->select('formacions.id as id','formacions.imagen','formacions.nombre as nombre','formacions.fecha_de_inicio'))
+            return datatables()->of(Formacion::where('empresa_proveedora_id',$em_id)->where('status','matriculada')->where('disponibilidad',1)->where('tipo','externa')->select('formacions.id as id','formacions.imagen','formacions.nombre as nombre','formacions.fecha_de_inicio'))
             ->addColumn('action', function($data){
                 $button = '<button type="button"  id ="btn_ver_m" name="btn_ver" data-nf="'.$data->nombre.'" data-id="'.$data->id.'" class="examinar btn btn-morado btn-sm"><i class="fas fa-eye" style="margin-right: 0.5rem;"></i>ver</button>';
 
@@ -764,9 +764,12 @@ class MdlInscripcionController extends Controller
         $data=[];
         $data=['name'=>$name,'ci'=>$ci,'nombre_f'=>$nombre_f,'fecha'=>$fecha];
 
-        dump($data['name']);
+        //dump($data['name']);
+        $user=Auth::user();
+            $em_id=$user->empresa->first()->id;
+        $q=Formacion::where('empresa_proveedora_id',$em_id)->where('status','matriculada')->where('disponibilidad',1)->where('tipo','externa')->get();
 
-
+        dump($q);
 
     }
        /* $idf=[];

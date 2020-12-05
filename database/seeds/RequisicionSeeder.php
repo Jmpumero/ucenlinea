@@ -34,7 +34,7 @@ class RequisicionSeeder extends Seeder
 
         Requisicion::create([
             'creador'      => 1,
-            'empresa_id'     => 2,
+            'empresa_id'     => 3,
             'nombre'  =>'Il Cigno Nero',
             'modalidad' =>'imposible',
             'audiencia' =>'todo publico',
@@ -114,3 +114,4 @@ class RequisicionSeeder extends Seeder
         //factory(Requisicion::class,15)->create();
     }
 }
+

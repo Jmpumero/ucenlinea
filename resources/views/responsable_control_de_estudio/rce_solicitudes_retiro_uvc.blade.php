@@ -2,7 +2,7 @@
 @section('content')
 <div id="_postulados" class="card table-responsive"  >
     <div class="card-header">
-      <h3 id="titulo" class="card-title" style="margin-bottom: 3%">Formaciones</h3>
+      <h3 id="titulo" class="card-title" style="margin-bottom: 3%"><strong> Retiro de la UC en línea</strong></h3>
 
 
     </div>

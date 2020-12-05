@@ -108,7 +108,7 @@
                 <span class="badge badge-danger navbar-badge"></span>
               </a>
               <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-item dropdown-header">15 Notifications</span>
+                <span class="dropdown-item dropdown-header">15 Notificationes</span>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                   <i class="fas fa-envelope mr-2"></i> 4 nuevas pruebas
@@ -117,15 +117,15 @@
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                   <i class="fas fa-users mr-2"></i> 8 nuevas formaciones
-                  <span class="float-right text-muted text-sm">12 hours</span>
+                  <span class="float-right text-muted text-sm">12 horas</span>
                 </a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
-                  <i class="fas fa-file mr-2"></i> 3 nuevos etc
-                  <span class="float-right text-muted text-sm">2 days</span>
+                  <i class="fas fa-file mr-2"></i> 3 nuevos
+                  <span class="float-right text-muted text-sm">2 dias</span>
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                <a href="#" class="dropdown-item dropdown-footer">Ver todas las Notificaciones</a>
               </div>
             </li>
 
@@ -142,8 +142,8 @@
                   <img src="{{ asset(Auth::user()->avatar) }}" class="img-circle elevation-2" alt="User Image">
                     <!-- NO ESTA TERMINADO-->
                   <p>
-                    Empresa - <strong> </strong>
-                    <small>Member since Nov. 2012</small>
+                    Empresa  <strong> </strong>
+                    <small></small>
                   </p>
                 </li>
                 <!-- Menu Body -->
@@ -153,12 +153,12 @@
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="#" class="btn btn-default btn-flat">Perfil</a>
 
                   <a class="btn btn-default btn-flat float-right" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('Salir') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

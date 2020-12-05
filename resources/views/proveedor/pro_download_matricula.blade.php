@@ -57,9 +57,9 @@
                     </th>
 
 
-                    <th style="width: 15%" class="text-center">
+                    <!--<th style="width: 15%" class="text-center">
                         Calificacion
-                    </th>
+                    </th>-->
 
 
 
@@ -208,11 +208,11 @@
                     {
                         extend:    'excelHtml5',
                         text:      '<i class="fa fa-file-excel"></i>Excel',
-                        title:'Matricula  formacion: '+ form_name + '-UVC',
+                        title:'Matricula para Proveedor formacion: '+ form_name + '-UC en linea',
                         titleAttr: 'Excel',
                         className: 'btns btn-app export excel',
                         exportOptions: {
-                        columns: [ 0, 1, 2, 3], //colummnas involucradas mucho muy importante :B
+                        columns: [ 0, 1, 2], //colummnas involucradas mucho muy importante :B
                         //stripHtml: false, /* Aquí indicamos que no se eliminen las imágenes */
                         },
                         /*action: function ( e, dt, node, config ) {
@@ -244,7 +244,7 @@
                 {data: 'name'},
                 //{data: 'apellido'},
                 {data: 'email'},
-                { "defaultContent": "" }, //agrega una columna vacia
+               // { "defaultContent": "" }, //agrega una columna vacia
                 //{data: 'id',"visible": false},
 
             ],

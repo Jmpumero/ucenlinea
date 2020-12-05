@@ -102,9 +102,7 @@ class UsersTableSeeder extends Seeder
         App\User::create([ //proveedor  8
             'name'      => 'PROVEEDOR Open E.',
             'email'     => 'pro@gmail.com',
-            'prioridad' => 'alta',
             'ci'  =>'V102',
-            'sexo' =>'hombre',
             'status' => true,
             'password'     => bcrypt('123'),
 
@@ -158,7 +156,7 @@ class UsersTableSeeder extends Seeder
 
         App\User::create([ // estudiante 13
             'name'      => 'Maura Pumero',
-            'email'     => 'mpumero@gmail.com',
+            'email'     => 'maurapumero@gmail.com',
             'prioridad' => 'alta',
             'ci'  =>'V4467336',
             'status' => true,
@@ -202,32 +200,33 @@ class UsersTableSeeder extends Seeder
             'motivo'      => 'Vacaciones',
         ]);
 
-       /* Facilitador_temp::create([
-            'facilitador_id'      => 10,
+
+        Facilitador_temp::create([
+            'facilitador_id'      => 9,
             'resumen'      => 'Especialista en Diseño digital, Ing. del Software,etc',
             'facilitador_empresa_id'=> 1,
         ]);
 
         Facilitador_temp::create([
-            'facilitador_id'      => 11,
+            'facilitador_id'      => 10,
             'resumen'      => 'Sistema Operativo,Diseño curricular',
             'facilitador_empresa_id'=> 1,
 
         ]);
 
         Facilitador_temp::create([
-            'facilitador_id'      => 12,
+            'facilitador_id'      => 11,
             'resumen'      => 'Sistema Operativo,Calculo computacional',
             'facilitador_empresa_id'=> 1,
 
         ]);
 
         Facilitador_temp::create([
-            'facilitador_id'      => 13,
+            'facilitador_id'      => 12,
             'resumen'      => 'Algebra lineal,etc',
             'facilitador_empresa_id'=> 1,
 
-        ]);*/
+        ]);
 
 
         //factory(User::class,100)->create();

@@ -205,7 +205,7 @@
 
 
         //nombre=nombre.replace(regex,'') //limpiamos la cadena
-        $('#titulo').text('Formas de descarga')
+        $('#titulo').text('')
 
 
         //$('#btn_form_ev').trigger('click');
@@ -292,12 +292,13 @@
     $('body').on('click', '#btn_calificar', function (e) {
         e.preventDefault();
 
-        $('#user_id').val($(this).data("id"));
+        //$('#user_id').val($(this).data("id"));
        //console.log($(this).data("id"));
        //console.log( $('#formacion_id').val());
        // $('#f_id').val(formacion_id);
 
         if (band) {
+            $('#user_id').val($(this).data("id"));
             $('#div_matricula').toggle(1000);
             $('#div_evalua_postulado').toggle(1100);
 
@@ -329,7 +330,7 @@
                // $("#rateYo").rateYo("option", "readOnly", true);
                 if (cont_resp==preguntas.length) {
                     $('#btn_continuar').toggle(600);
-
+                    console.log($('#user_id').val());
 
                 }else{
                     $('#btn_calificar').trigger('click');

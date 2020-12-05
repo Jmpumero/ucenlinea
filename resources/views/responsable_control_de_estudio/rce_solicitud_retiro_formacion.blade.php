@@ -2,8 +2,7 @@
 @section('content')
 <div id="_postulados" class="card table-responsive"  >
     <div class="card-header">
-      <h3 id="titulo" class="card-title" style="margin-bottom: 3%">Formaciones</h3>
-
+      <h2 id="titulo" class="card-title"  style="margin-bottom: 3%; color:green"> <strong>  Retiro de Formaciones</strong> </h2>
 
     </div>
 
