@@ -57,7 +57,7 @@ class MdlInscripcionController extends Controller
 
 
     //OJO en desuso por eliminar
-    public function matriculacion_externa_index()
+   /* public function matriculacion_externa_index()
     {
 
         if(request()->ajax())
@@ -83,7 +83,7 @@ class MdlInscripcionController extends Controller
         }
 
         return view('proveedor.pro_matricular');
-    }
+    }*/
 
 
 
@@ -99,7 +99,7 @@ class MdlInscripcionController extends Controller
             $em_id=$user->empresa->first()->id;//ojo
             $usuarios=Empresa::find($em_id)->users;
             $q=$roles_us->intersect($usuarios);
-            //para realizar la consulta mas apropia y adeterminar los facilitadores optimos en esta tabla, es necesario datos de otro modulo que lamentablemente no esta operativo...(y ya me fastidie de hacer funcionalidades de otros modulos)
+            //para realizar la consulta mas apropia y adeterminar los facilitadores optimos en esta tabla, es necesario datos de otro modulo que lamentablemente no esta operativo...
             //por ello se reaiza esta consulta mas "general" donde se obtienen solo los facilitadores de la empresa de quien esta matriculando
             $q=Facilitador_temp::join('users','users.id','=','facilitador_id');
 
