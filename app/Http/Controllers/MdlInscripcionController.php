@@ -100,7 +100,7 @@ class MdlInscripcionController extends Controller
             $usuarios=Empresa::find($em_id)->users;
             $q=$roles_us->intersect($usuarios);
             //para realizar la consulta mas apropia y adeterminar los facilitadores optimos en esta tabla, es necesario datos de otro modulo que lamentablemente no esta operativo...
-            //por ello se reaiza esta consulta mas "general" donde se obtienen solo los facilitadores de la empresa de quien esta matriculando
+
             $q=Facilitador_temp::join('users','users.id','=','facilitador_id');
 
             return datatables()->of($q)->addColumn('action', function($data){
@@ -121,7 +121,7 @@ class MdlInscripcionController extends Controller
 
 
 
-    public function external_enroll_file(&$m,&$i,$candidatos,$rol,$form_id) //otro metodo no usado de momento
+    public function external_enroll_file(&$m,&$i,$candidatos,$rol,$form_id) // no usado de momento
     {
         foreach ($candidatos as $key => $value) {
             $user=Auth::user()->find($value->user_id);
@@ -362,7 +362,7 @@ class MdlInscripcionController extends Controller
 
 
 //proveedor
-    public function formaciones_externas(Request $request){//OJO PENDIENTE DE MODIFICAR QUERY
+    public function formaciones_externas(Request $request){//OJO
        /* $result=User_ins_formacion::all();
         return view('proveedor.pro_download_matricula')->with('results', $result);*/
         if(request()->ajax())
