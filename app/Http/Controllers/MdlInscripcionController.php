@@ -406,7 +406,7 @@ class MdlInscripcionController extends Controller
     }
 
     /** FACILITADOR  */
-//ver la matricula de una formacion como facilitador
+    //ver la matricula de una formacion como facilitador
     public function show_matricula_formacion(Request $request)
     {
 
@@ -756,15 +756,9 @@ class MdlInscripcionController extends Controller
     public function pruebas(Request $request)
     {
 
-        $user=Auth::user();
-        $name='Jose Medina';
-        $ci='v20959966';
-        $nombre_f='seguridad';
-        $fecha='20/12/20';
-        $data=[];
-        $data=['name'=>$name,'ci'=>$ci,'nombre_f'=>$nombre_f,'fecha'=>$fecha];
 
-        //dump($data['name']);
+
+
         $user=Auth::user();
             $em_id=$user->empresa->first()->id;
         $q=Formacion::where('empresa_proveedora_id',$em_id)->where('status','matriculada')->where('disponibilidad',1)->where('tipo','externa')->get();
