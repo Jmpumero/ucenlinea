@@ -756,21 +756,14 @@ class MdlInscripcionController extends Controller
     public function pruebas(Request $request)
     {
 
-
-
-
         $user=Auth::user();
             $em_id=$user->empresa->first()->id;
         $q=Formacion::where('empresa_proveedora_id',$em_id)->where('status','matriculada')->where('disponibilidad',1)->where('tipo','externa')->get();
 
-        dump($q);
+        
 
     }
-       /* $idf=[];
-        $user=Auth::user();
-
-
-        $now=Carbon::now('-4:00');
+       /*
         $now->addDays(2); //fecha limite 3 dias antes del inicio
         $em_id=$user->empresa->first()->id;
 
