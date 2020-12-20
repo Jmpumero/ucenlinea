@@ -760,15 +760,11 @@ class MdlInscripcionController extends Controller
             $em_id=$user->empresa->first()->id;
         $q=Formacion::where('empresa_proveedora_id',$em_id)->where('status','matriculada')->where('disponibilidad',1)->where('tipo','externa')->get();
 
-        
+
 
     }
        /*
-        $now->addDays(2); //fecha limite 3 dias antes del inicio
-        $em_id=$user->empresa->first()->id;
-
-        $r=Requisicion::where('empresa_id',$em_id);
-        $formaciones_list=$r->join('formacions','requisicions.id','=','formacions.requisicion_id')->where('status','sin postulados')->where('disponibilidad',1)->where('fecha_de_inicio','>',$now)->get()->pluck('nombre','id');
+        
 
 
 
