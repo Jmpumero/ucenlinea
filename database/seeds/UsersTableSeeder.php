@@ -105,6 +105,7 @@ class UsersTableSeeder extends Seeder
             'prioridad' => 'alta',
             'ci'  =>'V102',
             'status' => true,
+            'sexo' =>'mujer',
             'password'     => bcrypt('123'),
 
         ]);
