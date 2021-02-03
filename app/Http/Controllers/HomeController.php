@@ -35,11 +35,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        /*$user=Auth::user();
-        $em_id=$user->empresa->first()->id;
 
-        $n_retiro= DB::table('retiro_formacion_est_rps as tbl_ret')->where('tbl_ret.empresa_del_postulado_id',$em_id)->where('tbl_ret.status_solicitud','NO PROCESADA')->join('users as tbl_us','tbl_ret.postulado_id','=','tbl_us.id')->count();*/
-        //return view('home')->with('n_rp_retiro',$n_retiro);
         return view('home');
     }
 
@@ -52,8 +48,7 @@ class HomeController extends Controller
             $ruta=$doc->mr_ruta;
             return Storage::response($ruta);
         }
-        //return Storage::response('marco_regulatorio/CONTRATO DE MAURA PUMERO.pdf'); //bien
-        //return response()->download($pathToFile);
+       
 
     }
 

@@ -493,8 +493,7 @@ class MdlInscripcionController extends Controller
 
         }
 
-        // $fn=Carbon::parse(Formacion::find(2)->fecha_de_inicio);
-        //$d=$fn->addDay(1);
+        
         $now=Carbon::now();
         $now=$now->subDay(1);
         $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->where('fecha_de_inicio','<',$now)->where('tblf.status','matriculada')->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();
@@ -749,10 +748,6 @@ class MdlInscripcionController extends Controller
 
 
 
-
-
-
-
     public function pruebas(Request $request)
     {
 
@@ -763,38 +758,7 @@ class MdlInscripcionController extends Controller
 
 
     }
-       /*
-        
 
-
-
-        $q1=DB::table('requisicions as tbl_r')->where('tbl_r.empresa_id',$em_id)->join('formacions as tbl_f','tbl_r.id','=','tbl_f.requisicion_id')->where('tbl_f.status','sin postulados')->where('tbl_f.disponibilidad',1)->where('tbl_f.fecha_de_inicio','>',$now)->select('tbl_f.id as formacion_id','tbl_f.nombre as nombre')->get();
-
-        $q2=DB::table('requisicions as tbl_r')->where('tbl_r.empresa_id',$em_id)->join('formacions as tbl_f','tbl_r.id','=','tbl_f.requisicion_id')->where('tbl_f.status','con postulados')->where('tbl_f.disponibilidad',1)->where('tbl_f.fecha_de_inicio','>',$now)->select('tbl_f.id as formacion_id','tbl_f.nombre as nombre')->get();
-
-        foreach ($q1 as $key => $value) {
-
-            $idf[]=$value->formacion_id;
-
-        }
-        foreach ($q2 as $key => $value) {
-
-            $idf[]=$value->formacion_id;
-
-        }
-
-        $q3=Formacion::whereIn('id',$idf)->get()->pluck('nombre','id');*/
-        //dump($formaciones_list);
-        //dump($q3);
-
-
-        //$fn=Formacion::find(2)->fecha_de_inicio;
-        //$fn=Carbon::now(Formacion::find(2)->fecha_de_inicio);
-        //$fn=Carbon::parse(Formacion::find(2)->fecha_de_inicio);
-        /* $now=Carbon::now();
-        $now=$now->subDay(1);
-        $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->where('fecha_de_inicio','<',$now)->where('tblf.status','matriculada')->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();
-        dump($qw);*/
 
 
 
