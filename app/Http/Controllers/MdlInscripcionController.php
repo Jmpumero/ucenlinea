@@ -493,7 +493,7 @@ class MdlInscripcionController extends Controller
 
         }
 
-        
+
         $now=Carbon::now();
         $now=$now->subDay(1);
         $qw = DB::table('formacions as tblf')->join('requisicions as tblr', 'tblf.requisicion_id', '=', 'tblr.id')->whereIn('tblf.id',$idf)->where('fecha_de_inicio','<',$now)->where('tblf.status','matriculada')->join('empresas as tblm','tblr.empresa_id','=','tblm.id')->select('tblf.id as id','tblf.imagen as imagen','tblf.nombre as nombre_formacion','tblm.nombre as nombre_empresa')->get();

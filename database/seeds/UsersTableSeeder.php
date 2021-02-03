@@ -102,6 +102,7 @@ class UsersTableSeeder extends Seeder
         App\User::create([ //proveedor  8
             'name'      => 'PROVEEDOR Open E.',
             'email'     => 'pro@gmail.com',
+            'prioridad' => 'alta',
             'ci'  =>'V102',
             'status' => true,
             'password'     => bcrypt('123'),
