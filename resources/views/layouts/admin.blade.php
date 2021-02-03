@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>RP Admin</title>
+  <title>UC en línea </title>
+  <link href="{{ asset('adminlte/img/logos/UC_logo_icono.png') }}" rel="icon">
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -19,7 +20,7 @@
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <script>window.jQuery || document.write('<script src="/adminlte/plugins/jquery/jquery.min.js"><\/script>')</script>
 
-
+    <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
     <!--sweetalert-->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
@@ -46,13 +47,16 @@
   <link rel="stylesheet" href="{{ asset('adminlte/css/extras.css') }}">
 
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{ asset('adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+  <!--<link rel="stylesheet" href="{{ asset('adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">-->
   <!-- Daterange picker -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.css') }}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/summernote/summernote-bs4.css') }}">
 
   <link href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
+
+  <link href="{{ asset('mentor/vendor/animate.css/animate.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('mentor/vendor/aos/aos.css') }}" rel="stylesheet">
   <!-- Google Font: Source Sans Pro -->
   <!--<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">-->
 </head>
@@ -67,7 +71,13 @@
               <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-              <a href="index3.html" class="nav-link ">Inicio</a>
+              <a href="{{ url('/') }}" class="nav-link ">Inicio</a>
+
+            </li>
+
+            <li class="nav-item d-none d-sm-inline-block">
+
+                <a href="{{ route('formaciones/publicadas') }}" class="nav-link ">Formaciones</a>
             </li>
 
           </ul>
@@ -75,7 +85,7 @@
           <!-- SEARCH FORM -->
           <form class="form-inline ml-3">
             <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <input class="form-control form-control-navbar" type="search" placeholder="Buscar" aria-label="Search">
               <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
@@ -95,10 +105,10 @@
             <li class="nav-item dropdown">
               <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="far fa-bell fa-lg text-white"></i>
-                <span class="badge badge-danger navbar-badge">15</span>
+                <span class="badge badge-danger navbar-badge"></span>
               </a>
               <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-item dropdown-header">15 Notifications</span>
+                <span class="dropdown-item dropdown-header">15 Notificationes</span>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                   <i class="fas fa-envelope mr-2"></i> 4 nuevas pruebas
@@ -107,15 +117,15 @@
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                   <i class="fas fa-users mr-2"></i> 8 nuevas formaciones
-                  <span class="float-right text-muted text-sm">12 hours</span>
+                  <span class="float-right text-muted text-sm">12 horas</span>
                 </a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
-                  <i class="fas fa-file mr-2"></i> 3 nuevos etc
-                  <span class="float-right text-muted text-sm">2 days</span>
+                  <i class="fas fa-file mr-2"></i> 3 nuevos
+                  <span class="float-right text-muted text-sm">2 dias</span>
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                <a href="#" class="dropdown-item dropdown-footer">Ver todas las Notificaciones</a>
               </div>
             </li>
 
@@ -123,17 +133,17 @@
             <!--USER-->
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <img src="{{ Auth::user()->avatar }}" class="user-image img-circle elevation-2" alt="User Image">
+                <img src="{{ asset(Auth::user()->avatar) }}" class="user-image img-circle elevation-2" alt="User Image">
                 <span class="d-none d-md-inline">{{ Auth::user()->name }} </span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <!-- User image -->
                 <li class="user-header bg-white">
-                  <img src="{{ Auth::user()->avatar }}" class="img-circle elevation-2" alt="User Image">
+                  <img src="{{ asset(Auth::user()->avatar) }}" class="img-circle elevation-2" alt="User Image">
                     <!-- NO ESTA TERMINADO-->
                   <p>
-                    Empresa - Algo
-                    <small>Member since Nov. 2012</small>
+                    Empresa  <strong> </strong>
+                    <small></small>
                   </p>
                 </li>
                 <!-- Menu Body -->
@@ -143,12 +153,12 @@
                 </li>
                 <!-- Menu Footer-->
                 <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="#" class="btn btn-default btn-flat">Perfil</a>
 
                   <a class="btn btn-default btn-flat float-right" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('Salir') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -176,11 +186,12 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
           <!-- Brand Logo -->
-          <a href="index3.html" class="brand-link">
-            <img src="adminlte/img/logos/UC_logo.png" alt="Logo" class="navbar-brand-image  elevation-3"
+          <a href="{{ url('/') }}" class="brand-link">
+            <img src="{{ asset('adminlte/img/logos/UC_logo.png') }}" alt="Logo" class="navbar-brand-image  elevation-3"
             width="60" height="70" alt="" style="margin: auto;">
-            <span class="brand-text font-weight-light" style="font-size: 1rem;"></span>
+            <span class="brand-text font-weight-light" style="font-size: 1rem;"> <strong>UC en línea</strong></span>
           </a>
+
 
           <!-- Sidebar -->
           <div class="sidebar">
@@ -191,39 +202,60 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
 
+                    <!--Notificaciones para todos-->
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="far fa-envelope fa-lg text-green"></i>
+                            <p>
+                            Notificaciones
+                            <i class="fas fa-angle-left right"></i>
+                            <span class="badge badge-danger right"></span>
+                            </p>
+                        </a>
 
-                     <li class="nav-item has-treeview">
-                      <a href="#" class="nav-link">
-                        <i class="far fa-envelope fa-lg text-green"></i>
-                        <p>
-                          Notificaciones
-                          <i class="fas fa-angle-left right"></i>
-                          <span class="badge badge-danger right">15</span>
-                        </p>
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="v_not_rp_est.html" class="nav-link">
-                            <i class="fas fa-user-graduate"></i>
-                            <p>Estudiantes</p>
-                            <span class="badge badge-warning right">10</span>
-                          </a>
-                        </li>
+                        <ul class="nav nav-treeview">
+                            @hasrole('Responsable de Personal')
+                                <li class="nav-item"><span class=" badge badge-success" > Responsable de personal: </span>
+                                <a href="{{ route('solicitudes/postulados') }}" class="nav-link">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <p>Procesar Retiros</p>
+                                    <span class="badge badge-warning right"></span>
+                                </a>
+                                </li>
+                            @endhasrole
 
-                      </ul>
+                            @hasrole('Responsable de Control de Estudio')
+                                <li class="nav-item has-treeview"><span class=" badge badge-morado" > Control de estudio: </span>
+                                    <a href="{{ route('tabla/solicitud/retiro/uvc') }}" class="nav-link">
+                                    <i class="fas fa-user-minus text-danger-borde2 icon-mg-sm"></i>
+                                    <p>
+                                        Retirar de la  UC en línea
+                                    </p>
+                                    </a>
+                                </li>
 
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="v_not_rp_prove.html" class="nav-link">
-                            <i class="fas fa-pencil-alt"></i>
-                            <p>Inscripciones</p>
-                            <span class="badge badge-primary right">5</span>
-                          </a>
-                        </li>
 
-                      </ul>
+                                <li class="nav-item">
+                                <a href="{{ route('solicitudes/retiro/formacion') }}" class="nav-link">
+                                    <i class="fas fa-user-slash"></i>
+                                    <i class="fas fa-folder"></i>
+                                    <p>Retirar de la Formación </p>
+
+                                </a>
+                                </li>
+
+                            @endhasrole
+
+
+                        </ul>
                     </li>
 
+
+
+
+
+
+                    <!--Formaciones-->
                     <li class="nav-item has-treeview">
                       <a href="#" class="nav-link">
                         <i class="fas fa-user-friends"></i>
@@ -233,73 +265,164 @@
                         </p>
                       </a>
 
-                      <ul class="nav nav-treeview">
-                        @can('inscribir estudiantes en formacion')
-                            <li class="nav-item">
-                            <a href= "{{ route('inscribir/estudiantes') }}" class="nav-link">
-                                <i class="fas fa-clipboard-check"></i>
 
-                                <p>Inscribir personal</p>
-                            </a>
+
+                      <ul class="nav nav-treeview">
+                        @hasrole('Responsable de Personal')
+                            @can('inscribir estudiantes en formacion')
+                                <li class="nav-item"><span class=" badge badge-success" > Responsable de personal: </span>
+                                <a href= "{{ route('inscribir/estudiantes') }}" class="nav-link">
+                                    <i class="fas fa-clipboard-check"></i>
+
+                                    <p>Postular Colaboradores</p>
+                                </a>
+                                </li>
+                            @endcan
+                        @endhasrole
+                        @hasrole('Responsable de Control de Estudio')
+                            @can('matricular estudiantes en moodle')
+                                <li class="nav-item"><span class=" badge badge-morado" > Control de estudio: </span>
+                                <a href= "{{ route('matricular/estudiantes') }}" class="nav-link">
+                                    <i class="fas fa-university"></i>
+
+                                    <p>Matricular Formación</p>
+                                </a>
+                                </li>
+                            @endcan
+
+
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('formaciones/sinpublicar') }}" class="nav-link">
+                                    <i class="fas fa-university"></i>
+                                    <i class="fas fa-check"></i>
+
+                                <p>
+                                    Publicar Formación
+
+                                </p>
+                                </a>
                             </li>
-                        @endcan
-                        <li class="nav-item">
-                          <a href="modform.html" class="nav-link">
-                            <i class="far fa-edit"></i>
-                            <p>Modificar inscripción</p>
-                          </a>
+                        @endhasrole
+
+                        @hasrole('Proveedor')
+                        <li class="nav-item"><span class=" badge badge-oro2" > Proveedor: </span>
+
+
+                        <a href= "{{ route('formaciones/m/externa') }}" class="nav-link">
+                            <i class="fas fa-cloud-download-alt"></i>
+
+                            <p> Descargar Matricula </p>
+                        </a>
                         </li>
+                        @endhasrole
+
+
+                        @hasrole('Facilitador')
+                        <li class="nav-item"><span class=" badge badge-verde-oscuro" > Facilitador: </span>
+
+                        <a href= "{{ route('formaciones/m/facilitador') }}" class="nav-link">
+                            <i class="fas fa-cloud-download-alt"></i>
+                            <i class="fas fa-file-signature"></i>
+
+                            <p> Descargar Matricula </p>
+                        </a>
+
+                        <a href= "{{ route('formaciones/actas/facilitador') }}" class="nav-link">
+                            <i class="fas fa-file-upload"></i>
+
+                            <p> Enviar Acta Académica</p>
+                        </a>
+                        </li>
+                        @endhasrole
+
+
+                        @hasrole('Estudiante')
+                        <li class="nav-item"> <span class=" badge badge-info" > Estudiante: </span>
+
+                        <a href= "{{ route('est/formaciones/certificadas') }}" class="nav-link">
+                            <i class="fas fa-award"></i>
+                            <i class="fas fa-file-invoice"></i>
+
+                            <p> Obtener Certificado </p>
+                        </a>
+
+
+
+                        <a href= "{{ route('est/retira/formacion') }}" class="nav-link">
+
+                            <i class="fas fa-folder-minus"></i>
+
+                            <p> Retirar de Formación </p>
+                        </a>
+                        </li>
+                        @endhasrole
+
+
+
+
+                        @hasrole('Supervisor')
+                        <li class="nav-item has-treeview"><span class=" badge badge-primary" > Supervisor: </span>
+                            <a href="{{ route('supervisor/formaciones/principal') }}" class="nav-link">
+                                <i class="fas fa-award"></i>
+                                <i class="fas fa-user-check"></i>
+
+                                <p> Calificar Colaboradores </p>
+                            </a>
+
+                        </li>
+                        @endhasrole
 
                       </ul>
                     </li>
 
+
+                    @hasrole('Responsable de Personal')
                     <li class="nav-item has-treeview">
-                      <a href="rpretiro_estudiante.html" class="nav-link">
+                      <a href="{{ route('retiro/estudiantes/uvc') }}" class="nav-link">
                         <i class="fas fa-user-minus text-danger-borde2 icon-mg-sm"></i>
                         <p>
-                          Retirar estudiante
+                          Retirar Estudiante
 
                         </p>
                       </a>
-
                     </li>
+                    @endhasrole
 
                     <li class="nav-item has-treeview">
                       <a href="#" class="nav-link">
                         <i class="far fa-folder-open"></i>
                         <p>
-                          Marco regulatorio
+                          Marco Regulatorio
                           <i class="fas fa-angle-left right"></i>
                         </p>
                       </a>
                       <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="rpinscripcion1.html" class="nav-link">
-                            <i class="far fa-file"></i>
 
-                            <p>documento1</p>
-                          </a>
-                        </li>
+
                         <li class="nav-item">
-                          <a href="#" class="nav-link">
-                            <i class="far fa-file"></i>
-                            <p>etc</p>
-                          </a>
+                            <a href="{{ route('ver/marco/regulatorio') }}" class="nav-link">
+                                <i class="fas fa-book-reader"></i>
+
+
+                                <p>Ver Documentos</p>
+                            </a>
                         </li>
+                        @hasrole('Responsable de Control de Estudio')
+                            <li class="nav-item"><span class=" badge badge-morado" > Control de estudio: </span>
+                                <a href="{{ route('carga/doc/marco/regulatorio') }}" class="nav-link">
+                                    <i class="fas fa-folder-plus"></i>
+
+                                    <p>Cargar Nuevo Documento</p>
+                            </a>
+                            </li>
+                        @endhasrole
+
 
                       </ul>
                     </li>
 
-                <li class="nav-header">EXAMPLES</li>
-                <li class="nav-item">
-                  <a href="pages/calendar.html" class="nav-link">
-                    <i class="nav-icon far fa-calendar-alt"></i>
-                    <p>
-                      Calendar
-                      <span class="badge badge-info right">2</span>
-                    </p>
-                  </a>
-                </li>
+                <li class="nav-header"></li>
+
 
               </ul>
             </nav>
@@ -324,7 +447,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Inicio</a></li>
 
                   </ol>
                 </div><!-- /.col -->
@@ -373,15 +496,25 @@
 
 
 <!--datatable jquery-->
-<script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<!--<script src="{{ asset('adminlte/plugins/datatables-scroller/js/dataTables.scroller.min.js') }}"></script>
-<script src="{{ asset('adminlte/plugins/datatables-scroller/js/scroller.bootstrap4.min.js') }}"></script>
--->
+
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
 
 <!--<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>-->
 
-<!--<script>window.dataTable || document.write('<script src="adminlte/plugins/datatables/jquery.dataTables.min.js"><\/script>')</script>-->
 
+
+<!-- CDN  para el ranting-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
 
 
 <!-- jQuery UI 1.11.4 -->
@@ -389,6 +522,8 @@
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
 <script src="{{ asset('adminlte/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="{{ asset('adminlte/plugins/limit-max-length/jquery-maxlength.js') }}"></script>
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
@@ -410,14 +545,15 @@
 <script src="{{ asset('adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 <!-- Summernoadminlte/te -->
 <script src="{{ asset('adminlte/plugins/summernote/summernote-bs4.min.js') }}"></script>
-<!-- overlayScrollbars -->
-<script src="{{ ('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+<!-- overlayScrollbars
+<script src="{{ ('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>-->
 
 <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
-
-
 <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
+
+<script src="{{ asset('adminlte/plugins/Image-PDF-Viewer-EZView/EZView.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/Image-PDF-Viewer-EZView/draggable.js') }}"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>-->
 
 <!-- AdminLTE App -->
@@ -425,7 +561,9 @@
 <!--para iconos ionic -->
 <!--<script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>-->
 
-
+<script>
+    AOS.init();
+  </script>
 
 </body>
 </html>

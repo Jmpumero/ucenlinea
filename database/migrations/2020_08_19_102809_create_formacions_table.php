@@ -20,22 +20,29 @@ class CreateFormacionsTable extends Migration
             //$hoy=new DateTime();
             //$hoy=$hoy->format('Y-m-d');
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('empresa_proveedora_id')->default(1);
             $table->string('nombre',50);
-            $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada']);
+            $table->enum('status', ['matriculada','publicada','con postulados','sin postulados','finalizada','cerrada']);
             $table->boolean('disponibilidad')->default(false);
+            $table->boolean('publicar')->default(false);
             $table->boolean('t_facilitador')->default(false);
             $table->enum('tipo',['interna','externa'])->default('interna');
-            $table->decimal('precio', 5, 2)->default(00000.00);
+            $table->decimal('precio', 7, 2)->default(000.00);
             $table->float('calificacion')->nullable()->default(0.00);
-            $table->string('imagen')->nullable();
+            $table->string('imagen')->default('adminlte/img/formaciones/default_formation.jpg
+'        );
+
             $table->smallInteger('max_matricula')->default(-1);
-            $table->smallInteger('actual_matricula')->default(0);//pendiente a revision
-            //$table->date('fecha_de_inicio')->default($hoy);
+            $table->smallInteger('actual_matricula')->default(0);
+            $table->boolean('formacion_libre')->default(false);
+            $table->text('f_resumen')->nullable();
+            //$table->string('categoria',50); //esto deberia ser una id a otra tabla,como no se si otro modulo ltenga esa tabla lo usare asi para efecto de ejemplo
             $table->dateTime('fecha_de_inicio')->default(Carbon::now());
             $table->dateTime('fecha_de_culminacion')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('empresa_proveedora_id')->references('id')->on('empresas');
             $table->unsignedBigInteger('requisicion_id')->unique()->nullable();//quitar nullable luego
             $table->foreign('requisicion_id')->references('id')->on('requisicions');
         });

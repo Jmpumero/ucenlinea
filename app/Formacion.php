@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -26,11 +27,25 @@ class Formacion extends Model
     }
 
 
+    //esto es para las fechas en campos fecha de inicio
+    public function getFechaDeInicioAttribute($value){
+        return Carbon::parse($value)->format('d-m-Y ');
+    }
 
-    public function requisicion() //inverse one to many
+    public function getFechaDeCulminacionAttribute($value){
+        return Carbon::parse($value)->format('d-m-Y ');
+    }
+
+    public function getUpdatedAtAttribute($value){
+        return Carbon::parse($value)->format('d-m-Y ');
+    }
+
+
+
+    /*public function requisicion() //inverse one to many
     {
         return $this->belongsTo('App\Requisicion');
-    }
+    }*/
 
 
 

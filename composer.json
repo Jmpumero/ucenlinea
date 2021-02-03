@@ -9,10 +9,12 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "barryvdh/laravel-dompdf": "^0.8.7",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.2",
         "laravel/tinker": "^2.0",
         "maatwebsite/excel": "^3.1",
+        "megacreativo/cedulave-api": "^1.0",
         "spatie/laravel-permission": "^3.13",
         "yajra/laravel-datatables": "1.5"
     },
@@ -61,6 +63,10 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-install-cmd": [
+            "php artisan clear-compiled",
+            "chmod -R 777 public/"
         ]
     }
 }

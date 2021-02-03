@@ -17,6 +17,7 @@ class CreateEmpresasTable extends Migration
             $table->bigIncrements('id');
             $table->string('nombre', 50)->unique();
             $table->string('rif', 30)->unique();
+            $table->string('direccion')->default('Av. Bolívar Norte Sede del Rectorado U.C. Valencia Edo. Carabobo.');
             $table->timestamps();
             $table->softDeletes();
         });

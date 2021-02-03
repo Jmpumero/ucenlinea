@@ -109,10 +109,30 @@ i.icon-mg-sm{
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-
-
   border-radius: 10rem;
 }
+
+
+
+.badge-pill-new {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 90%;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 8rem;
+  }
+
+
+
+.badge-verde-b {
+    color: #ffffff;
+    background-color:#00bb2d;
+  }
+
 
 
 .badge-verde-oscuro {
@@ -126,12 +146,295 @@ i.icon-mg-sm{
 }
 
 .badge-oro {
-  color: #111010;
+  color: #fdfdfd;
   background-color: #efb810;
 }
+
+.badge-oro2 {
+    color: #fdfdfd;
+    background-color: #ffae00;
+  }
 
 
 .badge-morado {
   color: #ffffff;
-  background-color: #9a13cf;
+  background-color: #af2fe2;
+}
+
+
+.badge-fabulous {
+    color: #ffffff;
+    background-color: #f32cd2;
+  }
+
+  .badge-ver-azul {
+    color: #ffffff;
+    background-color: #0b8f84;
+  }
+
+
+  .badge-naranja {
+    color: #ffffff;
+    background-color: #e85d04;
+  }
+
+
+.btn-morado {
+    color: #ffffff;
+    background-color: #7579e7;
+    border-color: #7427b3;
+    box-shadow: none;
+  }
+
+  .btn-morado:hover {
+    color: #ffffff;
+    background-color: #4daa0f;
+    border-color: #ffffff;
+  }
+
+
+
+  .bg-info2 {
+    background-color: #ff7d7d !important;
+  }
+
+  .bg-info2,
+  .bg-info2 > a {
+    color: #ffffff !important;
+  }
+
+  .bg-info2.btn:hover {
+    border-color: #ff7d7d;
+    color: #110909;
+  }
+
+
+  .btn-a1 {
+    color: #ffffff;
+    background-color: #48bfe3;
+    border-color: #4ea8de;
+    box-shadow: none;
+  }
+
+  .btn-a1:hover {
+    color: #ffffff;
+    background-color: #7400b8;
+    border-color: #ffffff;
+  }
+
+
+  .btn-calificar {
+    border: 2px solid;
+    color:  #efb810;
+    border-color:#efb71000;
+  }
+
+  .btn-calificar:hover {
+    color: #ffffff;
+    background-color: #ff9642;
+    border-color: #ff9642;
+  }
+
+
+  .btn-publica {
+    border: 2px solid;
+    color:  #06af1c;
+    border-color:#efb71000;
+  }
+
+  .btn-publica:hover {
+    color: #ffffff;
+    background-color: #036621;
+    border-color: #efb71000;
+  }
+
+  .btn-oculta {
+    border: 2px solid;
+    color:  #b718c5;
+    border-color:#efb71000;
+  }
+
+  .btn-oculta:hover {
+    color: #ffffff;
+    background-color: #91049e;
+    border-color: #efb71000;
+  }
+
+/*Paleta especial
+#f72585,#7209b7,#3a0ca3,#4361ee,#4cc9f0*/
+
+.card-p1:not(.card-outline) > .card-header {
+    background-color: #f72585;
+  }
+
+  .card-p1:not(.card-outline) > .card-header,
+  .card-p1:not(.card-outline) > .card-header a {
+    color: #ffffff;
+  }
+
+  .card-p1:not(.card-outline) > .card-header a.active {
+    color: #1F2D3D;
+  }
+
+  .card-p1.card-outline {
+    border-top: 4px solid #f72585;
+  }
+
+  .card-p1.card-outline-tabs > .card-header a:hover {
+    border-top: 3px solid #dee2e6;
+  }
+
+  .card-p1.card-outline-tabs > .card-header a.active {
+    border-top: 3px solid #f72585;
+  }
+
+  .card-p2.card-outline {
+    border-top: 4px solid #7209b7;
+  }
+
+  .card-p3.card-outline {
+    border-top: 4px solid #4cc9f0;
+  }
+
+
+
+/*para el strong*/
+
+.strong-msj{
+    font-size:1.35rem;
+    margin-left: 0%;
+    margin-right:1%;
+}
+
+
+
+
+
+
+
+
+
+:after, :before {
+    box-sizing: border-box;
+}
+
+a {
+    color: #337ab7;
+    text-decoration: none;
+}
+i{
+  margin-bottom:4px;
+}
+
+.btns {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+
+.btn-app {
+    color: white;
+    box-shadow: none;
+    border-radius: 3px;
+    position: relative;
+    padding: 10px 15px;
+    margin: 0;
+    min-width: 60px;
+    max-width: 90px;
+    text-align: center;
+    border: 1px solid #ddd;
+    background-color: #f4f4f4;
+    font-size: 12px;
+    transition: all .2s;
+    background-color: steelblue !important;
+}
+
+.btn-app > .fa, .btn-app > .glyphicon, .btn-app > .ion {
+    font-size: 30px;
+    display: block;
+}
+
+.btn-app:hover {
+    border-color: rgba(250, 248, 248, 0);
+    transform: scale(1.1);
+}
+
+.pdf {
+  background-color: #dc2f2f !important;
+}
+
+.excel {
+    background-color: #2f992f !important;
+}
+
+.csv {
+    background-color: #2c90ee !important;
+}
+
+.imprimir {
+    background-color: #c41dee !important;
+}
+
+/*
+Esto es opcional pero sirve para que todos los botones de exportacion se distribuyan de manera equitativa usando flexbox
+
+.flexcontent {
+    display: flex;
+    justify-content: space-around;
+}
+*/
+
+.selectTable{
+  height:40px;
+  float:right;
+}
+
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: left;
+    margin-top: 15px;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #4682b4;
+    border-color: #4682b4;
+}
+.btn-secondary:hover {
+    color: #fff;
+    background-color: #315f86;
+    border-color: #545b62;
+}
+
+
+
+.titulo-tabla{
+  color:#606263;
+  text-align:center;
+  margin-top:15px;
+  margin-bottom:15px;
+  font-weight:bold;
+}
+
+
+
+.inline{
+  display:inline-block;
+  padding:0;
+}
+
+.costo
+{
+    color: #000000;
+    font-weight:200;
+    font-size: 250%;
 }

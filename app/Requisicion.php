@@ -13,10 +13,10 @@ class Requisicion extends Model
         'nombre', 'modalida', 'audiencia','t_formacion',
     ];
 
-    public function formaciones()//one to many pendiente revision
+   /* public function formaciones()//one to many pendiente revision
     {
         return $this->hasMany('App\Formacion');
-    }
+    }*/
 
     public function user() //inverse one to many
     {
