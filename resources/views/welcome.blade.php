@@ -86,7 +86,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                   UC en línea
+                   UC en línea 1.1.0
                 </div>
 
                 <div class="links">
