@@ -515,7 +515,7 @@
     $('#form_dall').on('submit', function (event) {
 
         event.preventDefault();
-        console.log(info.recordsTotal)
+        
             $.ajax({
                 url: "{{ route('Eliminar.lista') }}",
                 method:"GET",

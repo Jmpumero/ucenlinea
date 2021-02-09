@@ -180,8 +180,7 @@ class ExpedienteUsuarioController extends Controller
             return redirect()->back();
         }
 
-        //asegurarse que $data no sea vacio
-
+        
        //no se porque el download no funciona... hace colapsar el serve
         //return view('estudiante.vista_certificado',compact('data'));
     }
