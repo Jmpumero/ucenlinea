@@ -226,8 +226,7 @@
     $('body').on('click', '#btn_retirar', function (e) {
         e.preventDefault();
 
-        //$('#formacion_id').val($(this).data("f"));
-        //$('#p_id').val($(this).data("uid"));
+        
 
 
         $.ajax({

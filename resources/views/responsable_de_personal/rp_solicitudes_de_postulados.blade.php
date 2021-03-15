@@ -305,9 +305,6 @@
 
     });
 
-
-
-
     $('#form_datos').on('submit', function (event) {
 
         event.preventDefault();
@@ -342,9 +339,6 @@
         });
 
     });
-
-
-
 
     $('body').on('click', '#btn_atras_M', function () {
         $('#div_matricula').toggle(1100);

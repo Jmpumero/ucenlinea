@@ -229,13 +229,7 @@
                             <input  id="archivo_input" type="file" name="archivo" required>
 
                     </div>
-                     <!-- <form id="form_p" action="{{ url('pruebas/excel') }}" method="POST"  accept-charset="UTF-8" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <label for="archivo"><b>Archivo: </b></label><br>
-                        <input id="archivo_inputp" type="file" name="archivo" required>
-                        <input id="f_id" type="text" name="formacion" hidden>
-                        <input id="btn_enviar_p" class="btn btn-success" type="submit" value="prueba" >
-                      </form>-->
+
 
                 <!-- Modal Footer -->
                     <div class="modal-footer">
@@ -362,10 +356,6 @@
             placeholder:" Elige una formacion ",
             theme:"classic"
         });
-
-
-
-
 
     });
 
@@ -511,11 +501,10 @@
         }
 
     });
-
     $('#form_dall').on('submit', function (event) {
 
         event.preventDefault();
-        
+
             $.ajax({
                 url: "{{ route('Eliminar.lista') }}",
                 method:"GET",
@@ -542,36 +531,7 @@
 
 
 
-    //primera forma
-    /*$('body').on('click', '#btn_eliminar_p', function () {
 
-        var postu_id = $(this).data("id");
-        id_f=$('#formas').val();
-
-        console.log(postu_id)
-        console.log(id_f)
-
-        var toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-            });
-
-        $.ajax({
-            url:"eliminar/postulado/f/"+postu_id+"/"+id_f,
-            type: "get",
-            success:function(data)
-            {
-                $('#tabla_postulados').DataTable().ajax.reload();
-                toast.fire({
-                    icon: 'success',
-                    title: 'Eliminado correctamente.'
-                })
-            }
-        })
-
-    });*/
 
     //Borrar postulado version "todo uso..."
     $('body').on('click', '#btn_eliminar_p', function () {
@@ -657,8 +617,7 @@
                 processData: false,//importante enviar este parametro en false
                 success:function(data)
                 {
-                    //console.log(data)
-                    //console.log(data[2].cont_e)
+
                     $('#archivo_input').val(''); //limpia el campo del archivo
                     var newRows = "";
                     //console.log(data[0].status)
@@ -761,8 +720,7 @@
                 }
         });
 
-        //$('#archivo_input').val('');
-    //$('#btn_closed_m_excel').trigger('click');
+
     });
 
     ////agregar un estudiante////
@@ -813,9 +771,6 @@
 
             "destroy":true,
             "responsive": true,
-            //"deferRender":  true,
-            //"scroller":     true,
-            //"searching": false,
             "serverSide": true,
             "processing": true,
             "ajax": "select/users_table",
@@ -905,7 +860,7 @@
             "columns": [
                 {data: 'ci'},
                 {data: 'name'},
-                //{data: 'email'},
+
                 {data: 'action', name: 'btn', orderable: false},
             ],
 
@@ -954,8 +909,6 @@
         $(this).closest('tr').css('background', '#b8daba');
         supervisor_select=true
 
-        //console.log($('#user_id').val())
-        //console.log($('#formacion_id').val())
 
 
 
@@ -964,8 +917,7 @@
     $('#form_new_postu').on('submit', function (event) {
 
         event.preventDefault();
-        //console.log($(this).serialize())
-        //console.log(postulado_select)
+
         if (postulado_select && supervisor_select && formacion_select) {
             $.ajax({
 
@@ -994,17 +946,15 @@
                             icon: 'error',
                             confirmButtonText: 'Cerrar',
                             width: '35%',
-                            //timerProgressBar:true,
-                            //timer: 2500
+
                             })
                         }
                         if(data.success)
                         {
-                            //html = '<div class="alert alert-success">' + data.success + '</div>';
+
                             $('#form_new_postu')[0].reset();
                             $('#tabla_postulados').DataTable().ajax.reload();
-                            //info= $('#tabla_postulados').DataTable().page.info();
-                            //console.log(info.recordsTotal)
+
 
                         const t= Swal.mixin({
                                 customClass: {
@@ -1025,8 +975,7 @@
                             timer: 2500
                             })
 
-                            //$('#btn_closed_m').trigger('click');
-                            //$('#modal_agregar').modal('hide'); desscuadra la cosa
+
                         }
 
 
@@ -1035,7 +984,6 @@
 
 
             }
-                //$('#btn_closed_m').trigger('click');
 
 
     });

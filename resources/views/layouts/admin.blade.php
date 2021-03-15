@@ -170,7 +170,7 @@
 
 
 
-           
+
           </ul>
         </nav>
         <!-- /.navbar -->
@@ -554,7 +554,7 @@
 <script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
 <!--para iconos ionic -->
 <!--<script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>-->
-
+@yield('footer-scripts') {{-- para agregar js personalizados a vistas especificas --}}
 <script>
     AOS.init();
   </script>
