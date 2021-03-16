@@ -16,8 +16,8 @@
        {{--@php dump($results); @endphp
        @php dump($formacion); @endphp--}}
     </div>
-    <div class="card-body p-0">
-        <div class="card table-responsive-md" style="height: 384px">
+    <div class="card-body ">
+
             <table id="table_ev" class="table table-striped table-responsive" style="height: 300px">
                 <thead>
                     <tr>
@@ -42,12 +42,6 @@
                         <th>
                             Acción
                         </th>
-
-
-
-
-
-
                     </tr>
                 </thead>
                 <tbody>
@@ -82,7 +76,7 @@
                 </tbody>
             </table>
 
-        </div>
+       
 
     </div>
     <!-- /.card-body -->

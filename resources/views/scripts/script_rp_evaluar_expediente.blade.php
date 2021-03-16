@@ -1,7 +1,4 @@
 
-
-
-    <h1>GEGE</h1>
 <script>
     $.ajaxSetup({
     headers: {
