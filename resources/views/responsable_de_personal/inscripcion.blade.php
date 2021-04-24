@@ -20,7 +20,7 @@
                 </div>
 
         </div>
-
+        <livewire:counter>
 
         <div id="_postulados" class="card table-responsive"  >
             <div class="card-header">

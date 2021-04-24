@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Livewire\SelectFormaciones;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,6 +12,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+
 
 //Route::get('validar/certificado','HomeController@verificar_certificado_index')->name('validar/certificado');
 
@@ -42,7 +47,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::middleware(['auth'])->group(function () {
 
     /** Responsable de personal */
-    Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')->middleware('permission:inscribir estudiantes en formacion');
+     Route::get('postulados', 'UserInsFormacionController@index')->name('inscribir/estudiantes')->middleware('permission:inscribir estudiantes en formacion');
+
+
 
     Route::get('select/users', 'UserInsFormacionController@select_usuarios')->name('select/users'); //pendiente revisar
 

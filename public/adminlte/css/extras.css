@@ -33,8 +33,53 @@ i.icon-mg-sm{
 
   }
 
+  .brd
+  {
+      border: 1px solid #e2eded;
+      border-color: #eaf1f1 #e4eded #dbe7e7 #e4eded;
+  }
 
+.card-selectformacion{
+    margin-top: 1rem;
+    width: 40%;
+    height: 100%;
+    display: block;
+    /* background-color: #64f786; */
+    position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
 
+    border-top: 3px solid #0ab112;
+
+}
+
+.center-hori {
+    justify-content: center;
+  }
+  .center-vert {
+    align-items: center;
+  }
+
+.cajacard{
+    width: 100%;
+    flex-flow: wrap;
+    flex-direction: row;
+    position: relative;
+    display: flex;
+
+    padding-right: 7.5px;
+    padding-left: 7.5px;
+    margin-right: auto;
+    margin-left: auto;
+    /* background-color: red; */
+}
+
+.card-header-f {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    /* background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 0 solid rgba(0, 0, 0, 0.125); */
+  }
 
 .card-notificacion{
   width: 40%;
@@ -374,7 +419,7 @@ i{
 }
 
 .excel {
-    background-color: #2f992f !important;
+    background-color: #2f992f ;
 }
 
 .csv {
