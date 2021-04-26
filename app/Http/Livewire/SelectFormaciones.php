@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class SelectFormaciones extends Component
 {
-    public $estatus=false,$id_formacion=null,$user=null;
-
+    public $selectedFormation=null;
+    public $user=null;
     public function render()
     {
         $now=Carbon::now('-4:00');
@@ -41,5 +41,9 @@ class SelectFormaciones extends Component
         return view('livewire.select-formaciones',
             ['formaciones'=>$formaciones_list]
     );
+    }
+
+    public function updatedSelectedFormation($formacion_id){
+        $this->selectedFormation=$formacion_id;
     }
 }
